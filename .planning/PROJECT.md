@@ -39,14 +39,14 @@ Full list with ids in `.planning/REQUIREMENTS.md`. Summary by role (`dom-require
 - Method: Goal-Directed Design. Three interfaces (Coordinator, Student, Admin), one per role, shaped by that role's goal, not a feature list (`src-feature-vs-goal-directed`, `adr-002-roles`). Student Organizer is a flag on a student account that adds My Tasks.
 - Personas are proto-personas with confidence `assumed` (`dom-personas`). Only real team research may be recorded as `evidence`. AI drafts research and usability instruments and never invents results.
 - Status vocabulary is fixed in `dom-status-vocabulary`; exact tokens are set in `kb/design-system` during Phase 3.
-- Things only the team can do: create the Supabase project and Vercel link (keys in `.env.local`, never committed), run real interviews and usability sessions.
+- Things only the team can do: create the Cloudflare account, log in and create the D1 database (secrets only in `.dev.vars` / `.env.local`, never committed), run real interviews and usability sessions.
 - Demo mode: one-click role login with seeded test users so reviewers can explore all three interfaces.
 
 ## Constraints
 
-- **Tech stack**: Next.js (App Router, TypeScript) + Tailwind + Supabase (Postgres, Auth, RLS, Realtime), deployed on Vercel (`adr-001-stack`). Verify current APIs with context7 before coding.
+- **Tech stack**: Next.js (App Router, TypeScript) + Tailwind on Cloudflare Workers (OpenNext) with D1 and app-side sessions, all on the free tier (`adr-001-stack`). Verify current APIs with context7 before coding.
 - **Accessibility**: WCAG 2.2 AA, 44px targets, full keyboard path, A-/A/A+ text size, plain-language errors (`src-accessibility-areas`). Non-negotiable.
-- **Data integrity**: venue clashes via Postgres exclusion constraint; registrations unique per (event, user); RLS reviewed before deploy (`dom-domain-model`).
+- **Data integrity**: venue clashes via D1 triggers; registrations unique per (event, user); authorization layer reviewed before deploy (`dom-domain-model`).
 - **Process**: one GSD phase per session; Phase 4 runs three parallel agents in separate git worktrees and folders per `AGENTS.md`; shared files frozen after Phase 3.
 - **Honesty**: kb `confidence` labels respected; no invented research or usability results.
 - **Simplicity**: prefer the simplest thing that works; leave one runnable check for non-trivial logic.
@@ -55,7 +55,7 @@ Full list with ids in `.planning/REQUIREMENTS.md`. Summary by role (`dom-require
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Next.js + Supabase + Vercel (`adr-001-stack`) | Real multi-user data and login make roles credible; exclusion constraints give true clash prevention; shareable URL | User-confirmed, pending |
+| Next.js + Cloudflare Workers + D1 (`adr-001-stack`) | User decision 2026-10-20: free tier only; replaces the earlier Supabase/Vercel plan; triggers give clash prevention | User-confirmed |
 | Three interfaces, four roles (`adr-002-roles`) | Mirrors the reference's Faculty/Student/Admin split and covers task allocation via the Organizer flag | Assumed, not yet user-confirmed |
 | Markdown + YAML KB, INDEX routing, no vector DB (`adr-003-kb-format`) | grep by id is enough at this size | Pending |
 | Scope cuts per `adr-004-scope` | YAGNI | Pending |

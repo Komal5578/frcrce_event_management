@@ -20,4 +20,11 @@ updated: 2026-10-20
 - Student: Discover · My Events · My Tasks (if organizer) · Notifications
 - Admin: Approvals · Calendar · Venues & Resources · Reports · Notifications
 
+# Detail
+- Coordinator: [docs/flows/coordinator-create-event.md](../../docs/flows/coordinator-create-event.md)
+- Student: [docs/flows/student-register.md](../../docs/flows/student-register.md)
+- Admin: [docs/flows/admin-approve.md](../../docs/flows/admin-approve.md)
+- Organizer (reversible, no Review & Confirm): [docs/flows/organizer-mark-task-done.md](../../docs/flows/organizer-mark-task-done.md)
+- Screen inventories: [docs/ia/](../../docs/ia/)
+
 Roles share component library and vocabulary (X4), not screens.

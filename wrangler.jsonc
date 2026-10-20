@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "college-events",
+  "compatibility_date": "2026-10-20",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "college-events" }],
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "college-events",
+    // Not a secret; identifies the team D1 database (created 2026-10-20).
+    "database_id": "c0394d85-d76f-41a0-9b7a-86a101686eb6",
+    "migrations_dir": "migrations"
+  }],
+  "vars": { "DEMO_LOGIN": "true" }
+}

@@ -22,16 +22,18 @@ The attendance PDF/md in `kb/source/attendance-reference/` is a **reference exam
 - KB `confidence`: source / derived / assumed / evidence. Only real team research is `evidence`. **Never invent research or usability results**; draft instruments, leave results to the team.
 - Report outcomes faithfully (failing tests, skipped steps).
 
-## Stack and commands (set up in Phase 3; update this block then)
-Next.js (App Router, TS) + Tailwind + Supabase (Postgres/Auth/RLS/Realtime), Vercel deploy. Verify current APIs with the context7 MCP before coding.
+## Stack and commands (set up in Phase 3)
+**DECISION (user, 2026-10-20): everything runs on Cloudflare's free tier (superseding the earlier Supabase/Vercel plan).** Stack: Next.js (App Router, TS) + Tailwind on Workers via `@opennextjs/cloudflare`, D1 (SQLite) for data, app-side sessions on D1. D1 has no RLS or exclusion constraints: clashes and double-registration are blocked by D1 triggers/unique constraints in `migrations/`, and `lib/domain` is the authorization layer (see `adr-001-stack`, `dom-domain-model`). Stay within free-tier limits; no paid add-ons. Verify current APIs with the context7 MCP before coding.
 - KB check: `node kb/tools/build-index.mjs` (must pass after any kb change)
-- App commands: _to be filled in Phase 3 (dev, build, lint, test)_
-- Secrets in `.env.local` only; commit `.env.example`; never commit keys.
+- App commands: `npm run dev|build|lint|typecheck|test|preview|deploy|cf-typegen|db:migrate|db:seed|db:reset`. Full gate: `npm run lint && npm run typecheck && npm test && npm run build`. Fast DB check: `npx vitest run tests/db.test.ts`.
+- Human steps (Cloudflare account): `npx wrangler login`, `npx wrangler d1 create college-events` (paste the `database_id` into `wrangler.jsonc`), then `npm run deploy`.
+- Secrets in `.dev.vars` (Workers runtime) and `.env.local` (Next build-time) only; commit `.env.example` / `.dev.vars.example`; never commit keys.
 
 ## Session protocol
 - Start: read INDEX + STATE. Plan with `gsd-plan-phase`, build with `gsd-execute-phase`, verify with `gsd-verify-work`.
 - Parallel waves (Phase 4): each agent in its own git worktree and own folder per `AGENTS.md`. Don't touch frozen shared files.
 - End: update STATE.md, run the KB check if kb changed, commit, then `/clear` before the next phase.
+- Commit only when a whole phase is complete and verified: one commit per phase. Never commit per plan, per task, per file change, per doc tweak or per SUMMARY. Keep working changes uncommitted until then. Never commit unless the gate is green.
 - Prefer the simplest thing that works (ponytail); leave one runnable check for non-trivial logic.
 
 ## Definition of done (per phase)

@@ -2,5 +2,10 @@ node_modules/
 .next/
 .env*
 !.env.example
-.vercel/
+.open-next/
+.wrangler/
+.dev.vars
 *.log
+next-env.d.ts
+*.tsbuildinfo
+coverage

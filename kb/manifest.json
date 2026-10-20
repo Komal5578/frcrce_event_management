@@ -2,14 +2,14 @@
   {
     "id": "adr-001-stack",
     "type": "decision",
-    "title": "ADR-001 Stack: Next.js + Supabase + Vercel",
+    "title": "ADR-001 Stack: Next.js + Cloudflare Workers (OpenNext) + D1",
     "tags": [
       "stack",
       "architecture"
     ],
     "confidence": "derived",
     "sources": "[user-chat]",
-    "summary": "Chosen stack and the rationale; user-confirmed.",
+    "summary": "Chosen stack and the rationale; user decision 2026-10-20, everything on Cloudflare free tier.",
     "updated": "2026-10-20",
     "path": "decisions/adr-001-stack.md"
   },
@@ -59,14 +59,14 @@
   {
     "id": "ds-readme",
     "type": "design",
-    "title": "Design system (placeholder, filled in Phase 3)",
+    "title": "Design system",
     "tags": [
       "design-system",
       "tokens"
     ],
-    "confidence": "assumed",
-    "sources": "[user-chat]",
-    "summary": "Placeholder: tokens, status colours, component rules to be defined in Phase 3.",
+    "confidence": "derived",
+    "sources": "[dom-status-vocabulary, src-accessibility-areas, src-hmi-principles, adr-001-stack]",
+    "summary": "Colour, spacing, type and status tokens, computed contrast record, and the frozen shared component set in components/ui.",
     "updated": "2026-10-20",
     "path": "design-system/README.md"
   },
@@ -126,7 +126,7 @@
       "analysis"
     ],
     "confidence": "derived",
-    "sources": "[src-gdd-process]",
+    "sources": "[src-gdd-process,dom-requirements,dom-flows]",
     "summary": "Primary/secondary goals and the ordered task list per role.",
     "updated": "2026-10-20",
     "path": "domain/goals-tasks.md"

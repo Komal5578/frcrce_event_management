@@ -14,21 +14,21 @@ Source: `kb/domain/requirements.md` (`dom-requirements`, ids in brackets are the
 
 ### Requirements and Framework (GDD deliverables 3-8)
 
-- [ ] **FRAM-01**: Goals and task analysis per role is written and linked to requirement ids (`dom-goals-tasks`)
-- [ ] **FRAM-02**: Scenarios and test tasks are written per role (`dom-scenarios`)
-- [ ] **FRAM-03**: Information architecture and navigation map exist for each of the three interfaces
-- [ ] **FRAM-04**: Task flows exist for the Coordinator, Student and Admin primary journeys (`dom-flows`)
-- [ ] **FRAM-05**: Low-fi wireframes cover every primary screen of the three interfaces
+- [x] **FRAM-01**: Goals and task analysis per role is written and linked to requirement ids (`dom-goals-tasks`)
+- [x] **FRAM-02**: Scenarios and test tasks are written per role (`dom-scenarios`)
+- [x] **FRAM-03**: Information architecture and navigation map exist for each of the three interfaces
+- [x] **FRAM-04**: Task flows exist for the Coordinator, Student and Admin primary journeys (`dom-flows`)
+- [x] **FRAM-05**: Low-fi wireframes cover every primary screen of the three interfaces
 
 ### Foundation
 
-- [ ] **FOUND-01**: Next.js + Tailwind app builds and runs locally, with dev/build/lint/test commands recorded in `CLAUDE.md`
-- [ ] **FOUND-02**: Design tokens, status vocabulary components (icon + text + colour) and shared UI components exist, with contrast ratios checked (`dom-status-vocabulary`, X1)
-- [ ] **FOUND-03**: Supabase schema, seed data and RLS policies implement the domain model (`dom-domain-model`)
-- [ ] **FOUND-04**: A venue/time clash cannot be saved: the database rejects it via exclusion constraint (X5)
-- [ ] **FOUND-05**: A user cannot register for the same event twice: the database rejects it via unique constraint (X5)
-- [ ] **FOUND-06**: User can sign in and land in the interface for their role
-- [ ] **FOUND-07**: Reviewer can enter any of the three interfaces from a one-click demo login with seeded test users
+- [x] **FOUND-01**: Next.js + Tailwind app builds and runs locally, with dev/build/lint/test commands recorded in `CLAUDE.md`
+- [x] **FOUND-02**: Design tokens, status vocabulary components (icon + text + colour) and shared UI components exist, with contrast ratios checked (`dom-status-vocabulary`, X1)
+- [x] **FOUND-03**: D1 schema, seed data and access rules (authorization layer) implement the domain model (`dom-domain-model`)
+- [x] **FOUND-04**: A venue/time clash cannot be saved: the database rejects it via a trigger (X5)
+- [x] **FOUND-05**: A user cannot register for the same event twice: the database rejects it via unique constraint (X5)
+- [x] **FOUND-06**: User can sign in and land in the interface for their role
+- [x] **FOUND-07**: Reviewer can enter any of the three interfaces from a one-click demo login with seeded test users
 
 ### Coordinator interface
 
@@ -72,8 +72,8 @@ Source: `kb/domain/requirements.md` (`dom-requirements`, ids in brackets are the
 
 ### Deploy and documentation (GDD deliverable 13)
 
-- [ ] **DEP-01**: App is deployed on Vercel against a Supabase project, reachable at a shareable URL
-- [ ] **DEP-02**: RLS policies are reviewed and no secrets are committed before deploy
+- [ ] **DEP-01**: App is deployed on Cloudflare Workers with D1, reachable at a shareable URL
+- [ ] **DEP-02**: Authorization layer is reviewed and no secrets are committed before deploy
 - [ ] **DEP-03**: Final documentation and the one-page design-model infographic are complete (`src-model-infographic`)
 
 ## v2 Requirements
@@ -107,18 +107,18 @@ Which phases cover which requirements. Filled during roadmap creation (2026-10-2
 |-------------|-------|--------|
 | RSCH-01 | Phase 1 | Complete |
 | RSCH-02 | Phase 1 | Complete |
-| FRAM-01 | Phase 2 | Pending |
-| FRAM-02 | Phase 2 | Pending |
-| FRAM-03 | Phase 2 | Pending |
-| FRAM-04 | Phase 2 | Pending |
-| FRAM-05 | Phase 2 | Pending |
-| FOUND-01 | Phase 3 | Pending |
-| FOUND-02 | Phase 3 | Pending |
-| FOUND-03 | Phase 3 | Pending |
-| FOUND-04 | Phase 3 | Pending |
-| FOUND-05 | Phase 3 | Pending |
-| FOUND-06 | Phase 3 | Pending |
-| FOUND-07 | Phase 3 | Pending |
+| FRAM-01 | Phase 2 | Complete |
+| FRAM-02 | Phase 2 | Complete |
+| FRAM-03 | Phase 2 | Complete |
+| FRAM-04 | Phase 2 | Complete |
+| FRAM-05 | Phase 2 | Complete |
+| FOUND-01 | Phase 3 | Complete |
+| FOUND-02 | Phase 3 | Complete |
+| FOUND-03 | Phase 3 | Complete |
+| FOUND-04 | Phase 3 | Complete |
+| FOUND-05 | Phase 3 | Complete |
+| FOUND-06 | Phase 3 | Complete |
+| FOUND-07 | Phase 3 | Complete |
 | COORD-01 | Phase 4 | Pending |
 | COORD-02 | Phase 4 | Pending |
 | COORD-03 | Phase 4 | Pending |

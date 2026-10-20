@@ -1,0 +1,3 @@
+# Workers runtime vars/secrets (read by wrangler and `next dev` via OpenNext).
+# Copy to .dev.vars. .env.local is Next build-time only.
+DEMO_LOGIN=true

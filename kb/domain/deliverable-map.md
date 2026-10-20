@@ -15,14 +15,14 @@ updated: 2026-10-20
 |---|---|---|---|
 | 1 | User research | 1 (kit) + team sessions | docs/research/ |
 | 2 | Personas | 1, updated after research | kb/domain/personas*.md, docs/personas/ |
-| 3 | Goals and task analysis | 2 | kb/domain/goals-tasks.md |
-| 4 | Scenarios | 2 | kb/domain/scenarios.md |
-| 5 | Requirements | 2 | kb/domain/requirements.md |
-| 6 | Information architecture | 2 | docs/ia/ |
-| 7 | User/task flow | 2 | kb/domain/flows.md, docs/flows/ |
-| 8 | Low-fi wireframes | 2 | docs/wireframes/ |
+| 3 | Goals and task analysis | 2 | kb/domain/goals-tasks.md  (drafted, derived, not user-tested) |
+| 4 | Scenarios | 2 | kb/domain/scenarios.md  (drafted, derived, not user-tested) |
+| 5 | Requirements | 2 | kb/domain/requirements.md  (drafted, derived, not user-tested) |
+| 6 | Information architecture | 2 | docs/ia/  (drafted, derived, not user-tested) |
+| 7 | User/task flow | 2 | kb/domain/flows.md, docs/flows/  (drafted, derived, not user-tested) |
+| 8 | Low-fi wireframes | 2 | docs/wireframes/  (drafted, derived, not user-tested) |
 | 9 | High-fi interactive prototype | 3–5 (the app) | app/ |
 | 10 | Usability testing | 6 | docs/validation/ |
 | 11 | Usability findings | 6 | docs/validation/findings.md |
 | 12 | Iterative improvements | 6 | docs/validation/iterations.md |
-| 13 | Final prototype | 7 (deployed) | Vercel URL + docs/final/ |
+| 13 | Final prototype | 7 (deployed) | Cloudflare Workers URL + docs/final/ |
