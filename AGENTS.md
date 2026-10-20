@@ -37,6 +37,8 @@ Applies to any AI agent (Claude Code, Codex, subagents). `CLAUDE.md` has the pro
 | `.planning/` | GSD workflows | don't hand-edit except STATE notes |
 
 ### Frozen after Phase 3
+Phase 4 Wave 0 amendment (approved 2026-10-20, re-frozen): new `lib/domain/{rules,drafts,catalog,allocations,people,views,admin}.ts`, `lib/format.ts`, eight StatusBadge keys + tokens in `components/ui/status-badge.tsx` and `app/globals.css`, `tests/status.test.ts` edit.
+
 Wave agents must not edit these paths:
 - `migrations/`, `seed/`, `scripts/hash-password.mjs`, `wrangler.jsonc`, `open-next.config.ts`, `cloudflare-env.d.ts`. No schema change is needed for Phase 4: `seatCounts` already exists.
 - `components/ui/**`

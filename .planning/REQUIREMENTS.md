@@ -32,28 +32,28 @@ Source: `kb/domain/requirements.md` (`dom-requirements`, ids in brackets are the
 
 ### Coordinator interface
 
-- [ ] **COORD-01**: Coordinator can create an event from a template with pre-filled defaults, and the draft autosaves [C1]
-- [ ] **COORD-02**: Venue picker lists only venues free for the chosen slot, with capacity shown [C2]
-- [ ] **COORD-03**: Coordinator can request resources for an event and sees availability [C3]
-- [ ] **COORD-04**: Coordinator can allocate tasks to students with due dates and see task status [C4]
-- [ ] **COORD-05**: Coordinator can submit an event for approval via Review & Confirm and see its approval state [C5]
-- [ ] **COORD-06**: Coordinator can monitor registrations against capacity, overdue tasks and event status [C6]
-- [ ] **COORD-07**: Coordinator can edit or cancel an event with confirmation, and registrants are notified in-app [C7]
+- [x] **COORD-01**: Coordinator can create an event from a template with pre-filled defaults, and the draft autosaves [C1]
+- [x] **COORD-02**: Venue picker lists only venues free for the chosen slot, with capacity shown [C2]
+- [x] **COORD-03**: Coordinator can request resources for an event and sees availability [C3]
+- [x] **COORD-04**: Coordinator can allocate tasks to students with due dates and see task status [C4]
+- [x] **COORD-05**: Coordinator can submit an event for approval via Review & Confirm and see its approval state [C5]
+- [x] **COORD-06**: Coordinator can monitor registrations against capacity, overdue tasks and event status [C6]
+- [x] **COORD-07**: Coordinator can edit or cancel an event with confirmation, and registrants are notified in-app [C7]
 
 ### Student interface
 
-- [ ] **STUD-01**: Student can discover events with search and filters for date, type, venue and department [S1]
-- [ ] **STUD-02**: Event detail shows what, when, where, seats left and status at a glance [S2]
-- [ ] **STUD-03**: Student can register via Review & Confirm, is waitlisted when the event is full, and can cancel a registration [S3]
-- [ ] **STUD-04**: Student can see My Registrations and a calendar view, with in-app reminders [S4]
-- [ ] **STUD-05**: Student Organizer can see My Tasks with due dates and mark them done [S5]
+- [x] **STUD-01**: Student can discover events with search and filters for date, type, venue and department [S1]
+- [x] **STUD-02**: Event detail shows what, when, where, seats left and status at a glance [S2]
+- [x] **STUD-03**: Student can register via Review & Confirm, is waitlisted when the event is full, and can cancel a registration [S3]
+- [x] **STUD-04**: Student can see My Registrations and a calendar view, with in-app reminders [S4]
+- [x] **STUD-05**: Student Organizer can see My Tasks with due dates and mark them done [S5]
 
 ### Admin interface
 
-- [ ] **ADMIN-01**: Admin has an approvals queue showing clash check and resources, and can approve or return with a reason [A1]
-- [ ] **ADMIN-02**: Admin sees a calendar of all events and venues with conflicts highlighted [A2]
-- [ ] **ADMIN-03**: Admin can manage venues and resources [A3]
-- [ ] **ADMIN-04**: Admin dashboard shows events, pending approvals, utilisation and department split [A4]
+- [x] **ADMIN-01**: Admin has an approvals queue showing clash check and resources, and can approve or return with a reason [A1]
+- [x] **ADMIN-02**: Admin sees a calendar of all events and venues with conflicts highlighted [A2]
+- [x] **ADMIN-03**: Admin can manage venues and resources [A3]
+- [x] **ADMIN-04**: Admin dashboard shows events, pending approvals, utilisation and department split [A4]
 
 ### Cross-cutting (Phase 5)
 
@@ -119,22 +119,22 @@ Which phases cover which requirements. Filled during roadmap creation (2026-10-2
 | FOUND-05 | Phase 3 | Complete |
 | FOUND-06 | Phase 3 | Complete |
 | FOUND-07 | Phase 3 | Complete |
-| COORD-01 | Phase 4 | Pending |
-| COORD-02 | Phase 4 | Pending |
-| COORD-03 | Phase 4 | Pending |
-| COORD-04 | Phase 4 | Pending |
-| COORD-05 | Phase 4 | Pending |
-| COORD-06 | Phase 4 | Pending |
-| COORD-07 | Phase 4 | Pending |
-| STUD-01 | Phase 4 | Pending |
-| STUD-02 | Phase 4 | Pending |
-| STUD-03 | Phase 4 | Pending |
-| STUD-04 | Phase 4 | Pending |
-| STUD-05 | Phase 4 | Pending |
-| ADMIN-01 | Phase 4 | Pending |
-| ADMIN-02 | Phase 4 | Pending |
-| ADMIN-03 | Phase 4 | Pending |
-| ADMIN-04 | Phase 4 | Pending |
+| COORD-01 | Phase 4 | Complete |
+| COORD-02 | Phase 4 | Complete |
+| COORD-03 | Phase 4 | Complete |
+| COORD-04 | Phase 4 | Complete |
+| COORD-05 | Phase 4 | Complete |
+| COORD-06 | Phase 4 | Complete |
+| COORD-07 | Phase 4 | Complete |
+| STUD-01 | Phase 4 | Complete |
+| STUD-02 | Phase 4 | Complete |
+| STUD-03 | Phase 4 | Complete |
+| STUD-04 | Phase 4 | Complete |
+| STUD-05 | Phase 4 | Complete |
+| ADMIN-01 | Phase 4 | Complete |
+| ADMIN-02 | Phase 4 | Complete |
+| ADMIN-03 | Phase 4 | Complete |
+| ADMIN-04 | Phase 4 | Complete |
 | XCUT-01 | Phase 5 | Pending |
 | XCUT-02 | Phase 5 | Pending |
 | XCUT-03 | Phase 5 | Pending |

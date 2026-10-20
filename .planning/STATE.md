@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 4 UI-SPEC approved
+stopped_at: "Phase 4 verified (marked by user); single Phase 4 commit not yet made"
 last_updated: "2026-10-20T16:00:59.268Z"
 last_activity: 2026-10-20 -- Phase 04 execution started
 progress:
@@ -88,4 +88,4 @@ None yet.
 
 Last session: 2026-10-20T15:40:03.963Z
 Stopped at: Phase 4 UI-SPEC approved
-Resume file: .planning/phases/04-role-interfaces-parallel-wave/04-UI-SPEC.md
+Resume file: .planning/phases/04-role-interfaces-parallel-wave/04-HANDOFF.md

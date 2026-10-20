@@ -11,7 +11,7 @@ Config: standard granularity, interactive mode, parallelization on. Coverage: 42
 - [x] **Phase 1: Research & Modeling Kit** - Interview guide, questionnaire, persona template, proto-personas flagged `assumed` (completed and verified 2026-10-20; UAT 9/9)
 - [x] **Phase 2: Requirements & Framework** - Goals/tasks, scenarios, IA, task flows, navigation map, low-fi wireframes (completed 2026-10-20)
 - [x] **Phase 3: Foundation** - Next.js + Tailwind scaffold, design tokens, shared components, D1 schema/seed, clash triggers, authorization layer, auth + demo logins (completed 2026-10-20)
-- [ ] **Phase 4: Role Interfaces (parallel wave)** - Coordinator, Student and Admin interfaces built by three agents in disjoint folders
+- [x] **Phase 4: Role Interfaces (parallel wave)** - Coordinator, Student and Admin interfaces built by three agents in disjoint folders
 - [ ] **Phase 5: Cross-Cutting** - Alerts, reports/export, a11y pass, empty/error/loading states, Review & Confirm everywhere
 - [ ] **Phase 6: Validation Kit & Iteration** - Test plan, task and metric sheets, heuristic evaluation, walkthrough, a11y checklist, team sessions, redesign
 - [ ] **Phase 7: Deploy & Final Documentation** - Cloudflare deployment, authorization/secrets review, final docs, design-model infographic
@@ -117,20 +117,20 @@ Plans:
 **Plans**: 8 plans
 Plans:
 **Wave 0** *(serial; amends the freeze, awaiting user confirmation of assumption A1)*
-- [ ] 04-00-PLAN.md — domain additions (new lib/domain files), 8 status keys, date helpers, worktree setup checklist
+- [x] 04-00-PLAN.md — domain additions (new lib/domain files), 8 status keys, date helpers, worktree setup checklist
 
 **Wave 1** *(parallel, one worktree and one route folder each)*
-- [ ] 04-01-PLAN.md — Coordinator part 1: actions, helpers, shell, My Events, New event, confirm flow, calendar/tasks/notifications
-- [ ] 04-02-PLAN.md — Student part 1: actions, helpers, shell, Discover, register/cancel flows
-- [ ] 04-03-PLAN.md — Admin part 1: actions, helpers, shell, Dashboard
+- [x] 04-01-PLAN.md — Coordinator part 1: actions, helpers, shell, My Events, New event, confirm flow, calendar/tasks/notifications
+- [x] 04-02-PLAN.md — Student part 1: actions, helpers, shell, Discover, register/cancel flows
+- [x] 04-03-PLAN.md — Admin part 1: actions, helpers, shell, Dashboard
 
 **Wave 2** *(parallel across roles; each continues in its own worktree after its part 1)*
-- [ ] 04-04-PLAN.md — Coordinator part 2: guided builder, event monitor, live-event edit/cancel
-- [ ] 04-05-PLAN.md — Student part 2: event detail, My events + calendar, My tasks, Alerts
-- [ ] 04-06-PLAN.md — Admin part 2: approvals split pane, calendar with venue lanes, venues and resources
+- [x] 04-04-PLAN.md — Coordinator part 2: guided builder, event monitor, live-event edit/cancel
+- [x] 04-05-PLAN.md — Student part 2: event detail, My events + calendar, My tasks, Alerts
+- [x] 04-06-PLAN.md — Admin part 2: approvals split pane, calendar with venue lanes, venues and resources
 
 **Wave 3**
-- [ ] 04-07-PLAN.md — merge check, full gate, browser flows, handoff, measurement sheet (has checkpoint)
+- [x] 04-07-PLAN.md — merge check, full gate, browser flows, handoff, measurement sheet (has checkpoint)
 **UI hint**: yes
 
 ### Phase 5: Cross-Cutting
