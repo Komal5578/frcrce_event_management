@@ -1,0 +1,374 @@
+[
+  {
+    "id": "adr-001-stack",
+    "type": "decision",
+    "title": "ADR-001 Stack: Next.js + Supabase + Vercel",
+    "tags": [
+      "stack",
+      "architecture"
+    ],
+    "confidence": "derived",
+    "sources": "[user-chat]",
+    "summary": "Chosen stack and the rationale; user-confirmed.",
+    "updated": "2026-10-20",
+    "path": "decisions/adr-001-stack.md"
+  },
+  {
+    "id": "adr-002-roles",
+    "type": "decision",
+    "title": "ADR-002 Roles: three interfaces, four roles",
+    "tags": [
+      "roles",
+      "personas"
+    ],
+    "confidence": "assumed",
+    "sources": "[user-chat]",
+    "summary": "Coordinator, Student(+Organizer flag), Admin; assistant's call, not yet user-confirmed.",
+    "updated": "2026-10-20",
+    "path": "decisions/adr-002-roles.md"
+  },
+  {
+    "id": "adr-003-kb-format",
+    "type": "decision",
+    "title": "ADR-003 Knowledge-base format",
+    "tags": [
+      "kb",
+      "rag",
+      "agents"
+    ],
+    "confidence": "derived",
+    "sources": "[user-chat]",
+    "summary": "Markdown+frontmatter atomic notes, INDEX.md router, generated manifest, grep retrieval.",
+    "updated": "2026-10-20",
+    "path": "decisions/adr-003-kb-format.md"
+  },
+  {
+    "id": "adr-004-scope",
+    "type": "decision",
+    "title": "ADR-004 Scope cuts (ponytail)",
+    "tags": [
+      "scope",
+      "yagni"
+    ],
+    "confidence": "derived",
+    "sources": "[user-chat]",
+    "summary": "What we deliberately do not build, and when to add it.",
+    "updated": "2026-10-20",
+    "path": "decisions/adr-004-scope.md"
+  },
+  {
+    "id": "ds-readme",
+    "type": "design",
+    "title": "Design system (placeholder, filled in Phase 3)",
+    "tags": [
+      "design-system",
+      "tokens"
+    ],
+    "confidence": "assumed",
+    "sources": "[user-chat]",
+    "summary": "Placeholder: tokens, status colours, component rules to be defined in Phase 3.",
+    "updated": "2026-10-20",
+    "path": "design-system/README.md"
+  },
+  {
+    "id": "dom-deliverable-map",
+    "type": "domain",
+    "title": "Mapping 13 deliverables to GSD phases",
+    "tags": [
+      "deliverables",
+      "roadmap",
+      "tracking"
+    ],
+    "confidence": "derived",
+    "sources": "[src-deliverables-13]",
+    "summary": "Which phase produces which of the 13 deliverables and where they live in the repo.",
+    "updated": "2026-10-20",
+    "path": "domain/deliverable-map.md"
+  },
+  {
+    "id": "dom-domain-model",
+    "type": "domain",
+    "title": "Domain model and data rules",
+    "tags": [
+      "data",
+      "model",
+      "database",
+      "constraints"
+    ],
+    "confidence": "derived",
+    "sources": "[src-hmi-problems-pattern]",
+    "summary": "Entities, relationships and the integrity rules the UI relies on.",
+    "updated": "2026-10-20",
+    "path": "domain/domain-model.md"
+  },
+  {
+    "id": "dom-flows",
+    "type": "domain",
+    "title": "Goal-directed task flows and navigation",
+    "tags": [
+      "flows",
+      "information-architecture",
+      "navigation"
+    ],
+    "confidence": "derived",
+    "sources": "[src-gdd-process]",
+    "summary": "Ordered flows and top-level navigation per role.",
+    "updated": "2026-10-20",
+    "path": "domain/flows.md"
+  },
+  {
+    "id": "dom-goals-tasks",
+    "type": "domain",
+    "title": "User goals and task analysis",
+    "tags": [
+      "goals",
+      "tasks",
+      "analysis"
+    ],
+    "confidence": "derived",
+    "sources": "[src-gdd-process]",
+    "summary": "Primary/secondary goals and the ordered task list per role.",
+    "updated": "2026-10-20",
+    "path": "domain/goals-tasks.md"
+  },
+  {
+    "id": "dom-hmi-problems",
+    "type": "domain",
+    "title": "HMI problems for the event system",
+    "tags": [
+      "hmi",
+      "problems",
+      "research-questions"
+    ],
+    "confidence": "derived",
+    "sources": "[src-hmi-problems-pattern]",
+    "summary": "Event-specific versions of the ten HMI questions, each tied to a requirement and metric.",
+    "updated": "2026-10-20",
+    "path": "domain/hmi-problems.md"
+  },
+  {
+    "id": "dom-how-to-think",
+    "type": "domain",
+    "title": "How to think: translating the attendance reference to events",
+    "tags": [
+      "mapping",
+      "method",
+      "reference"
+    ],
+    "confidence": "derived",
+    "sources": "[src-feature-vs-goal-directed,src-hmi-principles,src-gdd-process]",
+    "summary": "Maps each attendance-doc idea to its event-system equivalent; read before any design decision.",
+    "updated": "2026-10-20",
+    "path": "domain/how-to-think.md"
+  },
+  {
+    "id": "dom-personas",
+    "type": "domain",
+    "title": "Proto-personas (ASSUMED, replace with research evidence)",
+    "tags": [
+      "personas",
+      "modeling",
+      "assumed"
+    ],
+    "confidence": "assumed",
+    "sources": "[src-gdd-process]",
+    "summary": "Three primary personas plus organizer variant; hypotheses until real interviews confirm.",
+    "updated": "2026-10-20",
+    "path": "domain/personas.md"
+  },
+  {
+    "id": "dom-requirements",
+    "type": "domain",
+    "title": "Requirements (functional + interaction)",
+    "tags": [
+      "requirements",
+      "functional",
+      "interaction"
+    ],
+    "confidence": "derived",
+    "sources": "[src-gdd-process,src-universal-design]",
+    "summary": "Prioritised requirements per role plus cross-cutting HMI requirements.",
+    "updated": "2026-10-20",
+    "path": "domain/requirements.md"
+  },
+  {
+    "id": "dom-scenarios",
+    "type": "domain",
+    "title": "User scenarios",
+    "tags": [
+      "scenarios",
+      "narrative"
+    ],
+    "confidence": "derived",
+    "sources": "[src-gdd-process]",
+    "summary": "One narrative scenario per role used for design and for test tasks.",
+    "updated": "2026-10-20",
+    "path": "domain/scenarios.md"
+  },
+  {
+    "id": "dom-status-vocabulary",
+    "type": "domain",
+    "title": "Status vocabulary (single visual language)",
+    "tags": [
+      "status",
+      "consistency",
+      "design-language"
+    ],
+    "confidence": "derived",
+    "sources": "[src-hmi-principles,src-universal-design]",
+    "summary": "Canonical event/registration/task statuses with icon, label and colour rule.",
+    "updated": "2026-10-20",
+    "path": "domain/status-vocabulary.md"
+  },
+  {
+    "id": "dom-topic-brief",
+    "type": "domain",
+    "title": "Topic brief: College Event Planning and Management System",
+    "tags": [
+      "topic",
+      "brief",
+      "scope"
+    ],
+    "confidence": "derived",
+    "sources": "[src-gdd-process]",
+    "summary": "The allotted topic, scope, non-goals and success definition.",
+    "updated": "2026-10-20",
+    "path": "domain/topic-brief.md"
+  },
+  {
+    "id": "src-accessibility-areas",
+    "type": "source",
+    "title": "Accessibility considerations (5 areas)",
+    "tags": [
+      "accessibility",
+      "wcag",
+      "a11y"
+    ],
+    "confidence": "source",
+    "sources": "[original.md, original.pdf]",
+    "summary": "Visual, hearing, motor, cognitive and language accessibility requirements with examples.",
+    "updated": "2026-10-20",
+    "path": "source/attendance-reference/accessibility-areas.md"
+  },
+  {
+    "id": "src-deliverables-13",
+    "type": "source",
+    "title": "Minimum deliverables (13)",
+    "tags": [
+      "deliverables",
+      "checklist",
+      "grading"
+    ],
+    "confidence": "source",
+    "sources": "[original.md, original.pdf]",
+    "summary": "The 13 minimum deliverables the mini project must produce.",
+    "updated": "2026-10-20",
+    "path": "source/attendance-reference/deliverables-13.md"
+  },
+  {
+    "id": "src-evaluation-methods",
+    "type": "source",
+    "title": "Evaluation / validation methods",
+    "tags": [
+      "evaluation",
+      "validation",
+      "usability-testing",
+      "metrics"
+    ],
+    "confidence": "source",
+    "sources": "[original.md, original.pdf]",
+    "summary": "Heuristic evaluation, diverse-user testing, cognitive walkthrough, a11y checklist, task success metrics, and the redesign loop.",
+    "updated": "2026-10-20",
+    "path": "source/attendance-reference/evaluation-methods.md"
+  },
+  {
+    "id": "src-feature-vs-goal-directed",
+    "type": "source",
+    "title": "Feature-driven vs goal-directed design",
+    "tags": [
+      "gdd",
+      "principle",
+      "core-idea"
+    ],
+    "confidence": "source",
+    "sources": "[original.md, original.pdf]",
+    "summary": "The central teaching idea: the interface is a consequence of user goals, not a feature list.",
+    "updated": "2026-10-20",
+    "path": "source/attendance-reference/feature-vs-goal-directed.md"
+  },
+  {
+    "id": "src-gdd-process",
+    "type": "source",
+    "title": "Goal-Directed Design process (7 phases)",
+    "tags": [
+      "gdd",
+      "process",
+      "method"
+    ],
+    "confidence": "source",
+    "sources": "[original.md, original.pdf]",
+    "summary": "The 7 GDD phases, what each means, and the expected student output per phase.",
+    "updated": "2026-10-20",
+    "path": "source/attendance-reference/gdd-process.md"
+  },
+  {
+    "id": "src-hmi-principles",
+    "type": "source",
+    "title": "HMI principles and how the model applied them",
+    "tags": [
+      "hmi",
+      "heuristics",
+      "principles"
+    ],
+    "confidence": "source",
+    "sources": "[original.md, original.pdf]",
+    "summary": "Six core HMI principles with the concrete UI move that demonstrates each.",
+    "updated": "2026-10-20",
+    "path": "source/attendance-reference/hmi-principles.md"
+  },
+  {
+    "id": "src-hmi-problems-pattern",
+    "type": "source",
+    "title": "Important HMI problems the project must investigate",
+    "tags": [
+      "hmi",
+      "problems",
+      "research-questions"
+    ],
+    "confidence": "source",
+    "sources": "[original.md, original.pdf]",
+    "summary": "The ten HMI questions the mini-project should answer instead of just building a database.",
+    "updated": "2026-10-20",
+    "path": "source/attendance-reference/hmi-problems-pattern.md"
+  },
+  {
+    "id": "src-model-infographic",
+    "type": "source",
+    "title": "Design-model infographic (page 1 of the PDF)",
+    "tags": [
+      "infographic",
+      "design-model",
+      "output-format"
+    ],
+    "confidence": "source",
+    "sources": "[original.md, original.pdf]",
+    "summary": "Describes the one-page visual summary we should mimic for our final deliverable.",
+    "updated": "2026-10-20",
+    "path": "source/attendance-reference/model-infographic.md"
+  },
+  {
+    "id": "src-universal-design",
+    "type": "source",
+    "title": "Universal Design principles applied",
+    "tags": [
+      "universal-design",
+      "accessibility",
+      "evaluation"
+    ],
+    "confidence": "source",
+    "sources": "[original.md, original.pdf]",
+    "summary": "Seven Universal Design principles, each with an application and an evaluation question.",
+    "updated": "2026-10-20",
+    "path": "source/attendance-reference/universal-design.md"
+  }
+]
