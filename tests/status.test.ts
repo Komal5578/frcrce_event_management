@@ -6,9 +6,12 @@ const css = readFileSync("app/globals.css", "utf8");
 const entries = Object.entries(STATUS_META);
 
 describe("status vocabulary", () => {
-  it("has exactly the nine keys", () => {
+  it("has exactly the seventeen keys", () => {
     expect(Object.keys(STATUS_META).sort()).toEqual(
-      ["approved", "cancelled", "completed", "draft", "full", "ongoing", "open", "pending", "returned"],
+      [
+      "approved", "cancelled", "clash", "completed", "doing", "done", "draft", "full", "lowreg", "ongoing", "open",
+      "overdue", "pending", "registered", "returned", "todo", "waitlisted",
+    ],
     );
   });
 

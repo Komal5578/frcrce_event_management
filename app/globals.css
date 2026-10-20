@@ -34,6 +34,22 @@
   --color-status-full-bg: #FFEDD5;
   --color-status-returned-fg: #78350F;
   --color-status-returned-bg: #FEF3C7;
+  --color-status-registered-fg: #166534;
+  --color-status-registered-bg: #DCFCE7;
+  --color-status-waitlisted-fg: #9A3412;
+  --color-status-waitlisted-bg: #FFEDD5;
+  --color-status-todo-fg: #374151;
+  --color-status-todo-bg: #F3F4F6;
+  --color-status-doing-fg: #1E40AF;
+  --color-status-doing-bg: #DBEAFE;
+  --color-status-done-fg: #334155;
+  --color-status-done-bg: #E2E8F0;
+  --color-status-overdue-fg: #991B1B;
+  --color-status-overdue-bg: #FEE2E2;
+  --color-status-clash-fg: #991B1B;
+  --color-status-clash-bg: #FEE2E2;
+  --color-status-lowreg-fg: #78350F;
+  --color-status-lowreg-bg: #FEF3C7;
 
   --text-body: 1rem;
   --text-body--line-height: 1.5;

@@ -114,7 +114,23 @@ Plans:
   4. Admin (4c): an Admin works an approvals queue that shows clash check and resources and can approve or return with a reason, sees a calendar of all events and venues with conflicts highlighted, manages venues and resources, and reads a dashboard of events, pending approvals, utilisation and department split.
   5. Each role's primary flow is driven end-to-end in the browser using the demo logins, with no edits to frozen shared files and no overlap between the three route folders.
 
-**Plans**: TBD
+**Plans**: 8 plans
+Plans:
+**Wave 0** *(serial; amends the freeze, awaiting user confirmation of assumption A1)*
+- [ ] 04-00-PLAN.md — domain additions (new lib/domain files), 8 status keys, date helpers, worktree setup checklist
+
+**Wave 1** *(parallel, one worktree and one route folder each)*
+- [ ] 04-01-PLAN.md — Coordinator part 1: actions, helpers, shell, My Events, New event, confirm flow, calendar/tasks/notifications
+- [ ] 04-02-PLAN.md — Student part 1: actions, helpers, shell, Discover, register/cancel flows
+- [ ] 04-03-PLAN.md — Admin part 1: actions, helpers, shell, Dashboard
+
+**Wave 2** *(parallel across roles; each continues in its own worktree after its part 1)*
+- [ ] 04-04-PLAN.md — Coordinator part 2: guided builder, event monitor, live-event edit/cancel
+- [ ] 04-05-PLAN.md — Student part 2: event detail, My events + calendar, My tasks, Alerts
+- [ ] 04-06-PLAN.md — Admin part 2: approvals split pane, calendar with venue lanes, venues and resources
+
+**Wave 3**
+- [ ] 04-07-PLAN.md — merge check, full gate, browser flows, handoff, measurement sheet (has checkpoint)
 **UI hint**: yes
 
 ### Phase 5: Cross-Cutting
