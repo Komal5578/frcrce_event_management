@@ -8,7 +8,7 @@ Config: standard granularity, interactive mode, parallelization on. Coverage: 42
 
 ## Phases
 
-- [ ] **Phase 1: Research & Modeling Kit** - Interview guide, questionnaire, persona template, proto-personas flagged `assumed`
+- [x] **Phase 1: Research & Modeling Kit** - Interview guide, questionnaire, persona template, proto-personas flagged `assumed` (completed 2026-10-20)
 - [ ] **Phase 2: Requirements & Framework** - Goals/tasks, scenarios, IA, task flows, navigation map, low-fi wireframes
 - [ ] **Phase 3: Foundation** - Next.js + Tailwind scaffold, design tokens, shared components, Supabase schema/RLS/seed, clash constraint, auth + demo logins
 - [ ] **Phase 4: Role Interfaces (parallel wave)** - Coordinator, Student and Admin interfaces built by three agents in disjoint folders
@@ -117,7 +117,7 @@ Config: standard granularity, interactive mode, parallelization on. Coverage: 42
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research & Modeling Kit | 0/TBD | Not started | - |
+| 1. Research & Modeling Kit | 3/3 | Complete    | 2026-10-20 |
 | 2. Requirements & Framework | 0/TBD | Not started | - |
 | 3. Foundation | 0/TBD | Not started | - |
 | 4. Role Interfaces (parallel wave) | 0/TBD | Not started | - |

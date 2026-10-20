@@ -9,8 +9,8 @@ Source: `kb/domain/requirements.md` (`dom-requirements`, ids in brackets are the
 
 ### Research and Modeling (GDD deliverables 1-2)
 
-- [ ] **RSCH-01**: Team has an interview guide and questionnaire for coordinators, students and admins, ready to run (instruments only, no invented results)
-- [ ] **RSCH-02**: Persona template and proto-personas exist, each labelled `assumed` until real research replaces them (`dom-personas`)
+- [x] **RSCH-01**: Team has an interview guide and questionnaire for coordinators, students and admins, ready to run (instruments only, no invented results)
+- [x] **RSCH-02**: Persona template and proto-personas exist, each labelled `assumed` until real research replaces them (`dom-personas`)
 
 ### Requirements and Framework (GDD deliverables 3-8)
 
@@ -105,8 +105,8 @@ Which phases cover which requirements. Filled during roadmap creation (2026-10-2
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| RSCH-01 | Phase 1 | Pending |
-| RSCH-02 | Phase 1 | Pending |
+| RSCH-01 | Phase 1 | Complete |
+| RSCH-02 | Phase 1 | Complete |
 | FRAM-01 | Phase 2 | Pending |
 | FRAM-02 | Phase 2 | Pending |
 | FRAM-03 | Phase 2 | Pending |

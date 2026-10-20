@@ -4,12 +4,14 @@ type: domain
 title: Proto-personas (ASSUMED, replace with research evidence)
 tags: [personas,modeling,assumed]
 confidence: assumed
-sources: [src-gdd-process]
+sources: [src-gdd-process, dom-goals-tasks]
 summary: Three primary personas plus organizer variant; hypotheses until real interviews confirm.
 updated: 2026-10-20
 ---
 
 # Proto-personas — confidence: assumed
+
+**Status: assumed, pending research.** These personas are hypotheses until the team's real interviews replace them.
 
 > These are hypotheses for the team to test in real interviews. When real data arrives, create `dom-personas-evidence` (confidence: evidence) and supersede this note.
 
@@ -21,3 +23,12 @@ updated: 2026-10-20
 | Organizer variant | Student on a committee | Know my tasks and deadlines at a glance | Unclear who owns what | High |
 
 Diverse-user cases to include in testing: `src-evaluation-methods` section B.
+
+## Full personas
+
+- [Persona template](../../docs/personas/persona-template.md)
+- [Prof. Anita (Coordinator)](../../docs/personas/persona-coordinator.md)
+- [Rohan (Student, with Organizer variant)](../../docs/personas/persona-student.md)
+- [Dr. Sharma (Admin)](../../docs/personas/persona-admin.md)
+
+The research kit that tests these hypotheses is at [docs/research/README.md](../../docs/research/README.md).

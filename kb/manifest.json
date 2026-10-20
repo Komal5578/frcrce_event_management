@@ -171,7 +171,7 @@
       "assumed"
     ],
     "confidence": "assumed",
-    "sources": "[src-gdd-process]",
+    "sources": "[src-gdd-process, dom-goals-tasks]",
     "summary": "Three primary personas plus organizer variant; hypotheses until real interviews confirm.",
     "updated": "2026-10-20",
     "path": "domain/personas.md"
