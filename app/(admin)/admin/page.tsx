@@ -3,8 +3,12 @@ import { requireRole } from "@/lib/auth";
 import { listEventsWithSeats } from "@/lib/domain/views";
 import { listVenues } from "@/lib/domain/catalog";
 import { listCoordinatorTasks } from "@/lib/domain/allocations";
+import { listBookings } from "@/lib/domain/admin";
+import { listOverdueTasksForActor } from "@/lib/domain/reports";
+import { computeAlerts } from "@/lib/domain/alerts";
+import { alertHref } from "@/lib/alert-links";
 import { BOOKABLE_HOURS_PER_DAY } from "@/lib/domain/rules";
-import { StatusBadge } from "@/components/ui/status-badge";
+import { AttentionList } from "@/components/ui/attention-list";
 import { stats } from "./_lib/dashboard";
 import { BarList } from "./_components/bar-list";
 
@@ -23,8 +27,28 @@ function Stat({ label, value, note }: { label: string; value: string | number; n
 export default async function Page() {
   const profile = await requireRole("admin");
   const actor = { id: profile.id, role: profile.role };
-  const [events, venues, tasks] = await Promise.all([listEventsWithSeats(actor), listVenues(actor), listCoordinatorTasks(actor)]);
-  const s = stats(events, venues, tasks, new Date());
+  const now = new Date();
+  const fromIso = new Date(now.getTime() - 7 * 86_400_000).toISOString();
+  const toIso = new Date(now.getTime() + 60 * 86_400_000).toISOString();
+
+  const [events, venues, tasks, bookings, overdueTasks] = await Promise.all([
+    listEventsWithSeats(actor),
+    listVenues(actor),
+    listCoordinatorTasks(actor),
+    listBookings(actor, fromIso, toIso),
+    listOverdueTasksForActor(actor, now),
+  ]);
+
+  const s = stats(events, venues, tasks, now);
+
+  const alerts = computeAlerts({
+    role: "admin",
+    events,
+    tasks: overdueTasks,
+    bookings,
+    now,
+    hrefFor: (kind, id) => alertHref("admin", kind, id),
+  });
 
   return (
     <div className="flex flex-col gap-12">
@@ -55,27 +79,7 @@ export default async function Page() {
       </div>
       <p className="text-label text-muted">Booked hours divided by {BOOKABLE_HOURS_PER_DAY} bookable hours a day</p>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="text-heading font-semibold">Needs attention</h2>
-        {s.lowReg.length === 0 && s.overdueCount === 0 ? <p className="text-body text-muted">Nothing needs attention.</p> : (
-          <ul className="flex flex-col gap-3">
-            {s.lowReg.map((e) => (
-              <li key={e.id} className="flex flex-wrap items-center gap-3">
-                <StatusBadge status="lowreg" />
-                <Link href="/admin/calendar" className="inline-flex min-h-11 items-center text-body underline">{e.title} has low registrations</Link>
-              </li>
-            ))}
-            {s.overdueCount > 0 && (
-              <li className="flex flex-wrap items-center gap-3">
-                <StatusBadge status="overdue" />
-                <Link href="/admin/calendar" className="inline-flex min-h-11 items-center text-body underline">
-                  {s.overdueCount === 1 ? "1 task is overdue" : `${s.overdueCount} tasks are overdue`}
-                </Link>
-              </li>
-            )}
-          </ul>
-        )}
-      </section>
+      <AttentionList items={alerts} />
     </div>
   );
 }

@@ -128,10 +128,10 @@ export async function buildReport(
     events = events.filter((e) => e.status === filters.status);
   }
   if (filters.from) {
-    events = events.filter((e) => e.starts_at >= filters.from! + "T00:00:00.000Z");
+    events = events.filter((e) => e.starts_at !== null && e.starts_at >= filters.from! + "T00:00:00.000Z");
   }
   if (filters.to) {
-    events = events.filter((e) => e.starts_at <= filters.to! + "T23:59:59.999Z");
+    events = events.filter((e) => e.starts_at !== null && e.starts_at <= filters.to! + "T23:59:59.999Z");
   }
 
   // Get overdue tasks to compute per-event counts.

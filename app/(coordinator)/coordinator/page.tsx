@@ -3,10 +3,14 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import { Alert } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
+import { AttentionList } from "@/components/ui/attention-list";
 import { requireRole } from "@/lib/auth";
 import { isOverdue } from "@/lib/domain/rules";
 import { listCoordinatorTasks } from "@/lib/domain/allocations";
 import { listEventsWithSeats } from "@/lib/domain/views";
+import { listOverdueTasksForActor } from "@/lib/domain/reports";
+import { computeAlerts } from "@/lib/domain/alerts";
+import { alertHref } from "@/lib/alert-links";
 import { EventCard } from "./_components/event-card";
 import { filterEvents, isPast, needsYou, type Chip } from "./_lib/monitor";
 
@@ -26,7 +30,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
   const chips = (Array.isArray(f) ? f : f ? [f] : []).filter((v): v is Chip => CHIPS.some((c) => c.value === v));
   const now = new Date();
 
-  const [events, tasks] = await Promise.all([listEventsWithSeats(actor), listCoordinatorTasks(actor)]);
+  const [events, tasks, overdueTasks] = await Promise.all([
+    listEventsWithSeats(actor),
+    listCoordinatorTasks(actor),
+    listOverdueTasksForActor(actor, now),
+  ]);
+
   const overdue = new Map<string, number>();
   for (const t of tasks) if (isOverdue(t, now)) overdue.set(t.event_id, (overdue.get(t.event_id) ?? 0) + 1);
   const overdueOf = (e: { id: string }) => overdue.get(e.id) ?? 0;
@@ -34,6 +43,14 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
   const shown = filterEvents(events, chips, overdueOf, now);
   const needYou = events.filter((e) => !isPast(e, now) && needsYou(e, overdueOf(e))).length;
   const returned = events.filter((e) => e.status === "returned");
+
+  const alerts = computeAlerts({
+    role: "coordinator",
+    events,
+    tasks: overdueTasks,
+    now,
+    hrefFor: (kind, id) => alertHref("coordinator", kind, id),
+  });
 
   return (
     <div className="flex flex-col gap-6">
@@ -44,6 +61,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
         </div>
         <Link href="/coordinator/new" className={PRIMARY}>New event</Link>
       </div>
+
+      <AttentionList items={alerts} />
 
       {returned.map((e) => (
         <Alert key={e.id} variant="warning" title={`${e.title} was returned: ${e.return_reason ?? "no reason was given"}`}>

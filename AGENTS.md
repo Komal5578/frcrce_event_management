@@ -1,4 +1,5 @@
 # AGENTS.md: how agents work in this repo
+read @CLAUDE.md
 
 Applies to any AI agent (Claude Code, Codex, subagents). `CLAUDE.md` has the project rules; this file has the roles and boundaries.
 

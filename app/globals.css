@@ -110,3 +110,39 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+@media print {
+  .skip-link,
+  header,
+  nav,
+  [data-no-print] {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  table {
+    break-inside: auto;
+  }
+
+  tr {
+    break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  a[href]::after {
+    content: none !important;
+  }
+}
+
