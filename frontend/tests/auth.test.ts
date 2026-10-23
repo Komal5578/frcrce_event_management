@@ -46,7 +46,7 @@ describe("auth helpers", () => {
     for (const bad of ["Admin", "", undefined, null, "../evil", 1]) expect(parseRole(bad)).toBeNull();
   });
   it("demo emails exist in seed.sql", () => {
-    const seed = readFileSync(fileURLToPath(new URL("../../backend/seed/seed.sql", import.meta.url)), "utf8");
+    const seed = readFileSync(fileURLToPath(new URL("../../backend/seed/v1-sqlite/seed.sql", import.meta.url)), "utf8");
     for (const r of ROLES) expect(seed).toContain(`'${demoEmail(r)}'`);
   });
   it("isDemoEnabled is strictly 'true'", () => {

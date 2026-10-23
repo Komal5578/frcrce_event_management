@@ -6,9 +6,9 @@ const BACKEND = fileURLToPath(new URL("../../../backend/", import.meta.url));
 
 export function freshDb({ seed = false } = {}) {
   const db = new DatabaseSync(":memory:"); // foreign_keys on by default
-  for (const f of readdirSync(BACKEND + "migrations").filter((f) => f.endsWith(".sql")).sort())
-    db.exec(readFileSync(`${BACKEND}migrations/${f}`, "utf8"));
-  if (seed) db.exec(readFileSync(BACKEND + "seed/seed.sql", "utf8"));
+  for (const f of readdirSync(BACKEND + "migrations/v1-sqlite").filter((f) => f.endsWith(".sql")).sort())
+    db.exec(readFileSync(`${BACKEND}migrations/v1-sqlite/${f}`, "utf8"));
+  if (seed) db.exec(readFileSync(BACKEND + "seed/v1-sqlite/seed.sql", "utf8"));
   return db;
 }
 
