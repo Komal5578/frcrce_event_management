@@ -3,11 +3,11 @@ import { Alert } from "@/components/ui/alert";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { requireRole } from "@/lib/auth";
 import { DomainError } from "@/lib/errors";
-import { getEventDetail, type EventView } from "@/lib/domain/views";
+import { apiClient } from "@/lib/api";
 import { formatRange } from "@/lib/format";
 import { CancelFlow } from "../../_components/cancel-flow";
 import { RegisterFlow } from "../../_components/register-flow";
-import { detailModel } from "../../_lib/view";
+import { detailModel, type EventView } from "../../_lib/view";
 
 export const metadata = { title: "Event - College Events" };
 export const dynamic = "force-dynamic";
@@ -15,12 +15,13 @@ export const dynamic = "force-dynamic";
 const Back = () => <Link href="/student" className="inline-flex min-h-11 items-center font-semibold text-accent underline">Back to Discover</Link>;
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-  const p = await requireRole("student");
+  await requireRole("student");
   const { id } = await params;
   let e: EventView;
   try {
-    e = await getEventDetail({ id: p.id, role: p.role }, id);
+    e = await apiClient<EventView>(`/api/events/${id}`);
   } catch (err) {
+
     if (!(err instanceof DomainError)) throw err; // unexpected: error.tsx
     return (
       <div className="flex flex-col gap-4">

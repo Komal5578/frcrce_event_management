@@ -1,6 +1,6 @@
 import { dayKey } from "@/lib/format";
 
-type B = { event_id: string; venue_id: string; starts_at: string; conflict: string | null };
+type B = { event_id: string; venue_id: string; starts_at: string; conflict?: string | null };
 const addDays = (key: string, n: number) => new Date(Date.parse(key + "T00:00:00Z") + n * 86_400_000).toISOString().slice(0, 10);
 
 /** The 7 day keys (Monday first) of week `weekIndex` of the month starting at monthStart ("YYYY-MM-01"). */

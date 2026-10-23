@@ -2,13 +2,15 @@ import Link from "next/link";
 import { StatusBadge, type StatusKey } from "@/components/ui/status-badge";
 import { Card } from "@/components/ui/card";
 import { formatDateTime } from "@/lib/format";
-import { isLowReg } from "@/lib/domain/rules";
-import type { EventView } from "@/lib/domain/views";
+import { isLowReg } from "@/lib/rules";
+import type { components } from "@/lib/api-types";
+
+type EventViewItem = components["schemas"]["EventViewItem"];
 
 const CTA = "inline-flex min-h-11 min-w-11 items-center justify-center rounded-control border border-border-ui bg-surface px-4 py-2 text-label font-semibold text-ink hover:bg-panel";
 
 /** One event on My Events: status, when/where, seat meter, overdue and low-registration badges (CO-01). */
-export function EventCard({ ev, overdue, now }: { ev: EventView; overdue: number; now: Date }) {
+export function EventCard({ ev, overdue, now }: { ev: EventViewItem; overdue: number; now: Date }) {
   const editable = ev.status === "draft" || ev.status === "returned";
   const cap = ev.capacity ?? 0;
   return (

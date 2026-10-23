@@ -1,5 +1,6 @@
 import { dayKey } from "@/lib/format";
-import type { EventView } from "@/lib/domain/views";
+import type { EventView } from "./view";
+
 
 export type Params = {
   q: string; week: boolean; open: boolean; seats: boolean;

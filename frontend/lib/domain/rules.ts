@@ -4,9 +4,10 @@ export const LOWREG_DAYS = 7; // ... within 7 days of the start
 export const REMINDER_DAYS = 2; // reminder window
 export const BOOKABLE_HOURS_PER_DAY = 12; // venue utilisation basis
 
-export function isOverdue(task: { due_at: string | null; status: string }, now: Date): boolean {
+export function isOverdue(task: { due_at?: string | null; status: string }, now: Date): boolean {
   return !!task.due_at && task.status !== "done" && new Date(task.due_at).getTime() < now.getTime();
 }
+
 
 export function isLowReg(
   ev: { status: string; capacity: number | null; starts_at: string | null; confirmed: number }, now: Date,

@@ -9,6 +9,7 @@ import { isOverdue } from "./rules";
 import type { TaskRow } from "./allocations";
 import { STATUS_META, type StatusKey } from "@/components/ui/status-badge";
 import { formatDateTime } from "@/lib/format";
+import { parseFilters } from "@/lib/rules";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -45,11 +46,6 @@ const COLUMNS: { key: string; label: string }[] = [
   { key: "overdue_tasks", label: "Overdue tasks" },
 ];
 
-// Whitelisted status keys.
-const VALID_STATUS_KEYS = new Set(Object.keys(STATUS_META));
-
-// ISO date pattern YYYY-MM-DD.
-const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 // SQL for overdue-task queries — constant strings, no template literals.
 const TASKS_ADMIN =
@@ -66,23 +62,7 @@ const TASKS_COORD =
   "WHERE t.status <> 'done' AND t.due_at IS NOT NULL AND t.due_at < ?1 AND e.coordinator_id = ?2 " +
   "ORDER BY t.due_at, t.id";
 
-// ---------------------------------------------------------------------------
-// parseFilters — whitelist only; unknown keys are silently dropped.
-// ---------------------------------------------------------------------------
-
-export function parseFilters(raw: Record<string, string | undefined>): ReportFilters {
-  const out: ReportFilters = {};
-  if (raw.status && VALID_STATUS_KEYS.has(raw.status)) {
-    out.status = raw.status;
-  }
-  if (raw.from && ISO_DATE_RE.test(raw.from)) {
-    out.from = raw.from;
-  }
-  if (raw.to && ISO_DATE_RE.test(raw.to)) {
-    out.to = raw.to;
-  }
-  return out;
-}
+export { parseFilters };
 
 // ---------------------------------------------------------------------------
 // listOverdueTasksForActor — used by reports page and alerts page.

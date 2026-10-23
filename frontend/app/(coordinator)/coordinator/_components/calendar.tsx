@@ -3,7 +3,7 @@ import { StatusBadge, type StatusKey } from "@/components/ui/status-badge";
 import { dayKey, formatTime } from "@/lib/format";
 import { currentMonth, dayLabel, groupByDay, monthCells, monthTitle, shiftMonth } from "../_lib/calendar";
 
-type Ev = { id: string; title: string; status: string; starts_at: string | null; venue_name: string | null };
+type Ev = { id: string; title: string; status: string; starts_at?: string | null; venue_name?: string | null };
 const BTN = "inline-flex min-h-11 min-w-11 items-center justify-center rounded-control border border-border-ui bg-surface px-4 py-2 text-label font-semibold text-ink hover:bg-panel";
 const WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 

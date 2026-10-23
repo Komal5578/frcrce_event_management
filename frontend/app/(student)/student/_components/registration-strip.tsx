@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { formatDateTime, relativeDay } from "@/lib/format";
-import type { MyRegistration } from "@/lib/domain/people";
+import type { MyRegistration } from "../_lib/mine";
 import { CancelFlow } from "./cancel-flow";
+
 
 /** "Am I registered?" answered in text and badges. `upcoming` is already filtered and sorted. */
 export function RegistrationStrip({ upcoming, now }: { upcoming: MyRegistration[]; now: Date }) {

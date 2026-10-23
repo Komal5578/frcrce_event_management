@@ -2,12 +2,16 @@ import type { ReactNode } from "react";
 import { Building2, CalendarDays, FileBarChart, LayoutDashboard, ShieldCheck } from "lucide-react";
 import { AppShell } from "@/components/ui/app-shell";
 import { ROLE_LABEL, requireRole } from "@/lib/auth";
-import { listEventsWithSeats } from "@/lib/domain/views";
+import { apiClient } from "@/lib/api";
+import type { components } from "@/lib/api-types";
 import { signOut } from "@/app/login/actions";
+
+type EventViewItem = components["schemas"]["EventViewItem"];
 
 export default async function Layout({ children }: { children: ReactNode }) {
   const profile = await requireRole("admin");
-  const pending = (await listEventsWithSeats({ id: profile.id, role: profile.role })).filter((e) => e.status === "pending").length;
+  const events = await apiClient<EventViewItem[]>("/api/events");
+  const pending = events.filter((e) => e.status === "pending").length;
   const icon = { "aria-hidden": true, size: 20 } as const;
   const navItems = [
     { href: "/admin", label: "Dashboard", icon: <LayoutDashboard {...icon} /> },
@@ -17,7 +21,12 @@ export default async function Layout({ children }: { children: ReactNode }) {
     { href: "/admin/reports", label: "Reports", icon: <FileBarChart {...icon} /> },
   ];
   return (
-    <AppShell roleLabel={ROLE_LABEL.admin} userName={profile.name} navItems={navItems} signOut={signOut}>
+    <AppShell
+      roleLabel={ROLE_LABEL.admin}
+      userName={profile.name}
+      navItems={navItems}
+      signOut={signOut}
+    >
       {children}
     </AppShell>
   );

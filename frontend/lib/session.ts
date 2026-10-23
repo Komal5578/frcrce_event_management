@@ -13,19 +13,23 @@ export async function hashToken(token: string) {
   return b64url(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token))));
 }
 
-/** Creates a session row (hash only) and sets the cookie (raw token). */
 export async function createSession(userId: string) {
   const token = b64url(crypto.getRandomValues(new Uint8Array(32)));
   const expires = new Date(Date.now() + MAX_AGE * 1000).toISOString(); // matches schema GLOB format
-  await getDb().prepare("INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)")
-    .bind(await hashToken(token), userId, expires).run();
+  const db = getDb();
+  if (db) {
+    await db.prepare("INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)")
+      .bind(await hashToken(token), userId, expires).run();
+  }
   (await cookies()).set(SESSION_COOKIE, token, SESSION_COOKIE_OPTIONS(process.env.NODE_ENV === "production"));
 }
 
 export async function readSession() {
   const token = (await cookies()).get(SESSION_COOKIE)?.value;
   if (!token) return null;
-  return getDb()
+  const db = getDb();
+  if (!db) return null;
+  return db
     .prepare(
       `SELECT p.id, p.name, p.role FROM sessions s JOIN profiles p ON p.id = s.user_id
        WHERE s.token_hash = ? AND s.expires_at > ?`,
@@ -37,6 +41,8 @@ export async function readSession() {
 export async function deleteSession() {
   const jar = await cookies();
   const token = jar.get(SESSION_COOKIE)?.value;
-  if (token) await getDb().prepare("DELETE FROM sessions WHERE token_hash = ?").bind(await hashToken(token)).run();
+  const db = getDb();
+  if (token && db) await db.prepare("DELETE FROM sessions WHERE token_hash = ?").bind(await hashToken(token)).run();
   jar.delete(SESSION_COOKIE);
 }
+

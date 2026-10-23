@@ -10,7 +10,7 @@ created: 2026-10-23
 
 ## Execution Gate
 
-Phase 10 is an explicit prerequisite. Current `.planning/STATE.md` still records Phase 10 as next and Phase 10 has no execution summaries or verification. Before executing Plan 01, complete and verify the shared UI shell, API rewrite, generated OpenAPI types, and `frontend/lib/api.ts`. The phase plans then run strictly in order: Student → Coordinator → Admin. Each role's browser gate must pass before starting the next plan.
+Phase 10 is complete per `.planning/STATE.md` and `.planning/phases/10-design-system-shell/10-SUMMARY.md`; its shared UI shell, API rewrite, generated OpenAPI types, and `frontend/lib/api.ts` are available. Execute the Phase 11 plans strictly in order: Student → Coordinator → Admin. Each role's browser gate must pass before starting the next plan.
 
 ## Automated Checks
 

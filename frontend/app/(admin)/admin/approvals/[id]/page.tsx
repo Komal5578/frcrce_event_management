@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireRole } from "@/lib/auth";
-import { listEventsWithSeats } from "@/lib/domain/views";
+import { apiClient } from "@/lib/api";
+import type { components } from "@/lib/api-types";
 import { Alert } from "@/components/ui/alert";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { formatRange } from "@/lib/format";
@@ -12,13 +13,18 @@ import { DecisionCard } from "../../_components/decision-card";
 export const metadata: Metadata = { title: "Review approval - College Events" };
 const back = "inline-flex min-h-11 min-w-11 items-center underline";
 
+type EventViewItem = components["schemas"]["EventViewItem"];
+
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const p = await requireRole("admin");
   const actor = { id: p.id, role: p.role };
-  const { event: e, check, resources } = await loadClash(actor, id);
+  const [{ event: e, check, resources }, events] = await Promise.all([
+    loadClash(actor, id),
+    apiClient<EventViewItem[]>("/api/events"),
+  ]);
   const pending = e.status === "pending";
-  const queue = (await listEventsWithSeats(actor)).filter((x) => x.status === "pending" && x.id !== e.id);
+  const queue = events.filter((x) => x.status === "pending" && x.id !== e.id);
   const nextId = (queue.find((x) => (x.starts_at ?? "") > (e.starts_at ?? "")) ?? queue[0])?.id ?? null;
   const when = e.starts_at && e.ends_at ? formatRange(e.starts_at, e.ends_at) : "No time yet";
   const where = e.venue_name ? `${e.venue_name} (capacity ${e.venue_capacity ?? 0})` : "No venue yet";

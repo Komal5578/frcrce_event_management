@@ -2,7 +2,7 @@
 
 **Researched:** 2026-10-23
 **Domain:** Porting Next.js role screens from the SQLite reference to the FastAPI/Postgres API
-**Confidence:** HIGH for repository structure and API coverage; MEDIUM for sequencing because Phase 10 is not recorded complete
+**Confidence:** HIGH for repository structure, API coverage, and sequencing; Phase 10 completion is recorded in `.planning/STATE.md` and `10-SUMMARY.md`.
 
 ## User Constraints
 
@@ -34,11 +34,11 @@
 
 ## Summary
 
-Phase 11 is a migration of existing role behavior to the new backend, not a product redesign. The repository already has role routes, screen helpers, flow definitions and the FastAPI endpoints needed for most of the journeys. The frontend still imports `frontend/lib/domain/*`, which is the SQLite/D1 reference implementation, and `frontend/next.config.ts` has no API rewrite. Phase 10 is expected to supply the typed API client and rewrite; role work should consume those rather than calling the old domain modules or writing another fetch layer. [VERIFIED: repository files `frontend/app/(student)/student/page.tsx`, `frontend/app/(coordinator)/coordinator/page.tsx`, `frontend/app/(admin)/admin/page.tsx`, `frontend/lib/domain/*`, `frontend/next.config.ts`, `backend/app/routers/*`]
+Phase 11 is a migration of existing role behavior to the new backend, not a product redesign. The repository already has role routes, screen helpers, flow definitions and the FastAPI endpoints needed for most journeys. The frontend role pages still use `frontend/lib/domain/*`, the SQLite/D1 reference implementation. Phase 10 is complete and supplies the typed API client and rewrite; role work should consume those rather than calling the old domain modules or writing another fetch layer. [VERIFIED: repository files `frontend/app/(student)/student/page.tsx`, `frontend/app/(coordinator)/coordinator/page.tsx`, `frontend/app/(admin)/admin/page.tsx`, `frontend/lib/domain/*`, `frontend/lib/api.ts`, `frontend/next.config.ts`, `backend/app/routers/*`]
 
 The smallest coherent delivery is three sequential plans, Student then Coordinator then Admin. Each plan should finish its role's browser flow before the next begins. Existing `_lib` pure view helpers and route-specific UI can be retained where they operate on API response shapes; UI should adopt Phase 10 shared components and route-level loading/error patterns. [VERIFIED: `CONTEXT.md`, `ROADMAP.md`, existing route tree]
 
-**Primary recommendation:** First confirm Phase 10 is executed and verified, including the shared API client and UI contract; then port the existing Student flow, Coordinator flow, and Admin flow in that order, mapping each call to the existing FastAPI endpoint and preserving server-side role authorization.
+**Primary recommendation:** Port the existing Student flow, Coordinator flow, and Admin flow in that order, using the completed Phase 10 shared API client and UI contract, mapping each call to the existing FastAPI endpoint, and preserving server-side role authorization.
 
 ## Architectural Responsibility Map
 
@@ -82,7 +82,7 @@ ROLE-04 is a cross-role acceptance gate and should be checked in each role plan 
 ## Common Pitfalls
 
 1. **Using the SQLite reference at runtime:** frontend route pages currently import `frontend/lib/domain/*`. Continuing those imports would bypass FastAPI and keep the old storage model live. Replace page/action data calls with the Phase 10 API client.
-2. **Planning Phase 11 before Phase 10 is ready:** `.planning/STATE.md` currently says Phase 10 is next, and Phase 10 contains plans but no summaries/verification. Its shared shell/API work is a hard dependency; execution of role plans should not start until Phase 10 gate is green.
+2. **RESOLVED — Phase 10 prerequisite:** `.planning/STATE.md` records Phase 10 complete, and `10-SUMMARY.md` records its checks. The shared shell/API work is available to Phase 11.
 3. **Treating UI checks as integrity controls:** venue, resource, capacity and duplicate registration can change between display and submission. Handle backend errors and keep database/domain constraints authoritative (`dom-domain-model`).
 4. **Making admin clashes unreachable:** pending events intentionally may overlap; admin should see clash details before approval. Do not hide pending events from the clash response or convert pending requests into bookings.
 5. **Loading all notifications for a badge:** call unread-count, as the phase context explicitly requires.
@@ -130,7 +130,7 @@ The project config enables Nyquist validation. Existing commands are `cd fronten
 
 ## Open Questions / Dependencies (RESOLVED)
 
-1. **RESOLVED — Phase 10 completion and UI approval:** `.planning/STATE.md` says Phase 10 is next and no Phase 10 summaries/verification are present. Phase 11 plans carry a hard execution gate: complete and verify Phase 10, including the shared API client and rewrite, before executing role plans.
+1. **RESOLVED — Phase 10 completion and UI approval:** `.planning/STATE.md` and `10-SUMMARY.md` record Phase 10 complete, including its shared API client and rewrite.
 2. **RESOLVED — Student registration overlap warning:** `dom-requirements` includes S6, but Phase 11 maps STUD-01..05 only. S6 remains out of scope for this phase.
 3. **RESOLVED — Calendar behavior:** use date-window bookings for Admin and registration/event data for Student and Coordinator with existing calendar view helpers. Calendar sync remains excluded by `adr-004-scope`.
 
@@ -140,7 +140,7 @@ The project config enables Nyquist validation. Existing commands are `cd fronten
 - `.planning/phases/11-role-screens/CONTEXT.md` — role order, screen inventories, invariants and evidence rules.
 - `.planning/ROADMAP.md` — phase goal, requirements and success criteria.
 - `.planning/REQUIREMENTS.md` — ROLE-01..04 and carried role requirements.
-- `.planning/STATE.md` — Phase 10 is recorded as next; Phase 10 completion is not recorded.
+- `.planning/STATE.md`, `.planning/phases/10-design-system-shell/10-SUMMARY.md` — Phase 10 completion and verification commands/results.
 - `.planning/phases/10-design-system-shell/CONTEXT.md`, `10-UI-SPEC.md`, `10-RESEARCH.md` — shared UI/API dependency.
 - `backend/app/routers/*.py`, `backend/app/domain/*` — current API endpoints and domain ownership.
 - `frontend/app/(student)`, `frontend/app/(coordinator)`, `frontend/app/(admin)`, `frontend/lib/domain/*` — porting reference and existing route patterns.
@@ -151,7 +151,7 @@ The project config enables Nyquist validation. Existing commands are `cd fronten
 
 ## Metadata
 
-**Confidence breakdown:** API coverage HIGH (direct route inspection); screen reuse HIGH (current files inspected); execution sequencing MEDIUM (Phase 10 is explicitly unresolved in project state).
+**Confidence breakdown:** API coverage HIGH (direct route inspection); screen reuse HIGH (current files inspected); execution sequencing HIGH (Phase 10 completion is recorded in project state and summary).
 
 **Research date:** 2026-10-23
 **Valid until:** 2026-11-22, or until Phase 10/API contracts change.

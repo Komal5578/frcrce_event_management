@@ -1,15 +1,18 @@
 import Link from "next/link";
 import { CircleCheck, TriangleAlert } from "lucide-react";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { isOverdue } from "@/lib/domain/rules";
+import { isOverdue } from "@/lib/rules";
 import { formatRange, formatShortDate } from "@/lib/format";
-import type { EventView } from "@/lib/domain/views";
-import type { AllocationRow, TaskRow } from "@/lib/domain/allocations";
+import type { components } from "@/lib/api-types";
 import type { readiness } from "../_lib/readiness";
+
+type EventViewItem = components["schemas"]["EventViewItem"];
+type AllocationItem = components["schemas"]["AllocationItem"];
+type TaskItem = components["schemas"]["TaskItem"];
 
 /** Live Summary: rendered from the saved draft after each save. Only the readiness line is live. */
 export function LiveSummary({ ev, venue, allocations, tasks, ready, now }: {
-  ev: EventView; venue: { text: string; ok: boolean }; allocations: AllocationRow[]; tasks: TaskRow[];
+  ev: EventViewItem; venue: { text: string; ok: boolean }; allocations: AllocationItem[]; tasks: TaskItem[];
   ready: ReturnType<typeof readiness>; now: Date;
 }) {
   const row = (label: string, value: React.ReactNode) => (

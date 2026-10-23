@@ -1,12 +1,14 @@
 import { StatusBadge, type StatusKey } from "@/components/ui/status-badge";
-import { isOverdue } from "@/lib/domain/rules";
+import { isOverdue } from "@/lib/rules";
 import { formatShortDate } from "@/lib/format";
-import type { TaskRow } from "@/lib/domain/allocations";
+import type { components } from "@/lib/api-types";
+
+type TaskItem = components["schemas"]["TaskItem"];
 
 /** Tasks of one event: table at 640px and up, cards below. Overdue is a badge with text. */
-export function TaskTable({ tasks, now, caption = "Tasks for this event" }: { tasks: TaskRow[]; now: Date; caption?: string }) {
-  const key = (t: TaskRow): StatusKey => (isOverdue(t, now) ? "overdue" : (t.status as StatusKey));
-  const due = (t: TaskRow) => (t.due_at ? formatShortDate(t.due_at) : "No due date");
+export function TaskTable({ tasks, now, caption = "Tasks for this event" }: { tasks: TaskItem[]; now: Date; caption?: string }) {
+  const key = (t: TaskItem): StatusKey => (isOverdue(t, now) ? "overdue" : (t.status as StatusKey));
+  const due = (t: TaskItem) => (t.due_at ? formatShortDate(t.due_at) : "No due date");
   if (!tasks.length) return <p className="text-body">No tasks yet.</p>;
   return (
     <>

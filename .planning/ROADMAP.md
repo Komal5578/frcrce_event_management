@@ -305,9 +305,9 @@ Plans:
 **Plans**: 3 plans (sequential; each role's browser gate must pass before the next starts)
 Plans:
 
-- [ ] 11-01-PLAN.md — Student screens ST-01..06 on FastAPI, with registration and browser/a11y gate
-- [ ] 11-02-PLAN.md — Coordinator screens CO-01..08 and secondary routes on FastAPI
-- [ ] 11-03-PLAN.md — Admin screens AD-01..06, live clash decision flow, and phase-wide verification
+- [x] 11-01-PLAN.md — Student screens ST-01..06 on FastAPI, with registration and browser/a11y gate
+- [x] 11-02-PLAN.md — Coordinator screens CO-01..08 and secondary routes on FastAPI
+- [x] 11-03-PLAN.md — Admin screens AD-01..06, live clash decision flow, and phase-wide verification
 
 ### Phase 12: Deploy & Harden
 
@@ -343,9 +343,9 @@ Plans:
 | 5. Cross-Cutting | 6/6 | Built, human checkpoint not done (superseded by v2) | - |
 | 6. Validation Kit & Iteration | - | Folded into Phase 13 | - |
 | 7. Deploy & Final Documentation | - | Folded into Phases 12–13 | - |
-| 8. Re-baseline & Restructure | 0/TBD | Not started (next) | - |
-| 9. FastAPI Backend | 0/6 | Planned | - |
-| 10. Design System & App Shell | 0/5 | Planned | - |
-| 11. Role Screens | 0/TBD | Not started | - |
-| 12. Deploy & Harden | 0/TBD | Not started | - |
+| 8. Re-baseline & Restructure | 1/1 | Complete | 2026-10-23 |
+| 9. FastAPI Backend | 6/6 | Complete | 2026-10-23 |
+| 10. Design System & App Shell | 5/5 | Complete | 2026-10-23 |
+| 11. Role Screens | 3/3 | Complete | 2026-10-23 |
+| 12. Deploy & Harden | 0/TBD | Not started (next) | - |
 | 13. Validation & Final Docs | 0/TBD | Not started | - |

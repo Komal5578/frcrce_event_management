@@ -1,7 +1,7 @@
 // Pure: split venues into "free for your slot" and "not available" with a plain reason (C2, never hidden).
 import { formatTime } from "@/lib/format";
 
-type V = { id: string; name: string; capacity: number; active: number };
+type V = { id: string; name: string; capacity: number; active: boolean | number };
 type Busy = { venue_id: string; event_title: string; starts_at: string; ends_at: string };
 export type VenueOption = { id: string; name: string; capacity: number; fits: string };
 export type VenueNo = { id: string; name: string; capacity: number; reason: string; clash: boolean };

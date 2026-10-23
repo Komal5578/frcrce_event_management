@@ -6,8 +6,8 @@ import { Card } from "@/components/ui/card";
 import { StatusBadge, type StatusKey } from "@/components/ui/status-badge";
 import { requireRole } from "@/lib/auth";
 import { DomainError } from "@/lib/errors";
-import { getEventDetail, type EventView } from "@/lib/domain/views";
-import { listAllocations, listEventTasks } from "@/lib/domain/allocations";
+import { apiClient } from "@/lib/api";
+import type { components } from "@/lib/api-types";
 import { formatRange, formatShortDate } from "@/lib/format";
 import { advanceAction, cancelAction } from "../actions";
 import { ago, monitorModel } from "../_lib/monitor";
@@ -18,12 +18,16 @@ import { TaskTable } from "../_components/task-table";
 
 export const metadata: Metadata = { title: "Event - College Events" };
 
+type EventViewItem = components["schemas"]["EventViewItem"];
+type TaskItem = components["schemas"]["TaskItem"];
+type AllocationItem = components["schemas"]["AllocationItem"];
+
 const ADVANCE: Record<string, { label: string; verb: string; consequence: string; title: string; body: string; badge: StatusKey }> = {
   approved: { label: "Open registration", verb: "open registration", consequence: "Students can now see and register for this event.", title: "Registration is open", body: "Status is now Open.", badge: "open" },
   open: { label: "Start event", verb: "start the event", consequence: "The event is marked as happening now.", title: "Event started", body: "Status is now Ongoing.", badge: "ongoing" },
   ongoing: { label: "Complete event", verb: "complete the event", consequence: "The event is marked completed and its venue and resources are released.", title: "Event completed", body: "Venue and resources are released.", badge: "completed" },
 };
-const SENTENCE = (ev: EventView, now: Date) => ({
+const SENTENCE = (ev: EventViewItem, now: Date) => ({
   pending: `Sent ${ago(ev.updated_at, now)}. The Admin has not decided yet.`,
   approved: "The Admin approved this event. Open registration when you are ready.",
   open: "Registration is open. Students can register now.",
@@ -33,19 +37,23 @@ const SENTENCE = (ev: EventView, now: Date) => ({
 } as Record<string, string>)[ev.status] ?? "";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ done?: string }> }) {
-  const p = await requireRole("coordinator");
-  const actor = { id: p.id, role: p.role };
+  await requireRole("coordinator");
   const { id } = await params;
   const { done } = await searchParams;
 
-  let ev: EventView;
-  try { ev = await getEventDetail(actor, id); } catch (e) {
+  let ev: EventViewItem;
+  try {
+    ev = await apiClient<EventViewItem>(`/api/events/${id}`);
+  } catch (e) {
     return <Alert variant="error" title="We could not open this event">{e instanceof DomainError ? e.message : "Something went wrong on our side. Please try again in a moment."}</Alert>;
   }
   if (ev.status === "draft" || ev.status === "returned") redirect(`/coordinator/${id}/edit?step=1`);
 
   const now = new Date();
-  const [tasks, allocations] = await Promise.all([listEventTasks(actor, id), listAllocations(actor, id)]);
+  const [tasks, allocations] = await Promise.all([
+    apiClient<TaskItem[]>(`/api/events/${id}/tasks`),
+    apiClient<AllocationItem[]>(`/api/events/${id}/allocations`),
+  ]);
   const m = monitorModel(ev, tasks, now);
   const terminal = ev.status === "completed" || ev.status === "cancelled";
   const adv = ADVANCE[ev.status];

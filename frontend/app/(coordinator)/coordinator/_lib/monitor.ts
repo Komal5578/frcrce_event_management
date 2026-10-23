@@ -1,8 +1,16 @@
 // Pure view models for My Events and the monitor. `now` is always passed in.
-import { isLowReg, isOverdue } from "@/lib/domain/rules";
+import { isLowReg, isOverdue } from "@/lib/rules";
 
-type Ev = { status: string; capacity: number | null; confirmed: number; waitlisted?: number; starts_at: string | null; ends_at?: string | null };
-type Task = { due_at: string | null; status: string };
+type Ev = {
+  id?: string;
+  status: string;
+  capacity?: number | null;
+  confirmed: number;
+  waitlisted?: number;
+  starts_at?: string | null;
+  ends_at?: string | null;
+};
+type Task = { due_at?: string | null; status: string };
 
 export const NEXT_STEP: Record<string, string> = {
   pending: "Next: wait for approval",
@@ -33,7 +41,7 @@ export const needsYou = (ev: { status: string }, overdue: number) => ev.status =
 
 export type Chip = "attention" | "drafts" | "past";
 /** No chip: everything not past. Chips are additive (union). */
-export function filterEvents<E extends Ev>(events: E[], chips: Chip[], overdueOf: (e: E) => number, now: Date): E[] {
+export function filterEvents<E extends Ev & { id: string }>(events: E[], chips: Chip[], overdueOf: (e: E) => number, now: Date): E[] {
   if (!chips.length) return events.filter((e) => !isPast(e, now));
   return events.filter((e) =>
     (chips.includes("attention") && !isPast(e, now) && needsYou(e, overdueOf(e))) ||

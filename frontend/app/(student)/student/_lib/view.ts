@@ -1,5 +1,8 @@
 import type { StatusKey } from "@/components/ui/status-badge";
-import type { EventView } from "@/lib/domain/views";
+import type { components } from "@/lib/api-types";
+
+export type EventView = components["schemas"]["EventViewItem"];
+
 
 export type Cta = "register" | "waitlist" | "none";
 export type CardModel = {

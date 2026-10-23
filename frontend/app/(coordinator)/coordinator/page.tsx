@@ -5,16 +5,17 @@ import { Alert } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
 import { AttentionList } from "@/components/ui/attention-list";
 import { requireRole } from "@/lib/auth";
-import { isOverdue } from "@/lib/domain/rules";
-import { listCoordinatorTasks } from "@/lib/domain/allocations";
-import { listEventsWithSeats } from "@/lib/domain/views";
-import { listOverdueTasksForActor } from "@/lib/domain/reports";
-import { computeAlerts } from "@/lib/domain/alerts";
-import { alertHref } from "@/lib/alert-links";
+import { isOverdue } from "@/lib/rules";
+import { apiClient } from "@/lib/api";
+import type { components } from "@/lib/api-types";
 import { EventCard } from "./_components/event-card";
 import { filterEvents, isPast, needsYou, type Chip } from "./_lib/monitor";
 
 export const metadata: Metadata = { title: "My Events - College Events" };
+
+type EventViewItem = components["schemas"]["EventViewItem"];
+type TaskItem = components["schemas"]["TaskItem"];
+type AlertItem = components["schemas"]["AlertItem"];
 
 const CHIPS: { value: Chip; label: string }[] = [
   { value: "attention", label: "Needs attention" },
@@ -24,16 +25,15 @@ const CHIPS: { value: Chip; label: string }[] = [
 const PRIMARY = "inline-flex min-h-11 min-w-11 items-center justify-center rounded-control border border-accent bg-accent px-4 py-2 text-label font-semibold text-white";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ f?: string | string[] }> }) {
-  const p = await requireRole("coordinator");
-  const actor = { id: p.id, role: p.role };
+  await requireRole("coordinator");
   const { f } = await searchParams;
   const chips = (Array.isArray(f) ? f : f ? [f] : []).filter((v): v is Chip => CHIPS.some((c) => c.value === v));
   const now = new Date();
 
-  const [events, tasks, overdueTasks] = await Promise.all([
-    listEventsWithSeats(actor),
-    listCoordinatorTasks(actor),
-    listOverdueTasksForActor(actor, now),
+  const [events, tasks, alerts] = await Promise.all([
+    apiClient<EventViewItem[]>("/api/events"),
+    apiClient<TaskItem[]>("/api/tasks/coordinator"),
+    apiClient<AlertItem[]>("/api/notifications/alerts"),
   ]);
 
   const overdue = new Map<string, number>();
@@ -43,14 +43,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
   const shown = filterEvents(events, chips, overdueOf, now);
   const needYou = events.filter((e) => !isPast(e, now) && needsYou(e, overdueOf(e))).length;
   const returned = events.filter((e) => e.status === "returned");
-
-  const alerts = computeAlerts({
-    role: "coordinator",
-    events,
-    tasks: overdueTasks,
-    now,
-    hrefFor: (kind, id) => alertHref("coordinator", kind, id),
-  });
 
   return (
     <div className="flex flex-col gap-6">

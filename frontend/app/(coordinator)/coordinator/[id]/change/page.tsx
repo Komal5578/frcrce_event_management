@@ -4,30 +4,40 @@ import { redirect } from "next/navigation";
 import { Alert } from "@/components/ui/alert";
 import { requireRole } from "@/lib/auth";
 import { DomainError } from "@/lib/errors";
-import { getEventDetail, type EventView } from "@/lib/domain/views";
-import { busyVenues, listVenues } from "@/lib/domain/catalog";
-import { freeVenues } from "@/lib/domain/venues";
+import { apiClient } from "@/lib/api";
+import type { components } from "@/lib/api-types";
 import { isoToInputs } from "@/lib/format";
 import { venueGroups } from "../../_lib/venues";
 import { ChangeForm } from "../../_components/change-form";
 
 export const metadata: Metadata = { title: "Edit event - College Events" };
 
+type EventViewItem = components["schemas"]["EventViewItem"];
+type VenueItem = components["schemas"]["VenueItem"];
+type BusyVenueItem = components["schemas"]["BusyVenueItem"];
+
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-  const p = await requireRole("coordinator");
-  const actor = { id: p.id, role: p.role };
+  await requireRole("coordinator");
   const { id } = await params;
-  let ev: EventView;
-  try { ev = await getEventDetail(actor, id); } catch (e) {
+  let ev: EventViewItem;
+  try {
+    ev = await apiClient<EventViewItem>(`/api/events/${id}`);
+  } catch (e) {
     return <Alert variant="error" title="We could not open this event">{e instanceof DomainError ? e.message : "Something went wrong on our side. Please try again in a moment."}</Alert>;
   }
   if (ev.status === "draft" || ev.status === "returned") redirect(`/coordinator/${id}/edit?step=1`);
   if (ev.status === "completed" || ev.status === "cancelled" || ev.status === "ongoing" || !ev.starts_at || !ev.ends_at) redirect(`/coordinator/${id}`);
 
   const [venues, free, busy] = await Promise.all([
-    listVenues(actor), freeVenues(actor, ev.starts_at, ev.ends_at, id), busyVenues(actor, ev.starts_at, ev.ends_at, id),
+    apiClient<VenueItem[]>("/api/venues"),
+    apiClient<VenueItem[]>(
+      `/api/venues/free?start=${encodeURIComponent(ev.starts_at)}&end=${encodeURIComponent(ev.ends_at)}&exclude_event_id=${id}`
+    ),
+    apiClient<BusyVenueItem[]>(
+      `/api/venues/busy?start=${encodeURIComponent(ev.starts_at)}&end=${encodeURIComponent(ev.ends_at)}&exclude_event_id=${id}`
+    ),
   ]);
-  const g = venueGroups(venues, new Set(free.map((v) => v.id)), busy, ev.capacity);
+  const g = venueGroups(venues, new Set(free.map((v) => v.id)), busy, ev.capacity ?? null);
   const s = isoToInputs(ev.starts_at), e = isoToInputs(ev.ends_at);
   return (
     <div className="flex flex-col gap-6">

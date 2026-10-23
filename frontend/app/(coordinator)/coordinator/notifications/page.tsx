@@ -2,19 +2,26 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Bell, CalendarX, ClipboardList, FilePen, ShieldCheck, Undo2, type LucideIcon } from "lucide-react";
 import { requireRole } from "@/lib/auth";
-import { listNotifications } from "@/lib/domain/notifications";
+import { apiClient } from "@/lib/api";
+import type { components } from "@/lib/api-types";
 import { formatDateTime } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Notifications - College Events" };
 
+type NotificationItem = components["schemas"]["NotificationItem"];
+
 const ICON: Record<string, LucideIcon> = {
-  task_assigned: ClipboardList, event_approved: ShieldCheck, event_returned: Undo2, event_changed: FilePen, event_cancelled: CalendarX,
+  task_assigned: ClipboardList,
+  event_approved: ShieldCheck,
+  event_returned: Undo2,
+  event_changed: FilePen,
+  event_cancelled: CalendarX,
 };
 const WEEK_MS = 7 * 86_400_000;
 
 export default async function Page() {
-  const p = await requireRole("coordinator");
-  const list = await listNotifications({ id: p.id, role: p.role });
+  await requireRole("coordinator");
+  const list = await apiClient<NotificationItem[]>("/api/notifications");
   const now = new Date();
   return (
     <div className="flex flex-col gap-6">

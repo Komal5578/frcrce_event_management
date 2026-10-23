@@ -3,15 +3,18 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import { StatusBadge, type StatusKey } from "@/components/ui/status-badge";
 import { requireRole } from "@/lib/auth";
-import { isOverdue } from "@/lib/domain/rules";
-import { listCoordinatorTasks, type TaskRow } from "@/lib/domain/allocations";
+import { isOverdue } from "@/lib/rules";
+import { apiClient } from "@/lib/api";
+import type { components } from "@/lib/api-types";
 import { formatShortDate } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Tasks - College Events" };
 
-function Group({ title, rows, now }: { title: string; rows: TaskRow[]; now: Date }) {
-  const key = (t: TaskRow): StatusKey => (isOverdue(t, now) ? "overdue" : (t.status as StatusKey));
-  const due = (t: TaskRow) => (t.due_at ? formatShortDate(t.due_at) : "No due date");
+type TaskItem = components["schemas"]["TaskItem"];
+
+function Group({ title, rows, now }: { title: string; rows: TaskItem[]; now: Date }) {
+  const key = (t: TaskItem): StatusKey => (isOverdue(t, now) ? "overdue" : (t.status as StatusKey));
+  const due = (t: TaskItem) => (t.due_at ? formatShortDate(t.due_at) : "No due date");
   return (
     <section className="flex flex-col gap-2">
       <h2 className="text-heading font-semibold">{title}</h2>
@@ -53,10 +56,10 @@ function Group({ title, rows, now }: { title: string; rows: TaskRow[]; now: Date
 }
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ overdue?: string }> }) {
-  const p = await requireRole("coordinator");
+  await requireRole("coordinator");
   const { overdue: only } = await searchParams;
   const now = new Date();
-  const all = await listCoordinatorTasks({ id: p.id, role: p.role });
+  const all = await apiClient<TaskItem[]>("/api/tasks/coordinator");
   const late = all.filter((t) => isOverdue(t, now));
   const rest = only ? [] : all.filter((t) => !isOverdue(t, now));
   return (

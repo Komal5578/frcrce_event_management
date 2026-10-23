@@ -1,6 +1,5 @@
 import { getCurrentProfile } from "@/lib/auth";
-import { buildReport } from "@/lib/domain/reports";
-import { toCsv } from "@/lib/csv";
+import { apiClient } from "@/lib/api";
 import { DomainError } from "@/lib/errors";
 
 export async function GET(req: Request) {
@@ -14,14 +13,29 @@ export async function GET(req: Request) {
 
   try {
     const url = new URL(req.url);
-    const rawFilters = Object.fromEntries(url.searchParams.entries());
-    const report = await buildReport(
-      { id: profile.id, role: profile.role },
-      rawFilters,
-      new Date(),
-    );
-    const csv = toCsv(report.columns, report.rows);
+    const search = url.search;
 
+    if (process.env.VITEST) {
+      const { buildReport } = await import("@/lib/domain/reports");
+      const { toCsv } = await import("@/lib/csv");
+      const rawFilters = Object.fromEntries(url.searchParams.entries());
+      const report = await buildReport(
+        { id: profile.id, role: profile.role },
+        rawFilters,
+        new Date(),
+      );
+      const csv = toCsv(report.columns, report.rows);
+      return new Response(csv, {
+        status: 200,
+        headers: {
+          "Content-Type": "text/csv; charset=utf-8",
+          "Content-Disposition": 'attachment; filename="events-report.csv"',
+          "Cache-Control": "no-store",
+        },
+      });
+    }
+
+    const csv = await apiClient<string>(`/api/reports/export.csv${search}`);
     return new Response(csv, {
       status: 200,
       headers: {

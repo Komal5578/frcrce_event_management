@@ -1,6 +1,10 @@
-import { REMINDER_DAYS, isOverdue } from "@/lib/domain/rules";
-import type { MyRegistration, MyTask } from "@/lib/domain/people";
+import { REMINDER_DAYS, isOverdue } from "@/lib/rules";
+import type { components } from "@/lib/api-types";
 import { formatDate, formatTime, relativeDay } from "@/lib/format";
+
+export type MyRegistration = components["schemas"]["RegistrationItem"];
+export type MyTask = components["schemas"]["MyTaskItem"];
+
 
 const live = (r: MyRegistration) => r.reg_status === "confirmed" || r.reg_status === "waitlisted";
 const startOf = (r: MyRegistration) => r.starts_at ?? "";

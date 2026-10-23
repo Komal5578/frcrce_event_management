@@ -4,11 +4,8 @@ import { redirect } from "next/navigation";
 import { Alert } from "@/components/ui/alert";
 import { requireRole } from "@/lib/auth";
 import { DomainError } from "@/lib/errors";
-import { getEventDetail, type EventView } from "@/lib/domain/views";
-import { busyVenues, listResources, listVenues } from "@/lib/domain/catalog";
-import { freeVenues, resourceAvailable } from "@/lib/domain/venues";
-import { listAllocations, listEventTasks } from "@/lib/domain/allocations";
-import { listStudents, myProfile } from "@/lib/domain/people";
+import { apiClient } from "@/lib/api";
+import type { components } from "@/lib/api-types";
 import { formatRange, isoToInputs } from "@/lib/format";
 import { submitAction } from "../../actions";
 import { readiness } from "../../_lib/readiness";
@@ -24,15 +21,26 @@ import { VenueStep } from "../../_components/venue-step";
 
 export const metadata: Metadata = { title: "Build event - College Events" };
 
+type EventViewItem = components["schemas"]["EventViewItem"];
+type VenueItem = components["schemas"]["VenueItem"];
+type BusyVenueItem = components["schemas"]["BusyVenueItem"];
+type ResourceItem = components["schemas"]["ResourceItem"];
+type AllocationItem = components["schemas"]["AllocationItem"];
+type TaskItem = components["schemas"]["TaskItem"];
+type StudentProfileItem = components["schemas"]["StudentProfileItem"];
+type MyProfileItem = components["schemas"]["MyProfileItem"];
+type ResourceAvailableItem = components["schemas"]["ResourceAvailableItem"];
+
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ step?: string }> }) {
-  const p = await requireRole("coordinator");
-  const actor = { id: p.id, role: p.role };
+  await requireRole("coordinator");
   const { id } = await params;
   const n = Number((await searchParams).step);
   const step = Number.isInteger(n) && n >= 1 && n <= 4 ? n : 1;
 
-  let ev: EventView;
-  try { ev = await getEventDetail(actor, id); } catch (e) {
+  let ev: EventViewItem;
+  try {
+    ev = await apiClient<EventViewItem>(`/api/events/${id}`);
+  } catch (e) {
     return <Alert variant="error" title="We could not open this event">{e instanceof DomainError ? e.message : "Something went wrong on our side. Please try again in a moment."}</Alert>;
   }
   // not a draft any more: the monitor is the right place (redirect outside try/catch)
@@ -41,16 +49,43 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   const now = new Date();
   const slotSet = !!(ev.starts_at && ev.ends_at);
   const [venues, resources, allocations, tasks, students, profile, free, busy] = await Promise.all([
-    listVenues(actor), listResources(actor, ev.starts_at ?? undefined, ev.ends_at ?? undefined), listAllocations(actor, id), listEventTasks(actor, id),
-    listStudents(actor), myProfile(actor),
-    slotSet ? freeVenues(actor, ev.starts_at!, ev.ends_at!, id) : Promise.resolve(null),
-    slotSet ? busyVenues(actor, ev.starts_at!, ev.ends_at!, id) : Promise.resolve([]),
+    apiClient<VenueItem[]>("/api/venues"),
+    apiClient<ResourceItem[]>("/api/resources"),
+    apiClient<AllocationItem[]>(`/api/events/${id}/allocations`),
+    apiClient<TaskItem[]>(`/api/events/${id}/tasks`),
+    apiClient<StudentProfileItem[]>("/api/people/students"),
+    apiClient<MyProfileItem>("/api/people/me"),
+    slotSet
+      ? apiClient<VenueItem[]>(
+          `/api/venues/free?start=${encodeURIComponent(ev.starts_at!)}&end=${encodeURIComponent(ev.ends_at!)}&exclude_event_id=${id}`
+        )
+      : Promise.resolve(null),
+    slotSet
+      ? apiClient<BusyVenueItem[]>(
+          `/api/venues/busy?start=${encodeURIComponent(ev.starts_at!)}&end=${encodeURIComponent(ev.ends_at!)}&exclude_event_id=${id}`
+        )
+      : Promise.resolve([]),
   ]);
+
   const freeIds = free ? new Set(free.map((v) => v.id)) : null;
-  const groups = venueGroups(venues, freeIds ?? new Set(), busy, ev.capacity);
-  const venue = venueState(ev.venue_id, venues, freeIds, busy, ev.capacity);
-  const ready = readiness(ev, ev.venue_capacity, allocations, tasks);
-  const left = new Map(slotSet ? await Promise.all(resources.filter((r) => r.active).map(async (r) => [r.id, await resourceAvailable(actor, r.id, ev.starts_at!, ev.ends_at!, id)] as const)) : []);
+  const groups = venueGroups(venues, freeIds ?? new Set(), busy, ev.capacity ?? null);
+  const venue = venueState(ev.venue_id ?? null, venues, freeIds, busy, ev.capacity ?? null);
+  const ready = readiness(ev, ev.venue_capacity ?? null, allocations, tasks);
+
+  const left = new Map(
+    slotSet
+      ? await Promise.all(
+          resources
+            .filter((r) => r.active)
+            .map(async (r) => {
+              const res = await apiClient<ResourceAvailableItem>(
+                `/api/resources/${r.id}/available?start=${encodeURIComponent(ev.starts_at!)}&end=${encodeURIComponent(ev.ends_at!)}&exclude_event_id=${id}`
+              );
+              return [r.id, res.available] as const;
+            })
+        )
+      : []
+  );
   const held = new Map(allocations.map((a) => [a.resource_id, a.quantity]));
 
   const states: StepState[] = [
@@ -71,9 +106,9 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
         <div className="order-2 flex min-w-0 flex-col gap-4 lg:order-1">
           <h2 className="text-heading font-semibold">Step {step} of 4: {STEPS[step - 1]}</h2>
-          {step === 1 && <DetailsStep eventId={id} title={ev.title} seats={ev.capacity} description={ev.description} department={profile.department} />}
+          {step === 1 && <DetailsStep eventId={id} title={ev.title} seats={ev.capacity ?? null} description={ev.description ?? null} department={profile.department ?? null} />}
           {step === 2 && (
-            <VenueStep eventId={id} date={inputs?.d.date ?? ""} start={inputs?.d.time ?? ""} end={inputs?.e.time ?? ""} venueId={ev.venue_id}
+            <VenueStep eventId={id} date={inputs?.d.date ?? ""} start={inputs?.d.time ?? ""} end={inputs?.e.time ?? ""} venueId={ev.venue_id ?? null}
               free={groups.free} unavailable={groups.unavailable} />
           )}
           {step === 3 && (

@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { ROLE_LABEL, requireRole } from "@/lib/auth";
-import { buildReport, parseFilters } from "@/lib/domain/reports";
+import { parseFilters } from "@/lib/rules";
+import { apiClient } from "@/lib/api";
+import type { components } from "@/lib/api-types";
 import { ReportView } from "@/components/ui/report-view";
 import { Button } from "@/components/ui/button";
 import { STATUS_META, type StatusKey } from "@/components/ui/status-badge";
+
+type ReportItem = components["schemas"]["ReportItem"];
 
 const STATUS_OPTIONS: { value: string; label: string }[] = [
   { value: "", label: "All statuses" },
@@ -34,12 +38,14 @@ export default async function AdminReportsPage({
   }
 
   const filters = parseFilters(flattenedParams);
-  const now = new Date();
-  const report = await buildReport(
-    { id: profile.id, role: profile.role },
-    flattenedParams,
-    now,
-  );
+
+  const qs = new URLSearchParams();
+  if (filters.status) qs.set("status", filters.status);
+  if (filters.from) qs.set("from", filters.from);
+  if (filters.to) qs.set("to", filters.to);
+  const qString = qs.toString();
+
+  const report = await apiClient<ReportItem>(`/api/reports${qString ? `?${qString}` : ""}`);
 
   const activeFilters: string[] = [];
   if (filters.status) {
@@ -50,13 +56,7 @@ export default async function AdminReportsPage({
   if (filters.to) activeFilters.push(`To: ${filters.to}`);
   const filtersText = activeFilters.join(", ");
 
-  const qs = new URLSearchParams();
-  if (filters.status) qs.set("status", filters.status);
-  if (filters.from) qs.set("from", filters.from);
-  if (filters.to) qs.set("to", filters.to);
-  const qString = qs.toString();
   const exportHref = `/admin/reports/export${qString ? `?${qString}` : ""}`;
-
   const who = `${ROLE_LABEL[profile.role]}: ${profile.name}`;
 
   return (
@@ -130,9 +130,9 @@ export default async function AdminReportsPage({
         who={who}
         generatedAt={report.generatedAt}
         filtersText={filtersText}
-        columns={report.columns}
-        rows={report.rows}
-        totals={report.totals}
+        columns={report.columns.map((c) => ({ key: c.key ?? "", label: c.label ?? "" }))}
+        rows={report.rows as Record<string, string | number | null>[]}
+        totals={{ events: report.totals.events ?? 0, registered: report.totals.registered ?? 0 }}
         exportHref={exportHref}
       />
     </div>

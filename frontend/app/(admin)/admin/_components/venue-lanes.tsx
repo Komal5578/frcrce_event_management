@@ -1,12 +1,14 @@
 import { StatusBadge, type StatusKey } from "@/components/ui/status-badge";
 import { formatDate, formatTime, localToIso } from "@/lib/format";
-import type { BookingRow } from "@/lib/domain/admin";
+import type { components } from "@/lib/api-types";
 import { lanes } from "../_lib/lanes";
+
+type BookingItem = components["schemas"]["BookingItem"];
 
 const dayLabel = (key: string) => formatDate(localToIso(key, "12:00") ?? key);
 
 /** Week lanes: venues down, 7 days across. A clash badge shows only where the domain set `conflict`. */
-export function VenueLanes({ venues, bookings, days }: { venues: { id: string; name: string }[]; bookings: BookingRow[]; days: string[] }) {
+export function VenueLanes({ venues, bookings, days }: { venues: { id: string; name: string }[]; bookings: BookingItem[]; days: string[] }) {
   const by = lanes(bookings);
   return (
     <div role="region" aria-label="Venue lanes, scrolls sideways on narrow screens" tabIndex={0} className="overflow-x-auto">

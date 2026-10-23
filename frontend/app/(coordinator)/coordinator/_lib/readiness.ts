@@ -1,6 +1,6 @@
 // Pure: is the draft ready to submit, and what is missing (CO-02..06 Live Summary readiness line).
 export type ReadyEvent = {
-  title: string | null; capacity: number | null; venue_id: string | null; starts_at: string | null; ends_at: string | null;
+  title?: string | null; capacity?: number | null; venue_id?: string | null; starts_at?: string | null; ends_at?: string | null;
 };
 export type Missing = { key: "title" | "seats" | "venue" | "date"; label: string; step: 1 | 2 };
 

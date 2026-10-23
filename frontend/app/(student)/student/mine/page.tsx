@@ -2,11 +2,11 @@ import Link from "next/link";
 import { requireRole } from "@/lib/auth";
 import { Alert } from "@/components/ui/alert";
 import { StatusBadge, type StatusKey } from "@/components/ui/status-badge";
-import { listMyRegistrations, type MyRegistration } from "@/lib/domain/people";
+import { apiClient } from "@/lib/api";
 import { dayKey, formatRange } from "@/lib/format";
 import { Calendar } from "../_components/calendar";
 import { CancelFlow } from "../_components/cancel-flow";
-import { group, reminders } from "../_lib/mine";
+import { group, reminders, type MyRegistration } from "../_lib/mine";
 
 export const metadata = { title: "My events - College Events" };
 export const dynamic = "force-dynamic";
@@ -37,10 +37,11 @@ function Card({ r, upcoming }: { r: MyRegistration; upcoming: boolean }) {
 }
 
 export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const p = await requireRole("student");
+  await requireRole("student");
   const sp = await searchParams;
   const now = new Date();
-  const regs = await listMyRegistrations({ id: p.id, role: p.role });
+  const regs = await apiClient<MyRegistration[]>("/api/registrations/mine").catch(() => []);
+
   const { comingUp, past } = group(regs, now);
   const view = sp.view === "month" ? "month" : "agenda";
   const m = typeof sp.m === "string" && /^\d{4}-(0[1-9]|1[0-2])$/.test(sp.m) ? sp.m : dayKey(now.toISOString()).slice(0, 7);

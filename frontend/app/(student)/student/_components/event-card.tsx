@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { formatRange } from "@/lib/format";
-import type { EventView } from "@/lib/domain/views";
-import { cardModel } from "../_lib/view";
+import { cardModel, type EventView } from "../_lib/view";
 import { RegisterFlow } from "./register-flow";
+
 
 /** Read order: title, badge, when, where, seats, action. A meta block, never a table. */
 export function EventCard({ e, primary }: { e: EventView; primary: boolean }) {

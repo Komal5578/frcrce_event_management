@@ -49,10 +49,10 @@ def list_events(
     responses=SHARED_RESPONSES,
 )
 def get_templates(
-    _: Actor = Depends(current_actor),
+    actor: Actor = Depends(current_actor),
     conn: psycopg.Connection[dict[str, Any]] = Depends(get_conn),
 ) -> list[dict[str, Any]]:
-    return list_templates(conn)
+    return list_templates(actor, conn)
 
 
 @router.post(

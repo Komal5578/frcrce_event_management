@@ -1,9 +1,11 @@
 import { StatusBadge, type StatusKey } from "@/components/ui/status-badge";
 import { formatDate, formatTime, localToIso } from "@/lib/format";
-import type { BookingRow } from "@/lib/domain/admin";
+import type { components } from "@/lib/api-types";
 import { agendaGroups } from "../_lib/lanes";
 
-export function Agenda({ bookings }: { bookings: BookingRow[] }) {
+type BookingItem = components["schemas"]["BookingItem"];
+
+export function Agenda({ bookings }: { bookings: BookingItem[] }) {
   return (
     <div className="flex flex-col gap-6">
       {agendaGroups(bookings).map((g) => (

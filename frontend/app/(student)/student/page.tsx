@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { requireRole } from "@/lib/auth";
-import { listVenues } from "@/lib/domain/catalog";
-import { myProfile, listMyRegistrations } from "@/lib/domain/people";
-import { listEventsWithSeats } from "@/lib/domain/views";
+import { apiClient } from "@/lib/api";
+import type { components } from "@/lib/api-types";
 import { EventCard } from "./_components/event-card";
 import { FilterChips } from "./_components/filter-chips";
 import { RegistrationStrip } from "./_components/registration-strip";
@@ -10,18 +9,29 @@ import { applyFilters, distinct, echoText, parseParams } from "./_lib/filter";
 import { group } from "./_lib/mine";
 import { cardModel } from "./_lib/view";
 
+type MyProfile = components["schemas"]["MyProfileItem"];
+type EventView = components["schemas"]["EventViewItem"];
+type MyRegistration = components["schemas"]["RegistrationItem"];
+type Venue = components["schemas"]["VenueItem"];
+
 export const metadata = { title: "Discover events - College Events" };
 export const dynamic = "force-dynamic";
 
 export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const p = await requireRole("student");
-  const actor = { id: p.id, role: p.role };
   const sp = await searchParams;
   const now = new Date();
-  const [me, events, regs, venues] = await Promise.all([myProfile(actor), listEventsWithSeats(actor), listMyRegistrations(actor), listVenues(actor)]);
-  const params = parseParams(sp, me.department);
+  const [me, events, regs, venues] = await Promise.all([
+    apiClient<MyProfile>("/api/people/me").catch(() => ({ id: p.id, name: p.name, department: null, is_organizer: false })),
+    apiClient<EventView[]>("/api/events").catch(() => []),
+    apiClient<MyRegistration[]>("/api/registrations/mine").catch(() => []),
+    apiClient<Venue[]>("/api/venues").catch(() => []),
+  ]);
+  const params = parseParams(sp, me.department ?? null);
   const shown = applyFilters(events, params, now);
+
   const firstActionable = shown.findIndex((e) => cardModel(e).cta !== "none");
+
 
   return (
     <div className="flex flex-col gap-6">

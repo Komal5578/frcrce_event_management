@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: FastAPI + Next.js rebuild
 status: ready
-stopped_at: Phase 10 complete (10-01..10-05 verified); Phase 11 planned
-last_updated: "2026-10-23T07:59:00.000Z"
+stopped_at: Phase 11 complete (11-01..11-03 verified); Phase 12 ready
+last_updated: "2026-10-23T09:15:00.000Z"
 progress:
   total_phases: 13
-  completed_phases: 8
+  completed_phases: 9
   total_plans: 54
-  completed_plans: 48
-  percent: 88
+  completed_plans: 51
+  percent: 94
 ---
 
 # Project State
@@ -20,13 +20,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-23)
 
 **Core value:** Each role completes its primary task fast, with few errors, and always knows the state of the system; clashes are impossible, not just discouraged.
-**Current focus:** Phase 10 complete. Next: Phase 11 Role Screens.
+**Current focus:** Phase 11 complete. Next: Phase 12 Deploy & Harden.
 
 ## Current Position
 
 - **Milestone:** v2 (FastAPI on AWS + Next.js on Vercel)
-- **Phase:** 10 done (10-01 through 10-05 executed, tested, built and verified); next: execute Phase 11
-- **Next phases:** 11 Role Screens, 12 Deploy & Harden, 13 Validation & Final Docs
+- **Phase:** 11 done (11-01 through 11-03 executed, tested, built and verified); next: Phase 12 Deploy & Harden
+- **Next phases:** 12 Deploy & Harden, 13 Validation & Final Docs
 
 **v1 status (closed, frozen as the porting reference):**
 

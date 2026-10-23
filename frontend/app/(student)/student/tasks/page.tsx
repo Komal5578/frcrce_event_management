@@ -1,17 +1,19 @@
 import { requireRole } from "@/lib/auth";
-import { listMyTasks } from "@/lib/domain/people";
+import { apiClient } from "@/lib/api";
 import { formatShortDate } from "@/lib/format";
 import { TaskCard } from "../_components/task-card";
-import { orderTasks, taskBadge } from "../_lib/mine";
+import { orderTasks, taskBadge, type MyTask } from "../_lib/mine";
 
 export const metadata = { title: "My tasks - College Events" };
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const p = await requireRole("student");
+  await requireRole("student");
   const now = new Date();
   // Non-organizers simply have no tasks, so they get the empty state, not an error.
-  const tasks = orderTasks(await listMyTasks({ id: p.id, role: p.role }), now);
+  const rawTasks = await apiClient<MyTask[]>("/api/tasks/mine").catch(() => []);
+  const tasks = orderTasks(rawTasks, now);
+
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-display font-semibold">My tasks</h1>

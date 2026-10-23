@@ -28,15 +28,30 @@ export function isDemoEnabled(env: { DEMO_LOGIN?: string } = getEnv()) {
 }
 
 export type LoginRow = { id: string; role: string; password_hash: string };
-export const findLoginUser = (email: string) =>
-  getDb().prepare("SELECT id, role, password_hash FROM profiles WHERE email = ?").bind(email.toLowerCase()).first<LoginRow>();
+export const findLoginUser = (email: string) => {
+  const db = getDb();
+  if (!db) return Promise.resolve(null);
+  return db.prepare("SELECT id, role, password_hash FROM profiles WHERE email = ?").bind(email.toLowerCase()).first<LoginRow>();
+};
 
 export async function getCurrentProfile() {
+  try {
+    const { apiClient } = await import("@/lib/api");
+    const me = await apiClient<{ id: string; name: string; role: string }>("/api/auth/me");
+    const role = parseRole(me?.role);
+    if (me && role) {
+      return { id: me.id, name: me.name, role };
+    }
+  } catch {
+    // If API client fails or outside backend environment
+  }
+
   const row = await readSession();
   const role = parseRole(row?.role);
   if (!row || !role) return null;
   return { id: row.id, name: row.name, role };
 }
+
 
 export async function requireRole(role: Role) {
   const profile = await getCurrentProfile();

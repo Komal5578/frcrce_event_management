@@ -33,7 +33,7 @@ def post_review(
     actor: Actor = Depends(current_actor),
     conn: psycopg.Connection[dict[str, Any]] = Depends(get_conn),
 ) -> dict[str, str]:
-    review_event(actor, conn, str(event_id), body.action, body.reason)
+    review_event(actor, conn, str(event_id), body.action == "approve", body.reason)
     new_status = "approved" if body.action == "approve" else "returned"
     return {"status": new_status}
 

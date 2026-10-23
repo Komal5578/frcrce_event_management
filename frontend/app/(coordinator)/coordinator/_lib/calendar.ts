@@ -26,7 +26,7 @@ export function monthCells(ym: string): (string | null)[] {
 }
 
 /** Events with a start time, grouped by display-zone day, in time order. Only the given month. */
-export function groupByDay<T extends { starts_at: string | null }>(events: T[], ym: string): Map<string, T[]> {
+export function groupByDay<T extends { starts_at?: string | null }>(events: T[], ym: string): Map<string, T[]> {
   const out = new Map<string, T[]>();
   const sorted = events.filter((e): e is T & { starts_at: string } => !!e.starts_at).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
   for (const e of sorted) {

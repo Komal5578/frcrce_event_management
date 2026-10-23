@@ -1,15 +1,26 @@
 import type { ReactNode } from "react";
 import { requireRole } from "@/lib/auth";
-import { listEventsWithSeats } from "@/lib/domain/views";
+import { apiClient } from "@/lib/api";
+import type { components } from "@/lib/api-types";
 import { formatDateTime } from "@/lib/format";
 import { PaneSwitch } from "../_components/pane-switch";
 import { QueueList } from "../_components/queue-list";
 
+type EventViewItem = components["schemas"]["EventViewItem"];
+
 export default async function Layout({ children }: { children: ReactNode }) {
-  const p = await requireRole("admin");
-  const items = (await listEventsWithSeats({ id: p.id, role: p.role }))
+  await requireRole("admin");
+  const events = await apiClient<EventViewItem[]>("/api/events");
+  const items = events
     .filter((e) => e.status === "pending")
-    .map((e) => ({ id: e.id, title: e.title, when: e.starts_at ? formatDateTime(e.starts_at) : "No time yet", venue: e.venue_name ?? "No venue yet", department: e.department ?? "" }));
+    .map((e) => ({
+      id: e.id,
+      title: e.title,
+      when: e.starts_at ? formatDateTime(e.starts_at) : "No time yet",
+      venue: e.venue_name ?? "No venue yet",
+      department: e.department ?? "",
+    }));
+
   return (
     <div className="flex flex-col gap-6">
       <PaneSwitch

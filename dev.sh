@@ -17,11 +17,6 @@ echo "=== $(date '+%F %T') start ===" | tee -a .logs/frontend.log .logs/backend.
 
 run frontend frontend npm run dev
 
-# ponytail: backend app doesn't exist until Phase 9; starts automatically once backend/app/main.py is there
-if [ -f backend/app/main.py ]; then
-  run backend backend uvicorn app.main:app --reload --port 8000
-else
-  echo "[backend] backend/app/main.py not found yet (Phase 9), skipping" | tee -a .logs/backend.log
-fi
+run backend backend .venv/bin/uvicorn app.main:app --reload --port 8000
 
 wait
