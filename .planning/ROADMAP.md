@@ -6,15 +6,26 @@ Seven phases, one per session, taken from the approved plan. The first two phase
 
 Config: standard granularity, interactive mode, parallelization on. Coverage: 42/42 v1 requirements mapped.
 
-## Phases
+> **2026-10-23: milestone v2 replaces Phases 6–7.** The user switched the stack to FastAPI (AWS free tier) + Next.js (Vercel) and asked for a proper frontend design. v1 (Phases 1–5, the Cloudflare build) is frozen as the reference to port from. v1 Phase 5 was built but its human checkpoint was **never done**. Phases 6–7 are folded into v2 Phases 12–13. See "Milestone v2" below.
+
+## Phases (milestone v1: Cloudflare build, closed)
 
 - [x] **Phase 1: Research & Modeling Kit** - Interview guide, questionnaire, persona template, proto-personas flagged `assumed` (completed and verified 2026-10-20; UAT 9/9)
 - [x] **Phase 2: Requirements & Framework** - Goals/tasks, scenarios, IA, task flows, navigation map, low-fi wireframes (completed 2026-10-20)
 - [x] **Phase 3: Foundation** - Next.js + Tailwind scaffold, design tokens, shared components, D1 schema/seed, clash triggers, authorization layer, auth + demo logins (completed 2026-10-20)
-- [x] **Phase 4: Role Interfaces (parallel wave)** - Coordinator, Student and Admin interfaces built by three agents in disjoint folders
-- [ ] **Phase 5: Cross-Cutting** - Alerts, reports/export, a11y pass, empty/error/loading states, Review & Confirm everywhere
-- [ ] **Phase 6: Validation Kit & Iteration** - Test plan, task and metric sheets, heuristic evaluation, walkthrough, a11y checklist, team sessions, redesign
-- [ ] **Phase 7: Deploy & Final Documentation** - Cloudflare deployment, authorization/secrets review, final docs, design-model infographic
+- [x] **Phase 4: Role Interfaces (parallel wave)** - Coordinator, Student and Admin interfaces built by three agents in disjoint folders (no VERIFICATION/UAT; browser evidence was only "works")
+- [~] **Phase 5: Cross-Cutting** - Alerts, reports/export, a11y pass, empty/error/loading states, Review & Confirm everywhere (all 6 plans built, 260 tests pass; human checkpoint not done; superseded by v2)
+- [→] **Phase 6: Validation Kit & Iteration** - folded into v2 Phase 13
+- [→] **Phase 7: Deploy & Final Documentation** - folded into v2 Phases 12–13 (Cloudflare deploy replaced by AWS + Vercel)
+
+## Phases (milestone v2: FastAPI + Next.js rebuild)
+
+- [ ] **Phase 8: Re-baseline & Restructure** - ADR-001 v3, kb fixes (clash rule, vocabulary, IA), repo split into `/backend` + `/frontend`, cleanup
+- [ ] **Phase 9: FastAPI Backend** - Postgres schema, auth, domain logic ported from `lib/domain`, all endpoints, pytest port of the v1 tests
+- [ ] **Phase 10: Design System & App Shell** - UI-SPEC with a real visual direction, shadcn/ui tokens (light and dark), shell per role, login, typed API client
+- [ ] **Phase 11: Role Screens** - Student, Coordinator and Admin screens rebuilt on the new design and wired to FastAPI, one role at a time
+- [ ] **Phase 12: Deploy & Harden** - EC2 docker-compose + Caddy, Vercel, Playwright smoke tests of the 3 primary flows, a11y pass, security review
+- [ ] **Phase 13: Validation & Final Docs** - Usability kit, heuristic evaluation and walkthrough, team sessions (team only), iterations, `docs/final/`, infographic
 
 ## Phase Details
 
@@ -181,14 +192,134 @@ Plans:
 
 **Plans**: TBD
 
+## Milestone v2: FastAPI + Next.js rebuild
+
+Decided by the user on 2026-10-23. Stack, rules and audit summary are in `CLAUDE.md`, and each phase folder has a `CONTEXT.md` brief.
+- **Process:** lean. Work one phase per session and make one commit per verified phase. No worktrees or frozen files.
+- **Requirements:** carry over by id. The behaviour v1 requirements describe must keep holding on the new stack, and `REQUIREMENTS.md` "v2 Requirements" adds the new ids.
+
+### Phase 8: Re-baseline & Restructure
+
+**Goal**: Docs, kb and repo all describe the same system (FastAPI + Next.js) with no contradictions, and the repo has a clean `/backend` + `/frontend` layout before any new code.
+**Depends on**: v1 Phase 5 (code frozen as the porting reference)
+**Requirements**: REBASE-01, REBASE-02, REBASE-03, REBASE-04
+**Success Criteria**:
+  1. `adr-001-stack` is rewritten (v3: FastAPI + Postgres on AWS EC2, Next.js on Vercel) with its history kept. PROJECT.md, AGENTS.md and CLAUDE.md agree with it.
+  2. `dom-domain-model` says only approved/open/ongoing events book a venue (pending requests may overlap and are resolved at approval). Templates, return/cancel reasons and the venue `active` flag are documented.
+  3. `dom-status-vocabulary` covers event, task, registration and alert statuses. Every doc uses the canonical words (Pending approval, Done, Notifications).
+  4. IA fixes: Coordinator "Tasks" is a cross-event screen, the ST-01 card leads to ST-02, and student time-clash is either a "warn" requirement or removed. The user confirms or changes ADR-002.
+  5. The v1 app moves to `/frontend` (git mv). Cloudflare-only files are deleted (`wrangler.jsonc`, `open-next.config.ts`, `cloudflare-env.d.ts`, D1 scripts, `.continue-here.md`), `migrations/`, `seed/` and `scripts/` move to `/backend`, and `graphify-out/` is gitignored. `node kb/tools/build-index.mjs` passes.
+
+### Phase 9: FastAPI Backend
+
+**Goal**: A FastAPI service enforces every v1 business rule (plus the audit fixes) and exposes everything the three interfaces need, proven by tests against a real Postgres.
+**Depends on**: Phase 8
+**Requirements**: API-01, API-02, API-03, API-04, API-05, API-06
+**Success Criteria**:
+  1. `docker compose up` starts Postgres and the API; `GET /health` is OK; the schema and seed load from `backend/migrations` and `backend/seed`.
+  2. **Clash rule:**
+     - Saving two overlapping *approved* events at one venue is rejected by the exclusion constraint.
+     - Two overlapping *pending* requests are allowed, and approving the second one fails with `VENUE_CLASH`.
+     - A second registration for the same (event, user) is rejected by the unique constraint.
+  3. **Rules ported from the v1 triggers into domain transactions:**
+     - Capacity and waitlist, including promotion and its notification.
+     - The status state machine.
+     - Resource limits, now re-checked on approve and on reschedule.
+  4. **Auth:**
+     - Sign in, sign out and session cookie (hashed token stored), with argon2 passwords and a rate limit.
+     - Demo login only when `DEMO_LOGIN=true`.
+     - Every router, including CSV export, checks the actor's role; a student gets 403 on coordinator/admin endpoints.
+  5. The v1 vitest domain and trigger cases are ported to pytest, plus new tests for criteria 2–4. `ruff check && pytest` passes.
+  6. `/openapi.json` documents every endpoint, ready for `openapi-typescript`.
+
+### Phase 10: Design System & App Shell
+
+**Goal**: The frontend has a deliberate visual identity ("modern campus SaaS") that keeps every accessibility rule, plus a working shell for each role connected to the API.
+**Depends on**: Phase 9
+**Requirements**: UI-01, UI-02, UI-03, UI-04, UI-05
+**Success Criteria**:
+  1. A UI-SPEC (`gsd-ui-phase`) sets the visual direction, approved by the user:
+     - type scale
+     - palette as OKLCH tokens, light and dark
+     - radius and elevation
+     - motion (respects reduced-motion)
+     - chart style
+  2. **Components:**
+     - shadcn/ui is set up on the tokens.
+     - `StatusBadge` covers all status families with icon + text + colour.
+     - The contrast test passes AA for both themes.
+     - A-/A/A+ text size and the skip link still work.
+  3. **ConfirmDialog:** focus starts on "Go back", and there is a destructive variant.
+  4. **AppShell:**
+     - Sidebar plus mobile sheet for Coordinator and Admin, and a bottom tab bar for Student.
+     - The current nav item is marked correctly on subpages.
+     - `/design` is guarded or removed.
+  5. **Login and API:**
+     - The redesigned login works against FastAPI through the `/api/*` rewrite, with a first-party cookie.
+     - API types are generated by `openapi-typescript`.
+     - One shared `ReportsPage` and one shared `EventCard` replace the duplicates.
+
+### Phase 11: Role Screens
+
+**Goal**: Each role completes its primary task end to end, in the browser, on the new design and the FastAPI backend.
+**Depends on**: Phase 10
+**Requirements**: ROLE-01, ROLE-02, ROLE-03, ROLE-04 (re-delivers COORD-01..07, STUD-01..05, ADMIN-01..04, XCUT-01..06 on v2)
+**Success Criteria**:
+  1. **Student (ST-01..06):**
+     - Discover with filters, then event detail, then Review & Confirm to register, join the waitlist or cancel, with toast feedback.
+     - My Events with calendar, and My Tasks for organizers.
+     - Notifications with a cheap unread count.
+  2. **Coordinator (CO-01..08):**
+     - The 5-step builder: template prefill and autosave, a free-venue picker, resources and tasks.
+     - Review & Confirm to submit, then monitor, change or cancel (registrants are notified).
+     - The Tasks screen, and Reports with charts and CSV.
+  3. **Admin (AD-01..06):**
+     - Dashboard with an attention list.
+     - Approvals with a **live clash check** (two overlapping pending requests in the seed), approve or return with a reason.
+     - Calendar with conflicts, Venues & Resources, and Reports with charts and CSV.
+  4. **On every screen:**
+     - Designed empty, loading and error states with plain-language messages.
+     - 44px targets, a keyboard-only path and A+ text size.
+     - Consistent vocabulary.
+     - Each role's primary flow is driven in the browser and recorded (screenshots, real results only).
+
+### Phase 12: Deploy & Harden
+
+**Goal**: Anyone with the link can use the model over HTTPS, and it is reviewed for security.
+**Depends on**: Phase 11
+**Requirements**: DEPLOY-01, DEPLOY-02, DEPLOY-03, DEP-02
+**Success Criteria**:
+  1. The backend runs on one EC2 free-tier instance (docker-compose: Postgres + FastAPI + Caddy HTTPS on sslip.io), with a nightly `pg_dump` to S3 and a one-command redeploy script. (The user creates the AWS account.)
+  2. The frontend is on Vercel (root `/frontend`, `API_URL` set) and reaches the backend through the rewrite.
+  3. Playwright smoke tests of TT-C1, TT-S1 and TT-A1 pass against the deployed URL. Clash and double registration are rejected on production.
+  4. **Security review:**
+     - Authorization per role is checked.
+     - No secrets in the repo or its history.
+     - The demo-login decision is made explicitly.
+     - The Lighthouse a11y score is at least 95 on each role's home page.
+
+### Phase 13: Validation & Final Docs
+
+**Goal**: The team can run usability tests on the deployed model, and the project is documented as a complete Goal-Directed Design.
+**Depends on**: Phase 12
+**Requirements**: VAL-01, VAL-02, VAL-03, DEP-03
+**Honesty rule**: unchanged from v1 Phase 6. AI drafts the instruments; results, scores and quotes come only from the team.
+**Success Criteria**: v1 Phase 6 criteria 1–4, plus v1 Phase 7 criterion 4 (`docs/final/` covers all 13 deliverables with links, and the design-model infographic exists).
+
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Research & Modeling Kit | 3/3 | Complete    | 2026-10-20 |
-| 2. Requirements & Framework | 5/5 | Complete    | 2026-10-20 |
-| 3. Foundation | 10/10 | Complete   | 2026-10-20 |
-| 4. Role Interfaces (parallel wave) | 0/TBD | Not started | - |
-| 5. Cross-Cutting | 0/TBD | Not started | - |
-| 6. Validation Kit & Iteration | 0/TBD | Not started | - |
-| 7. Deploy & Final Documentation | 0/TBD | Not started | - |
+| 1. Research & Modeling Kit | 3/3 | Complete | 2026-10-20 |
+| 2. Requirements & Framework | 5/5 | Complete | 2026-10-20 |
+| 3. Foundation | 10/10 | Complete (Cloudflare; superseded by v2) | 2026-10-20 |
+| 4. Role Interfaces (parallel wave) | 8/8 | Built, not formally verified (superseded by v2) | 2026-10-21 |
+| 5. Cross-Cutting | 6/6 | Built, human checkpoint not done (superseded by v2) | - |
+| 6. Validation Kit & Iteration | - | Folded into Phase 13 | - |
+| 7. Deploy & Final Documentation | - | Folded into Phases 12–13 | - |
+| 8. Re-baseline & Restructure | 0/TBD | Not started (next) | - |
+| 9. FastAPI Backend | 0/TBD | Not started | - |
+| 10. Design System & App Shell | 0/TBD | Not started | - |
+| 11. Role Screens | 0/TBD | Not started | - |
+| 12. Deploy & Harden | 0/TBD | Not started | - |
+| 13. Validation & Final Docs | 0/TBD | Not started | - |

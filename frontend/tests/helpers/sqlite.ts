@@ -1,11 +1,14 @@
 import { DatabaseSync, type SQLInputValue } from "node:sqlite";
 import { readdirSync, readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+const BACKEND = fileURLToPath(new URL("../../../backend/", import.meta.url));
 
 export function freshDb({ seed = false } = {}) {
   const db = new DatabaseSync(":memory:"); // foreign_keys on by default
-  for (const f of readdirSync("migrations").filter((f) => f.endsWith(".sql")).sort())
-    db.exec(readFileSync(`migrations/${f}`, "utf8"));
-  if (seed) db.exec(readFileSync("seed/seed.sql", "utf8"));
+  for (const f of readdirSync(BACKEND + "migrations").filter((f) => f.endsWith(".sql")).sort())
+    db.exec(readFileSync(`${BACKEND}migrations/${f}`, "utf8"));
+  if (seed) db.exec(readFileSync(BACKEND + "seed/seed.sql", "utf8"));
   return db;
 }
 

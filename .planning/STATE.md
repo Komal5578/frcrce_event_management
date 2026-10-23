@@ -1,62 +1,45 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: verifying
-stopped_at: "Phase 5 Wave 4 at human-verify checkpoint (05-01 through 05-06 implemented, 260 tests passing)"
-last_updated: "2026-10-21T00:50:00.000Z"
-last_activity: 2026-10-21 -- Phase 05 complete through 05-06 automated tasks; ready for human verification
+milestone: v2.0
+milestone_name: FastAPI + Next.js rebuild
+status: executing
+stopped_at: "Phase 8 executed and gate green; awaiting user commit. Next: Phase 9"
+last_updated: "2026-10-23T00:00:00.000Z"
+last_activity: 2026-10-23 -- audit done; milestone v2 (Phases 8-13) added; CLAUDE.md updated; no code changed
 progress:
-  total_phases: 7
-  completed_phases: 4
-  total_plans: 26
-  completed_plans: 24
-  percent: 71
+  total_phases: 6
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
-
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-10-20)
+See: .planning/PROJECT.md (updated 2026-10-23)
 
 **Core value:** Each role completes its primary task fast, with few errors, and always knows the state of the system; clashes are impossible, not just discouraged.
-**Current focus:** Phase 05 — cross-cutting
+**Current focus:** Phase 08 (re-baseline & restructure). Brief: `.planning/phases/08-rebaseline-restructure/CONTEXT.md`
 
 ## Current Position
 
-Phase: 05 (cross-cutting) — VERIFYING (Wave 4 human checkpoint)
-Wave: 4 of 4
-Status: Plans 05-01, 05-02, 05-03, 05-04, 05-05, 05-06 complete; 260/260 tests green
-Last activity: 2026-10-21 -- Phase 05 all automated tasks completed; waiting for human checkpoint
+- **Milestone:** v2 (FastAPI on AWS + Next.js on Vercel)
+- **Phase:** 08 done (uncommitted, pending the one phase commit); next: plan Phase 9 with `gsd-plan-phase 9`
+- **Next phases:** 09 FastAPI Backend, then 10 Design System & Shell, 11 Role Screens, 12 Deploy & Harden, 13 Validation & Final Docs
 
-Progress: [███████░░░] 71%
+**v1 status (closed, frozen as the porting reference):**
+- Phases 1–3 are complete.
+- Phase 4 was built but not formally verified.
+- Phase 5 was built (260/260 vitest tests pass) but its human checkpoint was never done.
+- The live Cloudflare deployment (college-events.varadaj47.workers.dev) is v1 and has `DEMO_LOGIN=true`.
 
 ## Working Rules
 
-- One phase per session. Do not start the next phase; end with STATE.md update, KB check if kb changed, commit, then `/clear`.
-- Phase 4 is the only parallel wave: three worktree agents, one route folder each, per `AGENTS.md`; shared files frozen after Phase 3.
-- Honesty: AI drafts instruments only; research and usability results come only from the team and are the only data that may be `evidence`.
-
-## Performance Metrics
-
-**Velocity:**
-
-- Total plans completed: 8
-- Average duration: -
-- Total execution time: 0.0 hours
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 1 | 3 | - | - |
-| 2 | 5 | - | - |
-
-*Updated after each plan completion*
-| Phase 03 P01 | 25min | 3 tasks | 14 files |
-| Phase 03 P02 | 35min | 3 tasks | 7 files |
+- One phase per session. End with a STATE.md update, the KB check if kb changed, one commit per verified phase, then `/clear`.
+- Lean process (v2): no worktrees, no frozen files, no proposal/amendment machinery. One CONTEXT, PLAN(s), one SUMMARY and one VERIFICATION per phase.
+- Honesty: AI drafts instruments only. Research and usability results come only from the team and are the only data that may be `evidence`.
 
 ## Accumulated Context
 
@@ -64,29 +47,29 @@ Progress: [███████░░░] 71%
 
 Full log in PROJECT.md Key Decisions.
 
-- [Roadmap]: 7 fixed phases from the approved plan; phase order not to be re-derived.
-- [Roadmap]: Phases 2, 3, 4, 5 carry `UI hint: yes`.
-- [adr-002-roles]: Three interfaces, four roles; Organizer is a flag on a Student (assumed, not yet user-confirmed).
-- [Phase ?]: [03-01] globals.css is the only token source (no tokens.ts); --spacing 4px keeps 44px targets at every text size
+- [2026-10-23, user]: Stack is FastAPI (AWS free tier, EC2) + Next.js (Vercel). Supersedes the Cloudflare/D1 decision of 2026-10-20.
+- [2026-10-23, user]: Port the v1 work and keep the GDD design (kb, personas, IA, flows). Redesign the frontend visually as "modern campus SaaS".
+- [2026-10-23, user]: Start a new lean milestone instead of continuing the 7-phase process.
+- [2026-10-23, assistant, pending kb in Phase 8]: Only approved/open/ongoing events book a venue, so pending requests may overlap and are resolved at approval. This makes TT-A1 reachable.
+- [2026-10-23, user]: ADR-002 confirmed: Organizer is a flag on a Student account.
 
 ### Pending Todos
 
-None yet.
+- Phase 12: the user creates the AWS and Vercel accounts.
 
 ### Blockers/Concerns
 
-- [Phase 3] Plans 03-06..03-10 done. Deployed to https://college-events.varadaj47.workers.dev. Live check done: demo logins verified via tail, password sign-in user-reported OK (no CPU figure seen). DEMO_LOGIN true on public URL.
-- [Phase 6] Depends on the team running real usability sessions.
-- [Phase 7] Cloudflare account needed for deploy (same login as Phase 3).
+- AWS free-tier type depends on account age: accounts made after July 2025 are on the credit-based free plan. Check before Phase 12.
+- Phase 13 needs the team to run real research and usability sessions.
 
 ## Deferred Items
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
-| v2 | I18N-01 Hindi/Marathi, EXPT-01 export polish, CHKN-01 check-in | Deferred | Requirements |
+| Stretch | I18N-01 Hindi/Marathi, EXPT-01 export polish, CHKN-01 check-in | Deferred | Requirements |
 
 ## Session Continuity
 
-Last session: 2026-10-20T22:08:00.000Z
-Stopped at: Phase 5 Wave 1 partial — user paused to go home
-Resume file: .continue-here.md
+Last session: 2026-10-23
+Stopped at: Phase 8 executed (08-01..08-05), kb index passes, nothing committed. Commit once, then /clear.
+Resume: `.planning/phases/09-fastapi-backend/CONTEXT.md`

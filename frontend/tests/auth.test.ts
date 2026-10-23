@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { freshDb, d1Shim } from "./helpers/sqlite";
 
 let db = freshDb({ seed: true });
@@ -45,7 +46,7 @@ describe("auth helpers", () => {
     for (const bad of ["Admin", "", undefined, null, "../evil", 1]) expect(parseRole(bad)).toBeNull();
   });
   it("demo emails exist in seed.sql", () => {
-    const seed = readFileSync("seed/seed.sql", "utf8");
+    const seed = readFileSync(fileURLToPath(new URL("../../backend/seed/seed.sql", import.meta.url)), "utf8");
     for (const r of ROLES) expect(seed).toContain(`'${demoEmail(r)}'`);
   });
   it("isDemoEnabled is strictly 'true'", () => {

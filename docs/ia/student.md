@@ -26,7 +26,7 @@ flowchart TD
 
 | Item | Screen id | Goal served | Req ids |
 |---|---|---|---|
-| Discover | ST-01 | Find an event worth attending | S1, X1, X3 |
+| Discover | ST-01 | Find an event worth attending; each card links to ST-02 only, with no Register button on the card | S1, X1, X3 |
 | My Events | ST-04 | See what I am registered for | S4 |
 | My Tasks | ST-05 | Organizer only, tab hidden for other students | S5 |
 | Notifications | ST-06 | Reminders and changes | S4 |
@@ -36,7 +36,7 @@ flowchart TD
 | Screen id | Screen | Req ids |
 |---|---|---|
 | ST-01 | Discover | S1, X1, X3 |
-| ST-02 | Event detail | S2, X1 |
+| ST-02 | Event detail (the Register / Join waitlist action lives here and opens ST-03) | S2, X1 |
 | ST-03 | Review and Confirm (register; waitlist, cancel variants) | S3, X2, X5 |
 | ST-04 | My Events and calendar | S4 |
 | ST-05 | My Tasks, organizer only | S5 |

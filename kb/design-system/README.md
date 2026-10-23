@@ -47,6 +47,22 @@ Icon + word + colour, always. One table: `STATUS_META` in `components/ui/status-
 | full | Full / Waitlist | Users | #9A3412 | #FFEDD5 | 6.38 |
 | returned | Returned | CornerUpLeft | #78350F | #FEF3C7 | 8.15 |
 
+## Task, registration and alert tokens (v2, to add in Phase 10)
+
+Same pattern as above: icon + text + `--color-status-<key>-fg/-bg`, each pair checked at 4.5:1 by the contrast test (ratios recorded when computed, not before). Meaning and display mapping: `dom-status-vocabulary`.
+
+| Key | Label | Icon | Colour family |
+|---|---|---|---|
+| todo | To do | Circle | grey |
+| doing | In progress | Loader | blue |
+| done | Done | CircleCheck | green |
+| overdue | Overdue | AlarmClock | red |
+| registered | Registered | TicketCheck | green |
+| waitlisted | Waitlisted | Hourglass | orange |
+| reg-cancelled | Cancelled | CircleX | red |
+| alert-clash | Clash | TriangleAlert | red |
+| alert-low | Low registrations | TrendingDown | amber |
+
 ## Contrast record
 
 Output of `npx vitest run tests/contrast.test.ts --disableConsoleIntercept`, 2026-10-20. Computed, not user-tested. The test fails if any pair drops below its threshold.
@@ -83,7 +99,7 @@ Root font-size 14 / 16 / 20px on `<html>`. Stored in `localStorage` key `textSiz
 - `card.tsx`: panel surface, 24px padding.
 - `alert.tsx`: info, success, warning, error; error uses `role="alert"`; accepts a `ref` to move focus.
 - `text-size-control.tsx`: the A-/A/A+ group with `aria-pressed`.
-- `app-shell.tsx`: skip link, header, sidebar nav at 1024px and up, "Menu" disclosure below. Roles pass `navItems`, `roleLabel`, `userName`, `signOut`.
+- `app-shell.tsx`: skip link, header, sidebar nav at 1024px and up. Below 1024px the student interface uses a bottom tab bar (per the IA); admin and coordinator may keep a collapsible sidebar. Roles pass `navItems`, `roleLabel`, `userName`, `signOut`.
 - `confirm-dialog.tsx`: native `<dialog>` Review & Confirm.
 
 All targets are at least 44px, focus ring is never removed, nothing relies on colour alone.

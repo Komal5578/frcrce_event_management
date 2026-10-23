@@ -95,18 +95,18 @@ Next: CO-05
 
 ```
 +--------------------------------------------------------------+
-| Tasks for Tech Fest 2026                        A-  A  A+    |
+| Tasks (all my events)       [Event: All v] [Status: All v] A- A A+|
 +-----------+--------------------------------------------------+
-| My Events  | Task            Owner      Due     Status        |
-| Calendar   | Book poster     Asha K.    05 Mar  [~ To do - grey]|
-| > Tasks    | Print passes    Ravi P.    08 Mar  [> In progress - blue]|
-| Notifs     | Test mic        Meera S.   11 Mar  [! Overdue - red]|
+| My Events  | Event / Task        Owner    Due    Status       |
+| Calendar   | Tech Fest: Book poster Asha K. 05 Mar  [~ To do - grey]|
+| > Tasks    | Tech Fest: Print passes Ravi P. 08 Mar  [> In progress - blue]|
+| Notifs     | Quiz Night: Test mic Meera S. 11 Mar  [! Overdue - red]|
 |            | [ + Add task ]                                   |
 |            |                          [ Go back ] [ Next ]    |
 +-----------+--------------------------------------------------+
 ```
 
-Notes: standard tasks prefilled from the template; owner picked from students already in the department. Task chips use the shared vocabulary (X4).
+Notes: cross-event list across all the coordinator's events, filterable by event and status; in the new-event wizard the same list is pre-filtered to the event being created. Standard tasks prefilled from the template; owner picked from students already in the department. Task chips use the shared vocabulary (X4).
 Next: CO-06
 
 ## CO-06 Review and Confirm (C5, C7, X2)

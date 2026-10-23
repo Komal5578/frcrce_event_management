@@ -23,14 +23,14 @@ Legend (greyscale low-fi; Phase 3 picks real icons and tokens from `dom-status-v
 | Quiz Night                     |
 | Fri 20 Feb, 17:00  Room 204    |
 | 22 seats left                  |
-| [o Open - green]   [ Register ]|
+| [o Open - green] [ View details ]|
 |--------------------------------|
 | Tech Talk                      |
 | Sat 21 Feb, 11:00  Hall A      |
 | 0 seats left                   |
-| [= Full - orange] [ Join waitlist ]|
+| [= Full - orange] [ View details ]|
 |--------------------------------|
-| Discover | My Events | Tasks* | Alerts |
+| Discover | My Events | Tasks* | Notifications |
 +--------------------------------+
  * Tasks tab hidden for non-organizers
 ```
@@ -55,7 +55,7 @@ Next: ST-02, ST-05
 |                                |
 |        [ Register ]            |
 |--------------------------------|
-| Discover | My Events | Alerts  |
+| Discover | My Events | Notifications  |
 +--------------------------------+
 ```
 
@@ -85,7 +85,7 @@ After Confirm:
 +--------------------------------+
 ```
 
-Notes: waitlist variant says "You will be added to the waitlist at position 4. We will tell you if a seat opens." then "You're on the waitlist" with `[= Waitlisted - orange]`. Cancel variant says "Your seat will be released and the next person on the waitlist is offered it." with [ Go back ] [ Confirm cancel ], then "Registration cancelled". A clash with another registered event is blocked with a message naming that event.
+Notes: waitlist variant says "You will be added to the waitlist at position 4. We will tell you if a seat opens." then "You're on the waitlist" with `[= Waitlisted - orange]`. Cancel variant says "Your seat will be released and the next person on the waitlist is offered it." with [ Go back ] [ Confirm cancel ], then "Registration cancelled". A time overlap with another registered event shows a warning naming that event; you can still confirm (warn-only, S6).
 Next: ST-04
 
 ## ST-04 My Events and calendar (S4)
@@ -104,7 +104,7 @@ Next: ST-04
 | [= Waitlisted - orange] #4     |
 |                  [ Cancel ]    |
 |--------------------------------|
-| Discover | My Events | Alerts  |
+| Discover | My Events | Notifications  |
 +--------------------------------+
 ```
 
@@ -126,7 +126,7 @@ Next: end, ST-03
 | Due 11 Mar [! Overdue - red]   |
 |                [ Mark done ]   |
 |--------------------------------|
-| Discover | My Events | Tasks | Alerts |
+| Discover | My Events | Tasks | Notifications |
 +--------------------------------+
 After Mark done: "Marked done." [ Undo ]
 ```
@@ -146,7 +146,7 @@ Next: end
 | A seat opened for Tech Talk.   |
 | [+ Registered - green]         |
 |--------------------------------|
-| Discover | My Events | Alerts  |
+| Discover | My Events | Notifications  |
 +--------------------------------+
 ```
 

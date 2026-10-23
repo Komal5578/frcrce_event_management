@@ -2,15 +2,15 @@
   {
     "id": "adr-001-stack",
     "type": "decision",
-    "title": "ADR-001 Stack: Next.js + Cloudflare Workers (OpenNext) + D1",
+    "title": "ADR-001 Stack: FastAPI + Postgres on AWS EC2, Next.js on Vercel (v3)",
     "tags": [
       "stack",
       "architecture"
     ],
     "confidence": "derived",
     "sources": "[user-chat]",
-    "summary": "Chosen stack and the rationale; user decision 2026-10-20, everything on Cloudflare free tier.",
-    "updated": "2026-10-20",
+    "summary": "Chosen stack and rationale (v3); user decision 2026-10-23, FastAPI + Postgres on one EC2 free-tier instance, Next.js on Vercel.",
+    "updated": "2026-10-23",
     "path": "decisions/adr-001-stack.md"
   },
   {
@@ -21,10 +21,10 @@
       "roles",
       "personas"
     ],
-    "confidence": "assumed",
+    "confidence": "source",
     "sources": "[user-chat]",
-    "summary": "Coordinator, Student(+Organizer flag), Admin; assistant's call, not yet user-confirmed.",
-    "updated": "2026-10-20",
+    "summary": "Coordinator, Student(+Organizer flag), Admin; confirmed by the user 2026-10-23.",
+    "updated": "2026-10-23",
     "path": "decisions/adr-002-roles.md"
   },
   {
@@ -98,7 +98,7 @@
     "confidence": "derived",
     "sources": "[src-hmi-problems-pattern]",
     "summary": "Entities, relationships and the integrity rules the UI relies on.",
-    "updated": "2026-10-20",
+    "updated": "2026-10-23",
     "path": "domain/domain-model.md"
   },
   {
@@ -217,7 +217,7 @@
     "confidence": "derived",
     "sources": "[src-hmi-principles,src-universal-design]",
     "summary": "Canonical event/registration/task statuses with icon, label and colour rule.",
-    "updated": "2026-10-20",
+    "updated": "2026-10-23",
     "path": "domain/status-vocabulary.md"
   },
   {

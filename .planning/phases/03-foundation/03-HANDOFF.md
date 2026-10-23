@@ -37,7 +37,7 @@ Requirement support not in the table: C1 `event_templates` plus nullable draft c
 - `ConfirmDialog({ open, title?, verb, summary, consequence, onConfirm, onCancel, busy? })` for every irreversible action
 - `StatusBadge({ status })`; `STATUS_META` keys: draft, pending, approved, open, ongoing, completed, cancelled, full, returned
 - `TextSizeControl()` (A-/A/A+)
-- Helpers in `lib/auth.ts`: `requireRole(role)`, `getCurrentProfile()`, `homeFor`, `ROLE_LABEL`, `isDemoEnabled`. Supabase clients in `lib/supabase/`.
+- Helpers in `lib/auth.ts`: `requireRole(role)`, `getCurrentProfile()`, `homeFor`, `ROLE_LABEL`, `isDemoEnabled`. `lib/supabase/` (stale: Supabase removed; v1 used Cloudflare D1, now superseded by FastAPI, see ADR-001 v3).
 
 ## (c) Status transitions
 

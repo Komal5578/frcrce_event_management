@@ -67,5 +67,8 @@
   "resolve_model_ids": "omit",
   "runtime": "antigravity",
   "mode": "interactive",
-  "granularity": "standard"
+  "granularity": "standard",
+  "graphify": {
+    "enabled": true
+  }
 }

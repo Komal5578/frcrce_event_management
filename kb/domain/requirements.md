@@ -28,6 +28,7 @@ Priorities are derived (AI-proposed), to be revised after team research.
 - S3 Register via Review & Confirm; waitlist when full; cancel registration Accept: Registering shows Review & Confirm first; a full event offers the waitlist; a registration can be cancelled. Priority: must.
 - S4 My Registrations and calendar view; reminders in-app Accept: A student sees their registrations in a list and a calendar, and an in-app reminder for upcoming events. Priority: should.
 - S5 (Organizer) My Tasks with due dates; mark done Accept: An organizer sees their tasks with due dates and can mark one done in one step. Priority: should.
+- S6 Warn on time overlap when registering Accept: Registering for an event that overlaps another event the student is registered for shows a plain-language warning naming that event, and the student can still confirm. Warn-only: it never blocks; blocking is reserved for venue clash and double registration (X5). Priority: should.
 
 ## Admin
 - A1 Approvals queue with clash check, resources, approve / return with reason Accept: Each pending request shows clash result and resources; approve and return (with a required reason) are both available. Priority: must.

@@ -13,7 +13,7 @@ flowchart TD
   ST05["ST-05 My Tasks (S5)"]
   P1["Prefill: only my tasks, soonest due first"]
   M1["Mark done"]
-  S1["Status: check icon + Completed + colour"]
+  S1["Status: check icon + Done + colour"]
   U1["Undo available"]
   L --> ST01
   ST01 --> ST05

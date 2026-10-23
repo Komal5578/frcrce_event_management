@@ -9,3 +9,10 @@ node_modules/
 next-env.d.ts
 *.tsbuildinfo
 coverage
+graphify-out/
+__pycache__/
+.venv/
+backend/.env
+frontend/.wrangler
+frontend/.open-next
+.logs/

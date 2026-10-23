@@ -76,7 +76,50 @@ Source: `kb/domain/requirements.md` (`dom-requirements`, ids in brackets are the
 - [ ] **DEP-02**: Authorization layer is reviewed and no secrets are committed before deploy
 - [ ] **DEP-03**: Final documentation and the one-page design-model infographic are complete (`src-model-infographic`)
 
-## v2 Requirements
+## v2 Requirements (FastAPI + Next.js rebuild, added 2026-10-23)
+
+v1 behaviour (COORD, STUD, ADMIN, XCUT, VAL, DEP) must keep holding on the new stack. The ids below are what is new.
+
+### Re-baseline (Phase 8)
+
+- [x] **REBASE-01**: ADR-001 v3 (FastAPI + Postgres on AWS, Next.js on Vercel) is recorded. PROJECT.md, AGENTS.md and CLAUDE.md agree with it.
+- [x] **REBASE-02**: The domain model says only approved and later events book a venue (makes TT-A1 reachable). Templates, reasons and the venue `active` flag are documented (`dom-domain-model`).
+- [x] **REBASE-03**: The status vocabulary covers event, task, registration and alert statuses, and all docs use the canonical words (`dom-status-vocabulary`). IA inconsistencies are fixed.
+- [x] **REBASE-04**: The repo is split into `/backend` + `/frontend`, with Cloudflare-only and generated clutter removed.
+
+### Backend (Phase 9)
+
+- [ ] **API-01**: FastAPI + Postgres run with `docker compose up`, and the schema and seed load from plain SQL migrations.
+- [ ] **API-02**: An exclusion constraint blocks venue clashes among approved/open/ongoing events. Overlapping pending requests are allowed, and approving the clashing one fails (X5).
+- [ ] **API-03**: Capacity/waitlist with promotion, the status state machine and resource limits (re-checked on approve and on reschedule) are enforced in domain transactions.
+- [ ] **API-04**: Auth uses a hashed-token session cookie, argon2 passwords, a sign-in rate limit and a demo login gated by an env flag.
+- [ ] **API-05**: Every endpoint, including CSV export, checks the actor's role. Cross-role access gets 403.
+- [ ] **API-06**: The v1 domain and trigger tests are ported to pytest and pass, and OpenAPI documents every endpoint.
+
+### Design system and shell (Phase 10)
+
+- [ ] **UI-01**: A user-approved UI-SPEC sets the visual direction (type, OKLCH palette in light and dark, radius, elevation, motion, charts).
+- [ ] **UI-02**: shadcn/ui components on the tokens, with StatusBadge covering all status families. The contrast test passes AA in both themes (X1).
+- [ ] **UI-03**: ConfirmDialog focuses "Go back" first and has a destructive variant (X2).
+- [ ] **UI-04**: Role AppShells: sidebar + sheet for Coordinator/Admin, bottom tab bar for Student, correct current-nav marking, A-/A/A+ kept (X3).
+- [ ] **UI-05**: The login and typed API client (openapi-typescript, `/api/*` rewrite, first-party cookie) work against FastAPI.
+
+### Role screens (Phase 11)
+
+- [ ] **ROLE-01**: Student screens ST-01..06 work on v2 (STUD-01..05).
+- [ ] **ROLE-02**: Coordinator screens CO-01..08 work on v2 (COORD-01..07, XCUT-01).
+- [ ] **ROLE-03**: Admin screens AD-01..06 work on v2, with a reachable live clash check (ADMIN-01..04, XCUT-01, XCUT-02).
+- [ ] **ROLE-04**: Every screen has empty, loading and error states, a keyboard path, 44px targets and a consistent vocabulary (XCUT-03..06).
+
+### Deploy (Phase 12)
+
+- [ ] **DEPLOY-01**: The backend is live on AWS EC2 free tier over HTTPS, with a nightly DB backup to S3.
+- [ ] **DEPLOY-02**: The frontend is live on Vercel and reaches the backend through the rewrite.
+- [ ] **DEPLOY-03**: Playwright smoke tests of the three primary flows pass against the deployed URLs.
+
+Note: DEP-01 (Cloudflare deploy) is superseded by DEPLOY-01/02. DEP-02 moves to Phase 12 and DEP-03 to Phase 13.
+
+## Deferred (stretch)
 
 Deferred, in this order (`adr-004-scope`).
 
@@ -135,24 +178,47 @@ Which phases cover which requirements. Filled during roadmap creation (2026-10-2
 | ADMIN-02 | Phase 4 | Complete |
 | ADMIN-03 | Phase 4 | Complete |
 | ADMIN-04 | Phase 4 | Complete |
-| XCUT-01 | Phase 5 | Pending |
-| XCUT-02 | Phase 5 | Pending |
-| XCUT-03 | Phase 5 | Pending |
-| XCUT-04 | Phase 5 | Pending |
-| XCUT-05 | Phase 5 | Pending |
-| XCUT-06 | Phase 5 | Pending |
-| VAL-01 | Phase 6 | Pending |
-| VAL-02 | Phase 6 | Pending |
-| VAL-03 | Phase 6 | Pending |
-| DEP-01 | Phase 7 | Pending |
-| DEP-02 | Phase 7 | Pending |
-| DEP-03 | Phase 7 | Pending |
+| XCUT-01 | Phase 5 (built, unverified) → re-delivered by ROLE-02..04 | Pending |
+| XCUT-02 | Phase 5 (built, unverified) → re-delivered by ROLE-02..04 | Pending |
+| XCUT-03 | Phase 5 (built, unverified) → re-delivered by ROLE-02..04 | Pending |
+| XCUT-04 | Phase 5 (built, unverified) → re-delivered by ROLE-02..04 | Pending |
+| XCUT-05 | Phase 5 (built, unverified) → re-delivered by ROLE-02..04 | Pending |
+| XCUT-06 | Phase 5 (built, unverified) → re-delivered by ROLE-02..04 | Pending |
+| VAL-01 | Phase 13 | Pending |
+| VAL-02 | Phase 13 | Pending |
+| VAL-03 | Phase 13 | Pending |
+| DEP-01 | - | Superseded by DEPLOY-01/02 |
+| DEP-02 | Phase 12 | Pending |
+| DEP-03 | Phase 13 | Pending |
+| REBASE-01 | Phase 8 | Complete |
+| REBASE-02 | Phase 8 | Complete |
+| REBASE-03 | Phase 8 | Complete |
+| REBASE-04 | Phase 8 | Complete |
+| API-01 | Phase 9 | Pending |
+| API-02 | Phase 9 | Pending |
+| API-03 | Phase 9 | Pending |
+| API-04 | Phase 9 | Pending |
+| API-05 | Phase 9 | Pending |
+| API-06 | Phase 9 | Pending |
+| UI-01 | Phase 10 | Pending |
+| UI-02 | Phase 10 | Pending |
+| UI-03 | Phase 10 | Pending |
+| UI-04 | Phase 10 | Pending |
+| UI-05 | Phase 10 | Pending |
+| ROLE-01 | Phase 11 | Pending |
+| ROLE-02 | Phase 11 | Pending |
+| ROLE-03 | Phase 11 | Pending |
+| ROLE-04 | Phase 11 | Pending |
+| DEPLOY-01 | Phase 12 | Pending |
+| DEPLOY-02 | Phase 12 | Pending |
+| DEPLOY-03 | Phase 12 | Pending |
 
 **Coverage:**
 - v1 requirements: 42 total
 - Mapped to phases: 42
 - Unmapped: 0 ✓
+- v2 requirements: 22 new (REBASE 4, API 6, UI 5, ROLE 4, DEPLOY 3), all mapped to Phases 8–12
 
 ---
 *Requirements defined: 2026-10-20*
-*Last updated: 2026-10-20 after roadmap creation*
+*Last updated: 2026-10-23: milestone v2 (FastAPI + Next.js) added*

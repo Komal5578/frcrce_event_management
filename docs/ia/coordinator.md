@@ -30,7 +30,7 @@ flowchart TD
 |---|---|---|---|
 | My Events | CO-01 | Find and monitor my events | C1, C6 |
 | Calendar | secondary screen | See slots and clashes before choosing | C2, X5 |
-| Tasks | CO-05 | Allocate and track event tasks | C4 |
+| Tasks | CO-05 | Allocate and track tasks across all my events (filter by event and status) | C4 |
 | Notifications | secondary screen | Know what changed without checking | X1 |
 
 ## Screens
@@ -41,7 +41,7 @@ flowchart TD
 | CO-02 | New Event: template and details | C1, X4 |
 | CO-03 | Venue and slot picker | C2, X5 |
 | CO-04 | Resources | C3 |
-| CO-05 | Tasks | C4 |
+| CO-05 | Tasks (cross-event: all tasks across all the coordinator's events, filter by event/status; the new-event wizard step reuses this list scoped to one event) | C4 |
 | CO-06 | Review and Confirm (submit; also the edit/cancel variant) | C5, C7, X2 |
 | CO-07 | Submitted / Monitor | C5, C6, X1 |
 | CO-08 | Event summary | C6 |

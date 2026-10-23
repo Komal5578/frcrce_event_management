@@ -1,21 +1,32 @@
 ---
 id: adr-001-stack
 type: decision
-title: ADR-001 Stack: Next.js + Cloudflare Workers (OpenNext) + D1
+title: ADR-001 Stack: FastAPI + Postgres on AWS EC2, Next.js on Vercel (v3)
 tags: [stack,architecture]
 confidence: derived
 sources: [user-chat]
-summary: Chosen stack and the rationale; user decision 2026-10-20, everything on Cloudflare free tier.
-updated: 2026-10-20
+summary: Chosen stack and rationale (v3); user decision 2026-10-23, FastAPI + Postgres on one EC2 free-tier instance, Next.js on Vercel.
+updated: 2026-10-23
 ---
 
-# ADR-001 Stack
-**Decision (user, 2026-10-20):** Next.js (App Router, TypeScript) + Tailwind on Cloudflare Workers via `@opennextjs/cloudflare`, data in D1 (SQLite), app-side sessions on D1. Everything on the Cloudflare free tier. This supersedes the earlier Next.js + Supabase + Vercel choice (history only).
-**Why:** one account, no paid add-ons, a shareable `workers.dev` URL, and real multi-user data so the roles are credible.
+# ADR-001 Stack (version 3)
+**Decision (user, 2026-10-23):** FastAPI backend and Next.js frontend, hosted on free tiers.
+- **Backend `/backend`:** FastAPI (Python 3.12), Postgres via psycopg 3 with plain SQL and plain `.sql` migrations, Pydantic schemas, pytest against a real Postgres, ruff. Runs on one EC2 t3.micro with docker-compose: Postgres, FastAPI, and Caddy for HTTPS on an `<ip>.sslip.io` host. Nightly `pg_dump` to S3.
+- **Frontend `/frontend`:** Next.js (App Router, TS) + Tailwind + shadcn/ui on Vercel, project root `/frontend`. `next.config` `rewrites` proxies `/api/*` to the backend, so the session cookie is first-party and no CORS is needed. API types are generated with `openapi-typescript` from `/openapi.json`, never hand-written.
+
+**Why:** FastAPI was the intended architecture; Postgres gives native clash prevention; real multi-user data makes the roles credible; no paid add-ons.
+
 **Consequences:**
-- D1 has no exclusion constraints and no RLS. Venue clashes are rejected by BEFORE INSERT/UPDATE triggers (half-open `[)` ranges, active statuses only); the same pattern guards seats and resource over-allocation. Registrations stay unique per (event, user).
-- No RLS, so `lib/domain` (actor-explicit functions) is the access layer; route code may call only `lib/domain` and `lib/auth` (a test enforces it).
-- Sessions: random 256-bit token in an httpOnly cookie, only its SHA-256 stored in D1. Passwords use PBKDF2-SHA256 at 100000 iterations, below OWASP's 600000, because of the 10 ms CPU limit on Workers Free. Demo accounts and the `DEMO_LOGIN` flag must be removed or set false before any real use. No rate limiting on sign-in (accepted risk).
-- Free-tier ceilings to stay under: 50 D1 queries per invocation, 100k requests/day, 5M rows read/day, 10 ms CPU per request.
-- Secrets: `.dev.vars` (Workers runtime) and `.env.local` (Next build time), never committed. The D1 `database_id` is not a secret.
-**Ceiling:** no email/SMS, no payments. If the CPU limit fails live, the options are the Paid plan or static-shell pages (user decision). CPU on the deployed Worker is not yet measured.
+- Clashes: a Postgres `EXCLUDE USING gist` constraint on (venue, `tstzrange [start,end)`) for approved/open/ongoing only. Pending requests may overlap; the admin resolves them at approval (`dom-domain-model`).
+- Double registration: `UNIQUE(event_id, user_id)`. Capacity, waitlist, resource limits and the state machine live in `app/domain` inside one transaction with `SELECT ... FOR UPDATE`.
+- `app/domain` is the authorization layer; every function takes the `Actor` (from the session, never request input) first.
+- Sessions: random token in an httpOnly cookie, only its SHA-256 stored in `sessions`. Passwords use argon2. Sign-in is rate limited. `DEMO_LOGIN` is off in production.
+- Secrets: `backend/.env` and `frontend/.env.local` only; commit the `.env.example` files.
+- Human steps: AWS account (check the free-tier type), EC2 key pair, S3 bucket, Vercel account.
+
+**Ceiling:** no email/SMS, no payments (`adr-004-scope`). A single t3.micro has no failover.
+
+## History
+- Supabase + Vercel (initial plan): replaced because the user preferred free tier on a single account.
+- Cloudflare Workers (OpenNext) + D1 (2026-10-20): replaced because D1 has no exclusion constraints (clash prevention needed triggers), 10 ms CPU limits forced weak password hashing, and FastAPI was the intended architecture.
+- AWS EC2 FastAPI + Postgres, Next.js on Vercel (2026-10-23, user decision): current. The v1 Cloudflare code is a port reference only.

@@ -15,35 +15,35 @@ This validation checklist is intended for manual execution by the development an
 |-------------|------|----------|-----------------|-------|
 | Coordinator (A-) | New event | Focus lands on New Event form | | |
 | Coordinator (A-) | Tab to Workshop radio -> Start | Selection activates and starts draft | | |
-| Coordinator (A-) | Title and seats -> Save and continue | Input fields accept values and proceed | | |
+| Coordinator (A-) | Title and seats -> Next | Input fields accept values and proceed | | |
 | Coordinator (A-) | Date/time -> Show free venues | Free venues populate without focus loss | | |
-| Coordinator (A-) | Venue radio -> Save and continue | Venue selected and proceeds to resources | | |
-| Coordinator (A-) | Select Projector -> Save and continue | Resource selected and proceeds to tasks | | |
-| Coordinator (A-) | Add task -> Review and submit | Task added and proceeds to review step | | |
-| Coordinator (A-) | Confirm submit in dialog | Confirm dialog opens with initial focus on "Go back" | | |
-| Coordinator (A-) | Submission completed | Focus lands on Pending Approval alert | | |
+| Coordinator (A-) | Venue radio -> Next | Venue selected and proceeds to resources | | |
+| Coordinator (A-) | Select Projector -> Next | Resource selected and proceeds to tasks | | |
+| Coordinator (A-) | Add task -> Next to review | Task added and proceeds to review step | | |
+| Coordinator (A-) | "Confirm and submit" in dialog | Confirm dialog opens with initial focus on "Go back" | | |
+| Coordinator (A-) | Submission completed | Focus lands on Pending approval message | | |
 | Coordinator (A-) | Reports -> Download CSV -> Print | Reports view navigable, CSV downloads, print preview opens | | |
 | Coordinator (A-) | Find problem item in Attention list | Problem link focused and navigates to event edit view | | |
 | Coordinator (A) | New event | Focus lands on New Event form | | |
 | Coordinator (A) | Tab to Workshop radio -> Start | Selection activates and starts draft | | |
-| Coordinator (A) | Title and seats -> Save and continue | Input fields accept values and proceed | | |
+| Coordinator (A) | Title and seats -> Next | Input fields accept values and proceed | | |
 | Coordinator (A) | Date/time -> Show free venues | Free venues populate without focus loss | | |
-| Coordinator (A) | Venue radio -> Save and continue | Venue selected and proceeds to resources | | |
-| Coordinator (A) | Select Projector -> Save and continue | Resource selected and proceeds to tasks | | |
-| Coordinator (A) | Add task -> Review and submit | Task added and proceeds to review step | | |
-| Coordinator (A) | Confirm submit in dialog | Confirm dialog opens with initial focus on "Go back" | | |
-| Coordinator (A) | Submission completed | Focus lands on Pending Approval alert | | |
+| Coordinator (A) | Venue radio -> Next | Venue selected and proceeds to resources | | |
+| Coordinator (A) | Select Projector -> Next | Resource selected and proceeds to tasks | | |
+| Coordinator (A) | Add task -> Next to review | Task added and proceeds to review step | | |
+| Coordinator (A) | "Confirm and submit" in dialog | Confirm dialog opens with initial focus on "Go back" | | |
+| Coordinator (A) | Submission completed | Focus lands on Pending approval message | | |
 | Coordinator (A) | Reports -> Download CSV -> Print | Reports view navigable, CSV downloads, print preview opens | | |
 | Coordinator (A) | Find problem item in Attention list | Problem link focused and navigates to event edit view | | |
 | Coordinator (A+) | New event | Focus lands on New Event form with scaled text | | |
 | Coordinator (A+) | Tab to Workshop radio -> Start | Selection activates and starts draft without layout break | | |
-| Coordinator (A+) | Title and seats -> Save and continue | Input fields accept values and proceed | | |
+| Coordinator (A+) | Title and seats -> Next | Input fields accept values and proceed | | |
 | Coordinator (A+) | Date/time -> Show free venues | Free venues populate without focus loss | | |
-| Coordinator (A+) | Venue radio -> Save and continue | Venue selected and proceeds to resources | | |
-| Coordinator (A+) | Select Projector -> Save and continue | Resource selected and proceeds to tasks | | |
-| Coordinator (A+) | Add task -> Review and submit | Task added and proceeds to review step | | |
-| Coordinator (A+) | Confirm submit in dialog | Confirm dialog opens with initial focus on "Go back" | | |
-| Coordinator (A+) | Submission completed | Focus lands on Pending Approval alert | | |
+| Coordinator (A+) | Venue radio -> Next | Venue selected and proceeds to resources | | |
+| Coordinator (A+) | Select Projector -> Next | Resource selected and proceeds to tasks | | |
+| Coordinator (A+) | Add task -> Next to review | Task added and proceeds to review step | | |
+| Coordinator (A+) | "Confirm and submit" in dialog | Confirm dialog opens with initial focus on "Go back" | | |
+| Coordinator (A+) | Submission completed | Focus lands on Pending approval message | | |
 | Coordinator (A+) | Reports -> Download CSV -> Print | Reports view navigable, CSV downloads, print preview opens | | |
 | Coordinator (A+) | Find problem item in Attention list | Problem link focused and navigates to event edit view | | |
 
@@ -53,25 +53,25 @@ This validation checklist is intended for manual execution by the development an
 |-------------|------|----------|-----------------|-------|
 | Student (A-) | Discover -> Tab to search | Focus lands on search filter input | | |
 | Student (A-) | Type query -> Enter | Filtered event cards display | | |
-| Student (A-) | Tab to first card action -> Enter | Registration flow initiates | | |
+| Student (A-) | Tab to first card "View details" -> Enter | Event detail opens; "Register" is on the detail screen | | |
 | Student (A-) | Confirm Dialog -> Go back focused | Dialog opens with default focus on "Go back" | | |
-| Student (A-) | Tab to "Confirm register" -> Enter | Registration processes | | |
+| Student (A-) | Tab to "Confirm" -> Enter | Registration processes | | |
 | Student (A-) | Registration confirmed | Focus moves to success alert, status badge updates | | |
-| Student (A-) | Alerts -> Find problem item | Overdue task link focused and navigates to tasks page | | |
+| Student (A-) | Notifications -> Find problem item | Overdue task link focused and navigates to tasks page | | |
 | Student (A) | Discover -> Tab to search | Focus lands on search filter input | | |
 | Student (A) | Type query -> Enter | Filtered event cards display | | |
-| Student (A) | Tab to first card action -> Enter | Registration flow initiates | | |
+| Student (A) | Tab to first card "View details" -> Enter | Event detail opens; "Register" is on the detail screen | | |
 | Student (A) | Confirm Dialog -> Go back focused | Dialog opens with default focus on "Go back" | | |
-| Student (A) | Tab to "Confirm register" -> Enter | Registration processes | | |
+| Student (A) | Tab to "Confirm" -> Enter | Registration processes | | |
 | Student (A) | Registration confirmed | Focus moves to success alert, status badge updates | | |
-| Student (A) | Alerts -> Find problem item | Overdue task link focused and navigates to tasks page | | |
+| Student (A) | Notifications -> Find problem item | Overdue task link focused and navigates to tasks page | | |
 | Student (A+) | Discover -> Tab to search | Focus lands on search filter input with scaled text | | |
 | Student (A+) | Type query -> Enter | Filtered event cards display cleanly | | |
-| Student (A+) | Tab to first card action -> Enter | Registration flow initiates | | |
+| Student (A+) | Tab to first card "View details" -> Enter | Event detail opens; "Register" is on the detail screen | | |
 | Student (A+) | Confirm Dialog -> Go back focused | Dialog opens with default focus on "Go back" | | |
-| Student (A+) | Tab to "Confirm register" -> Enter | Registration processes | | |
+| Student (A+) | Tab to "Confirm" -> Enter | Registration processes | | |
 | Student (A+) | Registration confirmed | Focus moves to success alert, status badge updates | | |
-| Student (A+) | Alerts -> Find problem item | Overdue task link focused and navigates to tasks page | | |
+| Student (A+) | Notifications -> Find problem item | Overdue task link focused and navigates to tasks page | | |
 
 ### Admin Keyboard Flow
 
@@ -80,21 +80,21 @@ This validation checklist is intended for manual execution by the development an
 | Admin (A-) | Approvals nav -> Tab into queue | Queue aside receives keyboard focus | | |
 | Admin (A-) | Tab to item -> Enter | Event detail loads in right pane | | |
 | Admin (A-) | Tab through facts -> Approve -> Enter | Confirm dialog opens with focus on "Go back" | | |
-| Admin (A-) | Confirm approve -> Enter | Event approved, focus lands on success alert | | |
+| Admin (A-) | "Confirm" (approve) -> Enter | Event approved, focus lands on success alert | | |
 | Admin (A-) | Return flow -> Reason field | Return with reason requires text before confirm dialog | | |
 | Admin (A-) | Reports -> Download CSV -> Print | Reports table navigable, CSV downloads, print view opens | | |
 | Admin (A-) | Find problem item in Attention list | Clash/overdue/lowreg link focused and navigates to problem | | |
 | Admin (A) | Approvals nav -> Tab into queue | Queue aside receives keyboard focus | | |
 | Admin (A) | Tab to item -> Enter | Event detail loads in right pane | | |
 | Admin (A) | Tab through facts -> Approve -> Enter | Confirm dialog opens with focus on "Go back" | | |
-| Admin (A) | Confirm approve -> Enter | Event approved, focus lands on success alert | | |
+| Admin (A) | "Confirm" (approve) -> Enter | Event approved, focus lands on success alert | | |
 | Admin (A) | Return flow -> Reason field | Return with reason requires text before confirm dialog | | |
 | Admin (A) | Reports -> Download CSV -> Print | Reports table navigable, CSV downloads, print view opens | | |
 | Admin (A) | Find problem item in Attention list | Clash/overdue/lowreg link focused and navigates to problem | | |
 | Admin (A+) | Approvals nav -> Tab into queue | Queue aside receives keyboard focus with scaled text | | |
 | Admin (A+) | Tab to item -> Enter | Event detail loads cleanly without overflow | | |
 | Admin (A+) | Tab through facts -> Approve -> Enter | Confirm dialog opens with focus on "Go back" | | |
-| Admin (A+) | Confirm approve -> Enter | Event approved, focus lands on success alert | | |
+| Admin (A+) | "Confirm" (approve) -> Enter | Event approved, focus lands on success alert | | |
 | Admin (A+) | Return flow -> Reason field | Return with reason requires text before confirm dialog | | |
 | Admin (A+) | Reports -> Download CSV -> Print | Reports table navigable, CSV downloads, print view opens | | |
 | Admin (A+) | Find problem item in Attention list | Clash/overdue/lowreg link focused and navigates to problem | | |
