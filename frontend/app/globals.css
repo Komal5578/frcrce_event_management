@@ -5,67 +5,220 @@
   /* px spacing so 44px targets hold at every text size; only text scales (rem). */
   --spacing: 4px;
 
-  --color-page: #F8FAFC;
-  --color-surface: #FFFFFF;
-  --color-panel: #F1F5F9;
-  --color-accent: #3730A3;
-  --color-destructive: #B91C1C;
-  --color-ink: #0F172A;
-  --color-muted: #475569;
-  --color-border-ui: #64748B;
-  --color-border-card: #CBD5E1;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-pill: 9999px;
 
-  /* Status vocabulary (dom-status-vocabulary): text/icon/border = fg, tint = bg. */
-  --color-status-draft-fg: #374151;
-  --color-status-draft-bg: #F3F4F6;
-  --color-status-pending-fg: #78350F;
-  --color-status-pending-bg: #FEF3C7;
-  --color-status-approved-fg: #1E40AF;
-  --color-status-approved-bg: #DBEAFE;
-  --color-status-open-fg: #166534;
-  --color-status-open-bg: #DCFCE7;
-  --color-status-ongoing-fg: #115E59;
-  --color-status-ongoing-bg: #CCFBF1;
-  --color-status-completed-fg: #334155;
-  --color-status-completed-bg: #E2E8F0;
-  --color-status-cancelled-fg: #991B1B;
-  --color-status-cancelled-bg: #FEE2E2;
-  --color-status-full-fg: #9A3412;
-  --color-status-full-bg: #FFEDD5;
-  --color-status-returned-fg: #78350F;
-  --color-status-returned-bg: #FEF3C7;
-  --color-status-registered-fg: #166534;
-  --color-status-registered-bg: #DCFCE7;
-  --color-status-waitlisted-fg: #9A3412;
-  --color-status-waitlisted-bg: #FFEDD5;
-  --color-status-todo-fg: #374151;
-  --color-status-todo-bg: #F3F4F6;
-  --color-status-doing-fg: #1E40AF;
-  --color-status-doing-bg: #DBEAFE;
-  --color-status-done-fg: #334155;
-  --color-status-done-bg: #E2E8F0;
-  --color-status-overdue-fg: #991B1B;
-  --color-status-overdue-bg: #FEE2E2;
-  --color-status-clash-fg: #991B1B;
-  --color-status-clash-bg: #FEE2E2;
-  --color-status-lowreg-fg: #78350F;
-  --color-status-lowreg-bg: #FEF3C7;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 
+  --text-display: 1.75rem;
+  --text-display--line-height: 1.2;
+  --text-heading: 1.25rem;
+  --text-heading--line-height: 1.25;
+  --text-subheading: 1.125rem;
+  --text-subheading--line-height: 1.3;
   --text-body: 1rem;
   --text-body--line-height: 1.5;
   --text-label: 0.875rem;
   --text-label--line-height: 1.4;
-  --text-heading: 1.25rem;
-  --text-heading--line-height: 1.2;
-  --text-display: 1.75rem;
-  --text-display--line-height: 1.2;
-
-  --radius-control: 8px;
-  --radius-pill: 9999px;
-
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --text-fine: 0.8125rem;
+  --text-fine--line-height: 1.4;
 }
 
+/* ──────────────────────────────────────────────────────────────
+   LIGHT MODE tokens  (tests/contrast.test.ts parses :root block)
+   All OKLCH values; hex equivalents noted for reference.
+   ────────────────────────────────────────────────────────────── */
+:root {
+  /* Surface & Base */
+  --color-page: oklch(0.985 0.002 247);        /* ≈ #f8fafc */
+  --color-surface: oklch(1 0 0);               /* #ffffff   */
+  --color-panel: oklch(0.965 0.004 247);       /* ≈ #f1f5f9 */
+
+  /* Text & Ink */
+  --color-ink: oklch(0.18 0.02 260);           /* ≈ #0f172a deep slate */
+  --color-muted: oklch(0.45 0.03 260);         /* ≈ #475569  */
+
+  /* Borders */
+  --color-border-card: oklch(0.88 0.01 250);   /* ≈ #cbd5e1 subtle divider */
+  --color-border-ui: oklch(0.52 0.04 255);     /* ≈ #475569 control border ≥ 3:1 */
+
+  /* Accent — Indigo/Violet */
+  --color-accent: oklch(0.49 0.22 275);        /* ≈ #3730a3 vibrant indigo */
+  --color-accent-hover: oklch(0.43 0.22 275);  /* darker hover */
+  --color-accent-contrast: oklch(0.99 0 0);    /* pure white on accent */
+
+  /* Destructive — Crimson */
+  --color-destructive: oklch(0.46 0.21 27);    /* ≈ #b91c1c crimson */
+  --color-destructive-hover: oklch(0.40 0.21 27);
+  --color-destructive-contrast: oklch(0.99 0 0);
+
+  /* ── Status vocabulary (dom-status-vocabulary) ──
+     text/icon = fg, tint background = bg
+     WCAG 2.2 AA: fg on bg ≥ 4.5:1 required
+  */
+
+  /* Event family */
+  --color-status-draft-fg: oklch(0.30 0.01 260);    /* ≈ #374151 */
+  --color-status-draft-bg: oklch(0.96 0.003 260);   /* ≈ #f3f4f6 */
+
+  --color-status-pending-fg: oklch(0.33 0.10 60);   /* ≈ #78350f amber-dark */
+  --color-status-pending-bg: oklch(0.97 0.05 80);   /* ≈ #fef3c7 amber-light */
+
+  --color-status-approved-fg: oklch(0.34 0.13 255); /* ≈ #1e40af blue */
+  --color-status-approved-bg: oklch(0.94 0.04 245); /* ≈ #dbeafe blue-light */
+
+  --color-status-open-fg: oklch(0.33 0.10 145);     /* ≈ #166534 emerald */
+  --color-status-open-bg: oklch(0.96 0.05 148);     /* ≈ #dcfce7 */
+
+  --color-status-ongoing-fg: oklch(0.33 0.08 185);  /* ≈ #115e59 teal */
+  --color-status-ongoing-bg: oklch(0.96 0.05 190);  /* ≈ #ccfbf1 */
+
+  --color-status-completed-fg: oklch(0.32 0.02 255); /* ≈ #334155 slate */
+  --color-status-completed-bg: oklch(0.93 0.01 250); /* ≈ #e2e8f0 */
+
+  --color-status-cancelled-fg: oklch(0.37 0.16 27);  /* ≈ #991b1b crimson */
+  --color-status-cancelled-bg: oklch(0.96 0.05 27);  /* ≈ #fee2e2 */
+
+  --color-status-full-fg: oklch(0.38 0.14 42);       /* ≈ #9a3412 orange */
+  --color-status-full-bg: oklch(0.97 0.05 55);       /* ≈ #ffedd5 */
+
+  --color-status-returned-fg: oklch(0.33 0.10 60);   /* ≈ #78350f amber */
+  --color-status-returned-bg: oklch(0.97 0.05 80);   /* ≈ #fef3c7 */
+
+  /* Task family */
+  --color-status-todo-fg: oklch(0.30 0.01 260);      /* ≈ #374151 slate */
+  --color-status-todo-bg: oklch(0.96 0.003 260);     /* ≈ #f3f4f6 */
+
+  --color-status-doing-fg: oklch(0.34 0.13 255);     /* ≈ #1e40af blue */
+  --color-status-doing-bg: oklch(0.94 0.04 245);     /* ≈ #dbeafe */
+
+  --color-status-done-fg: oklch(0.32 0.02 255);      /* ≈ #334155 slate */
+  --color-status-done-bg: oklch(0.93 0.01 250);      /* ≈ #e2e8f0 */
+
+  --color-status-overdue-fg: oklch(0.37 0.16 27);    /* ≈ #991b1b crimson */
+  --color-status-overdue-bg: oklch(0.96 0.05 27);    /* ≈ #fee2e2 */
+
+  /* Registration family */
+  --color-status-registered-fg: oklch(0.33 0.10 145); /* ≈ #166534 emerald */
+  --color-status-registered-bg: oklch(0.96 0.05 148); /* ≈ #dcfce7 */
+
+  --color-status-waitlisted-fg: oklch(0.38 0.14 42);  /* ≈ #9a3412 orange */
+  --color-status-waitlisted-bg: oklch(0.97 0.05 55);  /* ≈ #ffedd5 */
+
+  /* Note: reg-cancelled maps to CSS key "reg-cancelled" but we use hyphenated CSS var */
+  --color-status-reg-cancelled-fg: oklch(0.37 0.16 27); /* crimson */
+  --color-status-reg-cancelled-bg: oklch(0.96 0.05 27); /* ≈ #fee2e2 */
+
+  /* Alert family */
+  --color-status-alert-clash-fg: oklch(0.37 0.16 27);   /* crimson */
+  --color-status-alert-clash-bg: oklch(0.96 0.05 27);   /* ≈ #fee2e2 */
+
+  --color-status-alert-low-fg: oklch(0.33 0.10 60);     /* amber */
+  --color-status-alert-low-bg: oklch(0.97 0.05 80);     /* ≈ #fef3c7 */
+
+  --color-status-alert-overdue-fg: oklch(0.37 0.16 27); /* crimson */
+  --color-status-alert-overdue-bg: oklch(0.96 0.05 27); /* ≈ #fee2e2 */
+
+  /* Legacy keys kept for backward compat (status.test.ts uses "clash" & "lowreg") */
+  --color-status-clash-fg: oklch(0.37 0.16 27);
+  --color-status-clash-bg: oklch(0.96 0.05 27);
+  --color-status-lowreg-fg: oklch(0.33 0.10 60);
+  --color-status-lowreg-bg: oklch(0.97 0.05 80);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   DARK MODE tokens
+   ────────────────────────────────────────────────────────────── */
+[data-theme="dark"], .dark {
+  /* Surface & Base */
+  --color-page: oklch(0.14 0.01 260);          /* dark backdrop */
+  --color-surface: oklch(0.18 0.015 260);      /* dark card surface */
+  --color-panel: oklch(0.22 0.02 260);         /* elevated panel/sidebar */
+
+  /* Text & Ink */
+  --color-ink: oklch(0.96 0.005 260);          /* bright foreground */
+  --color-muted: oklch(0.85 0.01 260);         /* raised for 4.5:1 on dark surface */
+
+  /* Borders */
+  --color-border-card: oklch(0.32 0.015 260);  /* dark subtle border */
+  --color-border-ui: oklch(0.75 0.02 260);     /* light enough for 3:1 on dark surface */
+
+  /* Accent — luminous violet in dark */
+  --color-accent: oklch(0.45 0.22 275);        /* dark mode accent — deep violet for white text */
+  --color-accent-hover: oklch(0.40 0.22 275);
+  --color-accent-contrast: oklch(0.99 0 0);    /* white text on dark accent */
+
+  /* Destructive */
+  --color-destructive: oklch(0.68 0.20 27);
+  --color-destructive-hover: oklch(0.74 0.18 27);
+  --color-destructive-contrast: oklch(0.12 0.02 260);
+
+  /* Status vocabulary — dark mode (all fg on dark bg ≥ 4.5:1) */
+  --color-status-draft-fg: oklch(0.82 0.01 260);
+  --color-status-draft-bg: oklch(0.24 0.01 260);
+
+  --color-status-pending-fg: oklch(0.88 0.10 75);
+  --color-status-pending-bg: oklch(0.22 0.04 70);
+
+  --color-status-approved-fg: oklch(0.80 0.10 255);
+  --color-status-approved-bg: oklch(0.22 0.06 250);
+
+  --color-status-open-fg: oklch(0.82 0.12 145);
+  --color-status-open-bg: oklch(0.22 0.05 145);
+
+  --color-status-ongoing-fg: oklch(0.82 0.10 185);
+  --color-status-ongoing-bg: oklch(0.22 0.05 185);
+
+  --color-status-completed-fg: oklch(0.80 0.02 260);
+  --color-status-completed-bg: oklch(0.22 0.01 260);
+
+  --color-status-cancelled-fg: oklch(0.82 0.14 27);
+  --color-status-cancelled-bg: oklch(0.22 0.05 27);
+
+  --color-status-full-fg: oklch(0.82 0.12 42);
+  --color-status-full-bg: oklch(0.22 0.05 50);
+
+  --color-status-returned-fg: oklch(0.88 0.10 75);
+  --color-status-returned-bg: oklch(0.22 0.04 70);
+
+  --color-status-todo-fg: oklch(0.82 0.01 260);
+  --color-status-todo-bg: oklch(0.24 0.01 260);
+
+  --color-status-doing-fg: oklch(0.80 0.10 255);
+  --color-status-doing-bg: oklch(0.22 0.06 250);
+
+  --color-status-done-fg: oklch(0.80 0.02 260);
+  --color-status-done-bg: oklch(0.22 0.01 260);
+
+  --color-status-overdue-fg: oklch(0.82 0.14 27);
+  --color-status-overdue-bg: oklch(0.22 0.05 27);
+
+  --color-status-registered-fg: oklch(0.82 0.12 145);
+  --color-status-registered-bg: oklch(0.22 0.05 145);
+
+  --color-status-waitlisted-fg: oklch(0.82 0.12 42);
+  --color-status-waitlisted-bg: oklch(0.22 0.05 50);
+
+  --color-status-reg-cancelled-fg: oklch(0.82 0.14 27);
+  --color-status-reg-cancelled-bg: oklch(0.22 0.05 27);
+
+  --color-status-alert-clash-fg: oklch(0.82 0.14 27);
+  --color-status-alert-clash-bg: oklch(0.22 0.05 27);
+
+  --color-status-alert-low-fg: oklch(0.88 0.10 75);
+  --color-status-alert-low-bg: oklch(0.22 0.04 70);
+
+  --color-status-alert-overdue-fg: oklch(0.82 0.14 27);
+  --color-status-alert-overdue-bg: oklch(0.22 0.05 27);
+
+  --color-status-clash-fg: oklch(0.82 0.14 27);
+  --color-status-clash-bg: oklch(0.22 0.05 27);
+  --color-status-lowreg-fg: oklch(0.88 0.10 75);
+  --color-status-lowreg-bg: oklch(0.22 0.04 70);
+}
+
+/* ── Base styles ── */
 html {
   font-size: 16px;
   scroll-padding-top: 80px;
@@ -145,4 +298,3 @@ body {
     content: none !important;
   }
 }
-

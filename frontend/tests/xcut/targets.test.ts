@@ -38,7 +38,10 @@ describe("XCUT-04: Target sizes, rem sizing and focus visibility", () => {
 
     for (const rel of layouts) {
       const content = fs.readFileSync(path.join(ROOT_DIR, rel), "utf-8");
-      expect(content.includes("AppShell"), `${rel} must mount AppShell`).toBe(true);
+      expect(
+        content.includes("AppShell") || content.includes("StudentShell"),
+        `${rel} must mount AppShell or StudentShell`,
+      ).toBe(true);
     }
 
     const appShellContent = fs.readFileSync(
@@ -48,6 +51,15 @@ describe("XCUT-04: Target sizes, rem sizing and focus visibility", () => {
     expect(
       appShellContent.includes("TextSizeControl"),
       "AppShell must mount TextSizeControl",
+    ).toBe(true);
+
+    const studentShellContent = fs.readFileSync(
+      path.join(COMPONENTS_DIR, "ui/student-shell.tsx"),
+      "utf-8",
+    );
+    expect(
+      studentShellContent.includes("TextSizeControl"),
+      "StudentShell must mount TextSizeControl",
     ).toBe(true);
   });
 

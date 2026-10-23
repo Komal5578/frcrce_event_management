@@ -7,7 +7,7 @@ import { STATUS_META, StatusBadge, type StatusKey } from "@/components/ui/status
 import { TextSizeControl } from "@/components/ui/text-size-control";
 import { DialogDemo } from "./dialog-demo";
 
-// Dev-only gallery; not linked from any nav.
+// Dev-only design gallery; always 404 in production (notFound() is not linked from any nav).
 export default function DesignPage() {
   if (process.env.NODE_ENV === "production") notFound();
   return (

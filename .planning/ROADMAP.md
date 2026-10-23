@@ -22,7 +22,7 @@ Config: standard granularity, interactive mode, parallelization on. Coverage: 42
 
 - [ ] **Phase 8: Re-baseline & Restructure** - ADR-001 v3, kb fixes (clash rule, vocabulary, IA), repo split into `/backend` + `/frontend`, cleanup
 - [ ] **Phase 9: FastAPI Backend** - Postgres schema, auth, domain logic ported from `lib/domain`, all endpoints, pytest port of the v1 tests
-- [ ] **Phase 10: Design System & App Shell** - UI-SPEC with a real visual direction, shadcn/ui tokens (light and dark), shell per role, login, typed API client
+- [x] **Phase 10: Design System & App Shell** - UI-SPEC with a real visual direction, shadcn/ui tokens (light and dark), shell per role, login, typed API client
 - [ ] **Phase 11: Role Screens** - Student, Coordinator and Admin screens rebuilt on the new design and wired to FastAPI, one role at a time
 - [ ] **Phase 12: Deploy & Harden** - EC2 docker-compose + Caddy, Vercel, Playwright smoke tests of the 3 primary flows, a11y pass, security review
 - [ ] **Phase 13: Validation & Final Docs** - Usability kit, heuristic evaluation and walkthrough, team sessions (team only), iterations, `docs/final/`, infographic
@@ -301,6 +301,13 @@ Plans:
      - 44px targets, a keyboard-only path and A+ text size.
      - Consistent vocabulary.
      - Each role's primary flow is driven in the browser and recorded (screenshots, real results only).
+
+**Plans**: 3 plans (sequential; each role's browser gate must pass before the next starts)
+Plans:
+
+- [ ] 11-01-PLAN.md — Student screens ST-01..06 on FastAPI, with registration and browser/a11y gate
+- [ ] 11-02-PLAN.md — Coordinator screens CO-01..08 and secondary routes on FastAPI
+- [ ] 11-03-PLAN.md — Admin screens AD-01..06, live clash decision flow, and phase-wide verification
 
 ### Phase 12: Deploy & Harden
 

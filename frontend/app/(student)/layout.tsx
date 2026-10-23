@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Bell, ListChecks, Search, Ticket } from "lucide-react";
-import { AppShell, type NavItem } from "@/components/ui/app-shell";
+import { StudentShell } from "@/components/ui/student-shell";
+import { type NavItem } from "@/components/ui/app-shell";
 import { ROLE_LABEL, requireRole } from "@/lib/auth";
 import { listNotifications } from "@/lib/domain/notifications";
 import { myProfile } from "@/lib/domain/people";
@@ -20,8 +21,8 @@ export default async function Layout({ children }: { children: ReactNode }) {
     { href: "/student/alerts", label: unread ? `Alerts (${unread} new)` : "Alerts", icon: icon(Bell) },
   ];
   return (
-    <AppShell roleLabel={ROLE_LABEL.student} userName={profile.name} navItems={navItems} signOut={signOut}>
+    <StudentShell roleLabel={ROLE_LABEL.student} userName={profile.name} navItems={navItems} signOut={signOut}>
       <FlashProvider>{children}</FlashProvider>
-    </AppShell>
+    </StudentShell>
   );
 }
