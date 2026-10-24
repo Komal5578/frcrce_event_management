@@ -73,3 +73,7 @@ Full log in PROJECT.md Key Decisions.
 Last session: 2026-10-23
 Stopped at: Phase 8 executed (08-01..08-05), kb index passes, nothing committed. Commit once, then /clear.
 Resume: `.planning/phases/09-fastapi-backend/CONTEXT.md`
+
+## 2026-10-24: frontend rebuild (post Phase 11)
+
+The v1/v2 frontend was deleted and rebuilt from scratch in `/frontend` to match the original mockup (`kb/source/attendance-reference/design-model.png`), using the impeccable, power-design and taste skills. All three role interfaces, the login (with one-click role buttons) and the Review & Confirm flows are built against the FastAPI backend. Responsive: Student is phone-first with a bottom tab bar and a sidebar layout from 1024px up. Gate: `tsc`, `eslint`, `next build` green; Lighthouse a11y 100 on login/coordinator/student; impeccable detector clean. Also: taste-skill inspector gate run on all screens (0 FAIL) and 5 Playwright specs that clean up after themselves (`cd frontend && npm run test:e2e`, needs a production build on :3000 and the backend on :8000). Not done: deploy (Phase 12), usability validation (Phase 13). Not committed (commit only per verified phase).

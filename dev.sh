@@ -17,6 +17,11 @@ echo "=== $(date '+%F %T') start ===" | tee -a .logs/frontend.log .logs/backend.
 
 run frontend frontend npm run dev
 
-run backend backend .venv/bin/uvicorn app.main:app --reload --port 8000
+# A backend (e.g. the docker-compose one) may already own :8000; reuse it instead of failing with "address in use".
+if curl -fs -o /dev/null http://localhost:8000/api/health; then
+  echo "[backend] already running on :8000, reusing it" | tee -a .logs/backend.log
+else
+  run backend backend .venv/bin/uvicorn app.main:app --reload --port 8000
+fi
 
 wait

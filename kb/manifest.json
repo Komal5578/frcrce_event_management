@@ -67,7 +67,7 @@
     "confidence": "derived",
     "sources": "[dom-status-vocabulary, src-accessibility-areas, src-hmi-principles, adr-001-stack]",
     "summary": "Colour, spacing, type and status tokens, computed contrast record, and the frozen shared component set in components/ui.",
-    "updated": "2026-10-20",
+    "updated": "2026-10-24",
     "path": "design-system/README.md"
   },
   {

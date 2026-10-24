@@ -6,7 +6,7 @@ tags: [design-system,tokens]
 confidence: derived
 sources: [dom-status-vocabulary, src-accessibility-areas, src-hmi-principles, adr-001-stack]
 summary: Colour, spacing, type and status tokens, computed contrast record, and the frozen shared component set in components/ui.
-updated: 2026-10-20
+updated: 2026-10-24
 ---
 
 # Design system
@@ -113,3 +113,29 @@ All targets are at least 44px, focus ring is never removed, nothing relies on co
 ## Review & Confirm (X2)
 
 Use `ConfirmDialog` for submit, register, cancel, approve and return: `<ConfirmDialog open verb="register" summary={...} consequence="..." onConfirm onCancel />`. It shows "Review before you {verb}", the summary, a plain consequence sentence, "Confirm {verb}" and "Go back". Esc calls `onCancel`. After success show a plain-language `Alert`, for example "You are registered for {event}." The `/design` route (dev only) shows every component.
+
+## v2 visual direction (2026-10-24, user-pinned reference: `src-model-infographic`, `kb/source/attendance-reference/design-model.png`)
+
+The v2 frontend (`/frontend`) is built to the original mockup's look, not a generic SaaS kit. Decisions that supersede the v1 notes above:
+
+- **Layout:** dark navy sidebar (`--navy`) against a light canvas (`--canvas`) with white cards, for Coordinator and Admin. Student is phone-first (purple header band, bottom tab bar) and becomes a purple sidebar with multi-column card grids from 1024px up: responsive, not a phone frame on desktop.
+- **Stat tiles:** a big coloured number over a plain label (green / red / amber / slate / blue pairs reuse the status tokens, so contrast is already checked).
+- **Themes:** light is the default (matches the mockup); dark is opt-in via the header toggle, stored in `localStorage.theme`. Tokens live in `app/globals.css` as CSS variables; `data-theme="dark"` re-maps them.
+- **Text size:** `html[data-text]` 14 / 16 / 19px (A- / A / A+), set before paint. Only text scales; interactive targets are `min-h-11` (44px).
+- **Returned** now has its own colour family (fuchsia, fg `#86198f` on `#fae8ff`) so it no longer reads the same as Pending approval; icon and word are unchanged.
+- **Type:** Plus Jakarta Sans (one family). Numbers use tabular figures.
+- **Motion:** `motion` library; staggered list entrances, count-up on stat tiles, spring dialogs and toasts, a sliding active-nav pill. Everything honours `prefers-reduced-motion` (`MotionConfig reducedMotion="user"` plus a CSS fallback).
+- **Review & Confirm:** native `<dialog>`; first focus is Go back; `destructive` variant uses the danger colour; plain-language feedback arrives as a toast (with Undo where the action is reversible).
+- **Pending clash display:** the Admin approval screen lists other pending requests for the same slot as a warning and does not block; only approved/open/ongoing bookings block Approve (`dom-domain-model`, TT-A1).
+
+Verification (computed, not user-tested): Lighthouse accessibility 100 on login, coordinator and student screens (desktop and mobile emulation); the impeccable detector reports no findings; the taste-skill `inspect.mjs --app` gate was run on every screen of all three roles at 1440 / 768 / 390px with 0 FAIL. Two deliberate allowances: `palette-purple` and `colour-sprawl` on the student interface (the purple header band is pinned by the original mockup) and `icon-chips` on the product's brand mark. Three WARNs are data-driven and accepted (short task list, an empty calendar day cell, a long notification list). Playwright specs live in `frontend/e2e` and clean up after themselves (`npm run test:e2e`).
+
+Panels use real borders, not box-shadow rings; the status chips use a border; buttons have no glow; skeletons are a flat tone with an opacity pulse (no gradients).
+
+Power-design web-rule audit (2026-10-24, computed): colour tokens are OKLCH and components contain no raw hex; first-load JS is 235-254 KB gzip per role entry (budget 300 KB; Recharts is lazy-loaded); lab LCP 122 ms and CLS 0.00 on the admin dashboard; `frontend/e2e/structure.spec.ts` asserts, on every screen at 320 / 390 / 1440px, one h1, no skipped heading levels, a `main` landmark, a per-page title, no horizontal scroll and 44px targets (dense month-calendar chips are 24px+ for a mouse and 44px on coarse pointers). Not applicable to an authenticated app: OG image and JSON-LD (the pages are private); the favicon is `app/icon.svg`.
+
+Chart colour (dataviz skill, 2026-10-24): the status donut was first red+green, which failed colour-blind separation (deutan dE 4.0). It is now amber / blue / red / neutral, validated with `validate_palette.js` in light and dark (CVD dE >= 20); dark steps `chart-1/3/4` were re-picked to sit in the dark lightness band. Never pair red with green. Every chart has a screen-reader table; line markers are 8px; slices have a 2px surface gap and a legend with values.
+
+Accessibility review (WCAG 2.1 AA walk-through): dialog title ids are unique (`useId`); the venue picker and the Upcoming/Past switch are `aria-pressed` buttons (not `radio`/`tab` roles that would promise arrow-key patterns we do not implement); `e2e/keyboard.spec.ts` proves Enter opens Review & Confirm, Go back has focus, Tab stays inside, Esc closes and focus returns. Motion audit: the list entrance no longer replays on every filter change, and the route transition is 200 ms.
+
+Bolder pass (2026-10-24, user-chosen direction): the Admin dashboard leads with a navy decision hero (the one waiting decision, the next request in the queue, one Review button), as `docs/wireframes/admin.md` AD-01 asks ("the one waiting decision is the biggest element"); empty states use flat token-coloured spot illustrations (`components/ui/illustrations.tsx`, no gradients); the student's next registered event is a countdown card. Motion stays restrained and reduced-motion safe.
