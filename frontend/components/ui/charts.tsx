@@ -1,6 +1,6 @@
 "use client";
 
-import { CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export type Slice = { name: string; value: number; color: string };
 
@@ -49,13 +49,14 @@ export function Trend({ data, height = 220 }: { data: { name: string; value: num
     <div className="relative" style={{ height }}>
       <table className="sr-only"><caption>Events per week, by start date</caption><thead><tr><th scope="col">Week of</th><th scope="col">Events</th></tr></thead><tbody>{data.map((d) => <tr key={d.name}><th scope="row">{d.name}</th><td className="text-right">{d.value}</td></tr>)}</tbody></table>
       <ResponsiveContainer>
-        <LineChart data={data} margin={{ top: 8, right: 12, left: -18, bottom: 0 }}>
+        <AreaChart data={data} margin={{ top: 8, right: 12, left: -18, bottom: 0 }}>
           <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
           <XAxis dataKey="name" tick={axis} tickLine={false} axisLine={{ stroke: "var(--line-strong)" }} />
           <YAxis tick={axis} tickLine={false} axisLine={false} allowDecimals={false} />
           <Tooltip {...tip} cursor={{ stroke: "var(--line-strong)" }} />
-          <Line dataKey="value" stroke="var(--chart-1)" strokeWidth={2.5} dot={{ r: 4, fill: "var(--surface)", stroke: "var(--chart-1)", strokeWidth: 2 }} activeDot={{ r: 6 }} animationDuration={900} />
-        </LineChart>
+          <defs><linearGradient id="trend-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.28} /><stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0} /></linearGradient></defs>
+          <Area type="monotone" dataKey="value" fill="url(#trend-fill)" stroke="var(--chart-1)" strokeWidth={2.5} dot={{ r: 4, fill: "var(--surface)", stroke: "var(--chart-1)", strokeWidth: 2 }} activeDot={{ r: 6 }} animationDuration={900} />
+        </AreaChart>
       </ResponsiveContainer>
     </div>
   );

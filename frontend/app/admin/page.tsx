@@ -9,8 +9,7 @@ import { Card, CardHeader } from "@/components/ui/card";
 import dynamic from "next/dynamic";
 import { BarList } from "@/components/ui/meters";
 import { ErrorState } from "@/components/ui/empty-state";
-import { motion } from "motion/react";
-import { CountUp, Item, Stagger } from "@/components/ui/motion";
+import { Item, Stagger } from "@/components/ui/motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatTile } from "@/components/ui/stat-tile";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -71,28 +70,34 @@ export default function Dashboard() {
       />
 
       {events ? (
-        <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }} aria-labelledby="decision" className="on-navy mb-5 grid overflow-hidden rounded-2xl bg-navy text-white lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-          <div className="p-7 lg:p-8">
-            <h2 id="decision" className="text-sm font-bold text-navy-ink">{m.pending.length ? "Waiting for your decision" : "Your decision queue"}</h2>
-            <p className="num mt-2 flex items-baseline gap-3 font-extrabold leading-none"><span className="text-[72px]"><CountUp value={m.pending.length} /></span><span className="text-xl font-bold text-navy-ink">{m.pending.length === 1 ? "event" : "events"}</span></p>
-            <p className="mt-3 max-w-sm text-[15px] text-navy-ink">{m.pending.length ? (clashes ? `${plural(clashes, "clash", "clashes")} to look at first. Approving is blocked while a slot is taken.` : "Each one shows its clash check before you approve.") : "New submissions will appear here."}</p>
-            {m.pending.length ? <Link href="/admin/approvals" className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-xl bg-white px-5 font-bold text-navy transition hover:bg-brand-soft active:scale-[.97]">Review {m.pending.length}<ArrowRight className="size-4" aria-hidden /></Link> : null}
-          </div>
-          {m.pending[0] ? (
-            <Link href={`/admin/approvals/${m.pending[0].id}`} className="group flex flex-col justify-center gap-3 border-t border-navy-line bg-navy-2 p-7 transition hover:bg-navy-line lg:border-l lg:border-t-0 lg:p-8">
-              <span className="text-sm font-bold text-navy-ink">Next in the queue</span>
-              <span className="flex items-start gap-4">
-                <span className="grid size-16 shrink-0 place-content-center rounded-2xl bg-white text-center text-navy" aria-hidden><span className="num text-2xl font-extrabold leading-none">{dateBlock(m.pending[0].starts_at).day}</span><span className="mt-0.5 text-[11px] font-bold uppercase">{dateBlock(m.pending[0].starts_at).mon}</span></span>
-                <span className="min-w-0">
-                  <span className="block truncate text-xl font-extrabold">{m.pending[0].title}</span>
-                  <span className="mt-0.5 block text-[15px] text-navy-ink">{fmtDay(m.pending[0].starts_at)}, {fmtRange(m.pending[0].starts_at, m.pending[0].ends_at)}</span>
-                  <span className="mt-0.5 flex items-center gap-1.5 text-[15px] text-navy-ink"><MapPin className="size-4" aria-hidden />{m.pending[0].venue_name} · {m.pending[0].coordinator_name}</span>
-                </span>
-              </span>
-              <span className="flex items-center gap-1.5 text-sm font-bold text-sky">Open the clash check<ArrowRight className="size-4 transition group-hover:translate-x-1" aria-hidden /></span>
-            </Link>
-          ) : null}
-        </motion.section>
+        <Card className="mb-5 overflow-hidden" aria-labelledby="decision">
+          <CardHeader
+            className="pb-3"
+            title={<span id="decision">Waiting for your decision</span>}
+            aside={m.pending.length ? <Link href="/admin/approvals" className="inline-flex min-h-11 items-center gap-1.5 rounded-[10px] bg-brand px-4 text-sm font-semibold text-on-brand transition hover:bg-brand-hover active:scale-[.97]">Review {m.pending.length}<ArrowRight className="size-4" aria-hidden /></Link> : undefined}
+          />
+          {m.pending.length === 0 ? (
+            <p className="flex items-center gap-2 border-t border-line px-5 py-5 text-[15px] font-medium text-good"><CircleCheckBig className="size-5" aria-hidden />Nothing needs your decision. New submissions will appear here.</p>
+          ) : (
+            <ul className="divide-y divide-line border-t border-line">
+              {m.pending.slice(0, 5).map((e) => (
+                <li key={e.id}>
+                  <Link href={`/admin/approvals/${e.id}`} className="group flex min-h-16 items-center gap-4 px-5 py-3 transition-colors hover:bg-surface-2">
+                    <span className="grid size-12 shrink-0 place-content-center rounded-[10px] border border-line bg-surface-2 text-center" aria-hidden>
+                      <span className="num text-lg font-semibold leading-none text-ink">{dateBlock(e.starts_at).day}</span>
+                      <span className="mt-0.5 text-[10.5px] font-semibold uppercase text-muted">{dateBlock(e.starts_at).mon}</span>
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[15px] font-semibold text-ink">{e.title}</span>
+                      <span className="flex items-center gap-1.5 truncate text-[13.5px] text-muted"><MapPin className="size-3.5 shrink-0" aria-hidden />{e.venue_name} · {e.coordinator_name} · {fmtDay(e.starts_at)}, {fmtRange(e.starts_at, e.ends_at)}</span>
+                    </span>
+                    <ArrowRight className="size-4 shrink-0 text-faint transition group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
       ) : null}
 
       {!events ? <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-28 rounded-2xl" />)}</div> : (
@@ -127,8 +132,8 @@ export default function Dashboard() {
         </Card>
         <Card className="lg:col-span-3">
           <CardHeader title="Status key" aside={<span className="text-[13px] font-semibold text-muted">Same icon, word and colour on every screen</span>} />
-          <ul className="grid gap-x-8 gap-y-3 p-5 sm:grid-cols-2 lg:grid-cols-3">
-            {keyRows.map(([s, meaning]) => <li key={s} className="flex items-center gap-3"><StatusBadge status={s} className="w-36 justify-start" /><span className="text-[14px] text-muted">{meaning}</span></li>)}
+          <ul className="grid gap-x-8 gap-y-4 p-5 sm:grid-cols-2 lg:grid-cols-3">
+            {keyRows.map(([s, meaning]) => <li key={s} className="flex flex-col items-start gap-1.5"><StatusBadge status={s} /><span className="text-[14px] text-muted">{meaning}</span></li>)}
           </ul>
         </Card>
       </div>

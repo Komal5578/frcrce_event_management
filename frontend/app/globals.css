@@ -6,28 +6,28 @@
   Status pairs are icon + word + colour (`dom-status-vocabulary`); every fg/bg pair is >= 4.5:1.
 */
 :root {
-  --canvas: oklch(96.7% 0.009 265);
-  --surface: oklch(100.0% 0 0);
-  --surface-2: oklch(97.9% 0.006 265);
-  --line: oklch(92.1% 0.016 263);
-  --line-strong: oklch(81.8% 0.032 263);
-  --ink: oklch(22.3% 0.056 263);
-  --muted: oklch(47.4% 0.049 263);
-  --faint: oklch(52.3% 0.048 263);
+  --canvas: oklch(95.5% 0.012 255);
+  --surface: oklch(100% 0 0 / 0.66);
+  --surface-2: oklch(97% 0.008 255 / 0.7);
+  --line: oklch(87% 0.018 255 / 0.8);
+  --line-strong: oklch(74% 0.03 255);
+  --ink: oklch(22% 0.045 255);
+  --muted: oklch(43% 0.035 255);
+  --faint: oklch(47% 0.03 255);
 
-  --brand: oklch(52.8% 0.207 262);
-  --brand-hover: oklch(45.2% 0.181 262);
-  --brand-soft: oklch(94.8% 0.022 266);
-  --on-brand: oklch(100.0% 0 0);
+  --brand: oklch(24% 0.06 255);
+  --brand-hover: oklch(34% 0.07 255);
+  --brand-soft: oklch(93% 0.025 255);
+  --on-brand: oklch(100% 0 0);
 
-  --navy: oklch(24.9% 0.062 263);
-  --navy-2: oklch(30.2% 0.078 264);
-  --navy-line: oklch(35.5% 0.089 265);
-  --navy-ink: oklch(85.3% 0.037 265);
+  --navy: oklch(21% 0.04 255);
+  --navy-2: oklch(28% 0.05 255);
+  --navy-line: oklch(36% 0.05 255);
+  --navy-ink: oklch(82% 0.03 255);
 
-  --purple: oklch(43.6% 0.194 283);
-  --purple-deep: oklch(35.8% 0.167 282);
-  --purple-soft: oklch(94.6% 0.028 295);
+  --purple: oklch(24% 0.06 255);
+  --purple-deep: oklch(16% 0.05 255);
+  --purple-soft: oklch(92% 0.045 245);
 
   --danger: oklch(50.0% 0.182 30);
   --danger-soft: oklch(95.6% 0.019 22);
@@ -35,24 +35,29 @@
   --good: oklch(51.2% 0.121 154);
   --good-soft: oklch(95.8% 0.022 160);
 
-  /* chart-1/3/4 validated with dataviz validate_palette.js (light on white, dark on navy): CVD dE >= 20, lightness band ok. Never pair red with green. */
-  --chart-1: oklch(56.5% 0.204 263);
+  /* chart-3/4 validated with dataviz validate_palette.js. chart-1 was later changed to ink/ice for the Ink & Ice system and has NOT been re-validated against the CVD check. Never pair red with green. */
+  --chart-1: oklch(38% 0.09 255);
   --chart-2: oklch(61.4% 0.150 152);
   --chart-3: oklch(75.1% 0.155 78);
   --chart-4: oklch(59.7% 0.189 27);
   --chart-5: oklch(58.9% 0.224 287);
   --chart-grid: oklch(93.9% 0.013 262);
 
-  --brand-solid: oklch(56.5% 0.204 263);
-  --sky: oklch(77.2% 0.115 264);
+  --brand-solid: oklch(82% 0.10 238);
+  --sky: oklch(82% 0.10 238);
   --signal: oklch(81.5% 0.150 82);
   --signal-ink: oklch(29.7% 0.061 85);
   --ok-bright: oklch(78.5% 0.146 155);
   --bad-bright: oklch(75.9% 0.144 26);
   --gold: oklch(88.0% 0.135 86);
-  --nav-accent: oklch(67.2% 0.173 263);
+  --on-purple: oklch(100% 0 0);
+  --surface-solid: oklch(99% 0.004 255);
+  --mark-fg: oklch(88% 0.09 238);
+  --ice: oklch(82% 0.10 238);
+  --nav-accent: oklch(82% 0.10 238);
 
-  --shadow-card: 0 1px 2px rgb(13 26 53 / 0.04);
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.7) inset, 0 12px 32px -16px rgb(20 40 90 / 0.28);
+  --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.7) inset, 0 24px 48px -20px rgb(20 40 90 / 0.4);
   --shadow-pop: 0 24px 60px -12px rgb(13 26 53 / 0.35);
 
   --st-draft-fg: oklch(37.3% 0.031 260);      --st-draft-bg: oklch(96.7% 0 0);
@@ -75,28 +80,28 @@
 }
 
 :root[data-theme="dark"] {
-  --canvas: oklch(18.7% 0.043 266);
-  --surface: oklch(22.9% 0.054 267);
-  --surface-2: oklch(21.1% 0.051 267);
-  --line: oklch(31.3% 0.059 265);
-  --line-strong: oklch(41.7% 0.069 266);
-  --ink: oklch(94.9% 0.018 269);
-  --muted: oklch(75.9% 0.041 265);
-  --faint: oklch(66.2% 0.051 264);
+  --canvas: oklch(15.5% 0.03 255);
+  --surface: oklch(28% 0.035 255 / 0.46);
+  --surface-2: oklch(22% 0.032 255 / 0.5);
+  --line: oklch(100% 0 0 / 0.10);
+  --line-strong: oklch(100% 0 0 / 0.22);
+  --ink: oklch(96% 0.01 255);
+  --muted: oklch(76% 0.025 255);
+  --faint: oklch(68% 0.03 255);
 
-  --brand: oklch(65.2% 0.185 262);
-  --brand-hover: oklch(70.1% 0.156 264);
-  --brand-soft: oklch(29.7% 0.085 265);
-  --on-brand: oklch(19.1% 0.059 264);
+  --brand: oklch(97% 0.006 255);
+  --brand-hover: oklch(90% 0.02 255);
+  --brand-soft: oklch(34% 0.05 255 / 0.7);
+  --on-brand: oklch(20% 0.04 255);
 
-  --navy: oklch(16.8% 0.039 266);
-  --navy-2: oklch(24.2% 0.060 266);
-  --navy-line: oklch(30.1% 0.072 266);
-  --navy-ink: oklch(78.2% 0.046 266);
+  --navy: oklch(13% 0.03 255);
+  --navy-2: oklch(22% 0.04 255);
+  --navy-line: oklch(100% 0 0 / 0.12);
+  --navy-ink: oklch(78% 0.03 255);
 
-  --purple: oklch(55.7% 0.198 285);
-  --purple-deep: oklch(44.4% 0.192 282);
-  --purple-soft: oklch(25.4% 0.086 282);
+  --purple: oklch(97% 0.006 255);
+  --purple-deep: oklch(90% 0.02 255);
+  --purple-soft: oklch(34% 0.05 255 / 0.7);
 
   --danger: oklch(75.9% 0.144 26);
   --danger-soft: oklch(25.6% 0.057 19);
@@ -104,14 +109,18 @@
   --good: oklch(78.5% 0.146 155);
   --good-soft: oklch(26.9% 0.046 159);
 
-  --chart-1: oklch(62.3% 0.176 264);
+  --chart-1: oklch(82% 0.10 238);
   --chart-2: oklch(76.5% 0.155 155);
   --chart-3: oklch(63.9% 0.134 72);
   --chart-4: oklch(63.6% 0.172 26);
   --chart-5: oklch(72.3% 0.154 289);
   --chart-grid: oklch(29.7% 0.058 265);
 
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.25);
+  --on-purple: oklch(20% 0.04 255);
+  --surface-solid: oklch(21% 0.035 255);
+  --mark-fg: oklch(20% 0.04 255);
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 16px 40px -18px rgb(0 0 0 / 0.6);
+  --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.08) inset, 0 28px 56px -20px rgb(0 0 0 / 0.75);
 
   --st-draft-fg: oklch(87.2% 0.009 258);      --st-draft-bg: oklch(32.2% 0.038 266);
   --st-pending-fg: oklch(87.9% 0.153 92);    --st-pending-bg: oklch(30.8% 0.052 88);
@@ -141,7 +150,13 @@
   --color-bad-bright: var(--bad-bright);
   --color-gold: var(--gold);
   --color-nav-accent: var(--nav-accent);
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-dm), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-geo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --color-ice: var(--ice);
+  --color-surface-solid: var(--surface-solid);
+  --color-on-purple: var(--on-purple);
+  --color-mark-fg: var(--mark-fg);
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
@@ -168,7 +183,8 @@
   --color-good-soft: var(--good-soft);
   --shadow-card: var(--shadow-card);
   --shadow-pop: var(--shadow-pop);
-  --radius-card: 16px;
+  --shadow-lift: var(--shadow-lift);
+  --radius-card: 12px;
 }
 
 html {
@@ -183,18 +199,69 @@ html[data-text="large"] { font-size: 19px; }
 body {
   background: var(--canvas);
   color: var(--ink);
-  font-family: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-dm), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
+h1, h2, h3 { text-wrap: balance; }
 .num { font-variant-numeric: tabular-nums; }
+
+/* Atmosphere. A fixed field of soft light blooms behind everything, drifting very slowly (the one ambient motion). */
+body { background: var(--canvas); }
+body::before {
+  content: ""; position: fixed; inset: -20%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(40% 44% at 78% 6%, oklch(58% 0.13 248 / 0.62), transparent 70%),
+    radial-gradient(34% 40% at 8% 72%, oklch(40% 0.09 268 / 0.5), transparent 70%),
+    radial-gradient(30% 34% at 62% 100%, oklch(46% 0.08 232 / 0.38), transparent 70%);
+  animation: drift 38s ease-in-out infinite alternate;
+}
+:root:not([data-theme="dark"]) body::before {
+  background:
+    radial-gradient(38% 42% at 80% 6%, oklch(86% 0.07 238 / 0.9), transparent 70%),
+    radial-gradient(34% 40% at 6% 70%, oklch(88% 0.06 268 / 0.8), transparent 70%),
+    radial-gradient(30% 34% at 60% 100%, oklch(90% 0.05 220 / 0.7), transparent 70%);
+}
+@keyframes drift { to { transform: translate3d(-4%, 3%, 0) scale(1.08); } }
+
+/* Hero field. Light theme: pale sky with a blue bloom. Dark theme (and .hero-dark always): deep slate with a blue bloom and a violet-blue counter-bloom. */
+.hero-bg {
+  background:
+    radial-gradient(62% 90% at 88% -10%, oklch(82% 0.10 238 / 0.95), transparent 68%),
+    radial-gradient(55% 80% at -5% 110%, oklch(87% 0.07 268 / 0.85), transparent 68%),
+    linear-gradient(165deg, oklch(98.5% 0.008 245), oklch(93% 0.025 250));
+  color: var(--ink);
+}
+:root[data-theme="dark"] .hero-bg, .hero-dark {
+  background:
+    radial-gradient(62% 90% at 88% -10%, oklch(56% 0.12 245 / 0.75), transparent 68%),
+    radial-gradient(55% 80% at -5% 110%, oklch(42% 0.10 268 / 0.7), transparent 68%),
+    linear-gradient(165deg, oklch(24% 0.045 255), oklch(14% 0.03 258));
+  color: oklch(97% 0.006 255);
+}
+.hero-bg::after, .hero-dark::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5), inset 0 0 0 1px oklch(70% 0.04 250 / 0.25); }
+:root[data-theme="dark"] .hero-bg::after, .hero-dark::after { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.14), inset 0 0 0 1px rgb(255 255 255 / 0.06); }
+
+/* Every translucent surface is frosted glass. */
+.bg-surface, .bg-surface-2 { backdrop-filter: blur(18px) saturate(1.25); -webkit-backdrop-filter: blur(18px) saturate(1.25); }
+/* A faint diagonal sheen so glass reads as glass, not as a flat tint. */
+:root[data-theme="dark"] .bg-surface { background-image: linear-gradient(155deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0) 42%); }
+dialog.bg-surface, .bg-surface-solid { backdrop-filter: none; }
+/* Display voice: light geometric sans, sentence case, tight. Page titles, dates, countdowns. */
+.display { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.035em; line-height: 1.02; }
+
+/* Browser surfaces take the palette too. */
+::selection { background: var(--ice); color: oklch(20% 0.04 255); }
+html { accent-color: var(--brand); scrollbar-color: var(--line-strong) transparent; }
+input, textarea { caret-color: var(--ink); }
 
 /* One visible focus ring everywhere; never removed. */
 :focus-visible {
   outline: 3px solid var(--brand);
   outline-offset: 2px;
   border-radius: 6px;
+  box-shadow: 0 0 0 2px var(--surface);
 }
 .on-navy :focus-visible { outline-color: white; }
 
@@ -233,6 +300,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .skeleton { animation: none; }
+  body::before { animation: none; }
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
 

@@ -12,21 +12,21 @@ export function EventCard({ e }: { e: EventItem }) {
   const fill = e.capacity ? Math.min(100, Math.round(((e.confirmed ?? 0) / e.capacity) * 100)) : 0;
   const status = eventStatus(e);
   return (
-    <Link href={`/student/events/${e.id}`} className="group block rounded-2xl bg-surface p-4 shadow-card border border-line transition duration-150 hover:-translate-y-0.5 hover:ring-purple active:scale-[.985]">
+    <Link href={`/student/events/${e.id}`} className="group block rounded-[24px] bg-surface p-4 shadow-card border border-line transition duration-150 hover:-translate-y-0.5 hover:shadow-lift hover:border-line-strong active:scale-[.985]">
       <div className="flex gap-4">
-        <div className="grid size-16 shrink-0 place-content-center rounded-2xl bg-purple-soft text-center text-purple" aria-hidden>
-          <span className="num text-2xl font-extrabold leading-none">{day}</span>
-          <span className="mt-1 text-xs font-bold uppercase tracking-wide">{mon}</span>
+        <div className="grid size-[4.5rem] shrink-0 place-content-center rounded-[18px] bg-ice text-center text-neutral-950" aria-hidden>
+          <span className="display num text-[2.75rem]">{day}</span>
+          <span className="mt-0.5 text-[11px] font-bold uppercase tracking-wide">{mon}</span>
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="text-[17px] font-extrabold leading-snug tracking-tight text-ink">{e.title}</h2>
+          <h2 className="text-[18px] font-semibold leading-snug tracking-[-0.015em] text-ink">{e.title}</h2>
           <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted"><Clock className="size-3.5 shrink-0" aria-hidden /><span><span className="sr-only">When: </span>{fmtDay(e.starts_at)}, {fmtRange(e.starts_at, e.ends_at)}</span></p>
           <p className="mt-0.5 flex items-center gap-1.5 text-sm text-muted"><MapPin className="size-3.5 shrink-0" aria-hidden /><span><span className="sr-only">Where: </span>{e.venue_name ?? "Venue to be set"}</span></p>
         </div>
       </div>
       {left !== null ? (
         <div className="mt-3.5">
-          <div className="h-1.5 overflow-hidden rounded-full bg-line" aria-hidden><div className="h-full rounded-full bg-purple transition-[width] duration-700" style={{ width: `${fill}%` }} /></div>
+          <div className="h-1.5 overflow-hidden rounded-full bg-line" aria-hidden><div className="h-full rounded-full bg-ink transition-[width] duration-700" style={{ width: `${fill}%` }} /></div>
           <p className="num mt-1.5 text-[13px] font-semibold text-muted">{left === 0 ? "No seats left" : `${left} of ${e.capacity} seats left`}</p>
         </div>
       ) : null}
@@ -35,7 +35,7 @@ export function EventCard({ e }: { e: EventItem }) {
           <StatusBadge status={status} />
           {e.my_reg && e.my_reg !== "cancelled" ? <StatusBadge status={regStatus(e.my_reg)} label={e.my_reg === "waitlisted" && e.my_waitlist_pos ? `Waitlisted #${e.my_waitlist_pos}` : undefined} /> : null}
         </div>
-        <span className="flex min-h-11 items-center gap-0.5 text-sm font-bold text-purple">View details <ChevronRight className="size-4 transition group-hover:translate-x-0.5" aria-hidden /></span>
+        <span className="grid size-11 place-items-center rounded-full bg-brand text-on-brand transition group-hover:scale-105"><ChevronRight className="size-5" aria-hidden /><span className="sr-only">View details</span></span>
       </div>
     </Link>
   );

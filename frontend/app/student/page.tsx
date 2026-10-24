@@ -51,7 +51,7 @@ export default function Discover() {
   const ms = next?.starts_at ? Math.max(0, +new Date(next.starts_at) - now) : 0;
   const countdown = ms >= 864e5 ? { n: Math.floor(ms / 864e5), unit: Math.floor(ms / 864e5) === 1 ? "day" : "days" } : { n: Math.max(1, Math.floor(ms / 36e5)), unit: "hours" };
 
-  const chip = (on: boolean) => cn("min-h-11 shrink-0 rounded-full px-4 text-sm font-bold border transition active:scale-95", on ? "border-purple bg-purple text-white" : "border-line-strong bg-surface text-muted hover:text-ink");
+  const chip = (on: boolean) => cn("min-h-11 shrink-0 rounded-full px-4 text-sm font-bold border transition active:scale-95", on ? "border-purple bg-purple text-on-purple" : "border-line-strong bg-surface text-muted hover:text-ink hover:border-ink");
 
   return (
     <>
@@ -59,11 +59,11 @@ export default function Discover() {
         <div className="relative mt-4">
           <label htmlFor="q" className="sr-only">Search events</label>
           <Search className="pointer-events-none absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-faint" aria-hidden />
-          <input id="q" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search events or venues" className="min-h-12 w-full rounded-2xl bg-surface pl-11 pr-4 text-[15px] text-ink placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-white/80" />
+          <input id="q" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search events or venues" className="min-h-12 w-full rounded-full bg-surface pl-11 pr-4 text-[15px] text-ink placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-white/80" />
         </div>
       </StudentHead>
 
-      <div className="-mt-6 lg:mt-6 space-y-5 px-4 lg:px-8">
+      <div className="relative -mt-6 lg:mt-6 space-y-5 px-4 lg:px-8">
         <div className="-mx-4 flex gap-2 relative overflow-x-auto px-4 pb-1 lg:mx-0 lg:flex-wrap lg:px-0 [scrollbar-width:none]" role="group" aria-label="Filters">
           {profile?.department ? <button aria-pressed={!!dept} onClick={() => setDeptOff((v) => !v)} className={chip(!!dept)}>{profile.department}</button> : null}
           <button aria-pressed={week} onClick={() => setWeek((v) => !v)} className={chip(week)}>Next 7 days</button>
@@ -71,17 +71,16 @@ export default function Discover() {
         </div>
 
         {next ? (
-          <Link href={`/student/events/${next.event_id}`} className="group flex items-center gap-5 rounded-2xl border border-line bg-surface p-4 shadow-card transition hover:border-purple active:scale-[.985] sm:p-5">
-            <div className="grid min-w-20 place-items-center rounded-2xl bg-purple px-3 py-3 text-center text-white" aria-hidden>
-              <span className="num text-[34px] font-extrabold leading-none">{countdown.n}</span>
-              <span className="mt-1 text-xs font-bold uppercase tracking-wide opacity-90">{countdown.unit}</span>
+          <Link href={`/student/events/${next.event_id}`} className="group relative isolate block overflow-hidden rounded-[28px] hero-dark p-5 text-white transition active:scale-[.985] sm:p-7">
+            <p className="display num text-[clamp(2.75rem,1.8rem+5vw,4.5rem)] text-ice"><span className="sr-only">Your next event starts in </span>{countdown.n} {countdown.unit} to go</p>
+            <div className="mt-3 flex items-end justify-between gap-4">
+              <div className="min-w-0">
+                <p className="truncate text-xl font-semibold tracking-[-0.015em]">{next.title}</p>
+                <p className="mt-0.5 text-[15px] text-navy-ink">{fmtDay(next.starts_at)}, {fmtTime(next.starts_at)}{next.venue_name ? ` · ${next.venue_name}` : ""}</p>
+                <span className="sr-only">Starts {relative(next.starts_at)}</span>
+              </div>
+              <span className="grid size-12 shrink-0 place-items-center rounded-full bg-ice text-neutral-950 transition group-hover:translate-x-1"><ArrowRight className="size-5" aria-hidden /></span>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold uppercase tracking-wide text-purple">Your next event <span className="sr-only">starts {relative(next.starts_at)}</span></p>
-              <p className="mt-0.5 truncate text-lg font-extrabold">{next.title}</p>
-              <p className="text-sm text-muted">{fmtDay(next.starts_at)}, {fmtTime(next.starts_at)}{next.venue_name ? ` · ${next.venue_name}` : ""}</p>
-            </div>
-            <ArrowRight className="size-5 shrink-0 text-purple transition group-hover:translate-x-1" aria-hidden />
           </Link>
         ) : null}
 

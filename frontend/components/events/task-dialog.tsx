@@ -40,7 +40,7 @@ export function TaskDialog({ open, events, eventId, onClose, onDone }: { open: b
   }
 
   return (
-    <dialog ref={ref} onCancel={(e) => { e.preventDefault(); onClose(); }} aria-labelledby={titleId} className="m-auto w-[min(30rem,calc(100vw-2rem))] rounded-3xl bg-surface p-0 text-ink shadow-pop border border-line">
+    <dialog ref={ref} onCancel={(e) => { e.preventDefault(); onClose(); }} aria-labelledby={titleId} className="m-auto w-[min(30rem,calc(100vw-2rem))] rounded-3xl bg-surface-solid p-0 text-ink shadow-pop border border-line">
       <form onSubmit={save} className="space-y-4 p-6" noValidate>
         <h2 id={titleId} className="text-xl font-extrabold tracking-tight">Add a task</h2>
         {!eventId ? <Field label="Event" required>{(id) => <Select id={id} value={ev} onChange={(e) => setEv(e.target.value)}>{events.map((x) => <option key={x.id} value={x.id}>{x.title}</option>)}</Select>}</Field> : null}

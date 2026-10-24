@@ -51,7 +51,7 @@ export function ConfirmDialog({
       onCancel={(e) => { e.preventDefault(); close(); }}
       aria-labelledby={titleId}
       className={cn(
-        "m-auto w-[min(32rem,calc(100vw-2rem))] rounded-3xl bg-surface p-0 text-ink shadow-pop border border-line",
+        "m-auto w-[min(32rem,calc(100vw-2rem))] rounded-3xl bg-surface-solid p-0 text-ink shadow-pop border border-line",
         closing ? "animate-[pop-out_.14s_ease-in_forwards]" : "animate-[pop-in_.22s_cubic-bezier(.22,1,.36,1)]",
       )}
     >

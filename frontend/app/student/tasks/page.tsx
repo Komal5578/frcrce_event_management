@@ -40,7 +40,7 @@ export default function MyTasks() {
   return (
     <>
       <StudentHead title="My Tasks" sub="Organizer view only" />
-      <div className="-mt-6 lg:mt-6 space-y-4 px-4 lg:px-8">
+      <div className="relative -mt-6 lg:mt-6 space-y-4 px-4 lg:px-8">
         {error ? <ErrorState onRetry={() => mutate()} /> : !data ? <ListSkeleton rows={3} h="h-28" /> : data.length === 0 ? (
           <EmptyState art="tasks" icon={PartyPopper} title="No tasks assigned" body="When a coordinator assigns you something, it shows up here." />
         ) : (

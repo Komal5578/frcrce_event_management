@@ -52,7 +52,7 @@ export default function MyEvents() {
             const today = i === 0;
             return (
               <div key={i} role="listitem" aria-label={`${d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}${today ? ", today" : ""}${evs.length ? `, ${evs.length} event${evs.length > 1 ? "s" : ""}: ${evs.map((x) => x.title).join(", ")}` : ""}`}
-                className={cn("flex min-w-0 flex-col items-center rounded-2xl py-2 text-center", today ? "bg-white text-purple-deep" : "bg-white/12 text-white")}>
+                className={cn("flex min-w-0 flex-col items-center rounded-2xl py-2 text-center", today ? "bg-ice text-neutral-950" : "border border-line bg-surface-2 text-ink")}>
                 <span className="text-[11px] font-bold uppercase opacity-80">{d.toLocaleDateString("en-GB", { weekday: "short" })}</span>
                 <span className="num text-lg font-extrabold leading-tight">{d.getDate()}</span>
                 <span className={cn("mt-0.5 size-1.5 rounded-full", evs.length ? (today ? "bg-purple" : "bg-gold") : "bg-transparent")} aria-hidden />
@@ -62,17 +62,17 @@ export default function MyEvents() {
         </div>
       </StudentHead>
 
-      <div className="-mt-6 lg:mt-6 space-y-4 px-4 lg:px-8">
+      <div className="relative -mt-6 lg:mt-6 space-y-4 px-4 lg:px-8">
         <div role="group" aria-label="Show upcoming or past events" className="grid grid-cols-2 rounded-2xl bg-surface p-1 shadow-card border border-line">
           {(["up", "past"] as const).map((t) => (
-            <button key={t} aria-pressed={tab === t} onClick={() => setTab(t)} className={cn("min-h-11 rounded-xl text-sm font-bold transition", tab === t ? "bg-purple text-white" : "text-muted hover:text-ink")}>
+            <button key={t} aria-pressed={tab === t} onClick={() => setTab(t)} className={cn("min-h-11 rounded-xl text-sm font-bold transition", tab === t ? "bg-purple text-on-purple" : "text-muted hover:text-ink")}>
               {t === "up" ? `Upcoming (${up.length})` : `Past (${past.length})`}
             </button>
           ))}
         </div>
 
         {error ? <ErrorState onRetry={() => mutate()} /> : !data ? <ListSkeleton rows={3} h="h-32" /> : list.length === 0 ? (
-          <EmptyState art="calendar" icon={CalendarSearch} title={tab === "up" ? "Nothing booked yet" : "No past events"} body={tab === "up" ? "Find an event and register in a few taps." : "Events you attend will show up here."} action={tab === "up" ? <Link href="/student" className="inline-flex min-h-11 items-center rounded-xl bg-purple px-5 font-bold text-white">Discover events</Link> : undefined} />
+          <EmptyState art="calendar" icon={CalendarSearch} title={tab === "up" ? "Nothing booked yet" : "No past events"} body={tab === "up" ? "Find an event and register in a few taps." : "Events you attend will show up here."} action={tab === "up" ? <Link href="/student" className="inline-flex min-h-11 items-center rounded-xl bg-purple px-5 font-bold text-on-purple">Discover events</Link> : undefined} />
         ) : (
           <Stagger className="grid gap-3.5 md:grid-cols-[repeat(auto-fit,minmax(21rem,1fr))]" key={tab}>
             {list.map((r) => (

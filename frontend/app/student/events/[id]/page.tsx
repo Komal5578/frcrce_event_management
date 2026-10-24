@@ -36,8 +36,8 @@ export default function EventDetail() {
   const [confirm, setConfirm] = useState<"register" | "cancel" | null>(null);
   const [just, setJust] = useState<"registered" | "waitlisted" | "cancelled" | null>(null);
 
-  if (error) return <><StudentHead title="Event" back="/student" /><div className="-mt-6 lg:mt-6 px-4 lg:px-8"><ErrorState onRetry={() => mutate()} message="We could not load this event. It may have been removed." /></div></>;
-  if (!e) return <><StudentHead title="Loading…" back="/student" /><div className="-mt-6 lg:mt-6 space-y-3 px-4 lg:px-8"><Skeleton className="h-48 rounded-2xl" /><Skeleton className="h-24 rounded-2xl" /></div></>;
+  if (error) return <><StudentHead title="Event" back="/student" /><div className="relative -mt-6 lg:mt-6 px-4 lg:px-8"><ErrorState onRetry={() => mutate()} message="We could not load this event. It may have been removed." /></div></>;
+  if (!e) return <><StudentHead title="Loading…" back="/student" /><div className="relative -mt-6 lg:mt-6 space-y-3 px-4 lg:px-8"><Skeleton className="h-48 rounded-2xl" /><Skeleton className="h-24 rounded-2xl" /></div></>;
 
   const status = eventStatus(e);
   const left = seatsLeft(e);
@@ -86,7 +86,7 @@ export default function EventDetail() {
         <div className="mt-3 flex flex-wrap gap-2"><StatusBadge status={status} />{e.my_reg && e.my_reg !== "cancelled" ? <StatusBadge status={regStatus(e.my_reg)} label={waitlisted && e.my_waitlist_pos ? `Waitlisted #${e.my_waitlist_pos}` : undefined} /> : null}</div>
       </StudentHead>
 
-      <div className="-mt-6 grid gap-4 px-4 lg:mt-6 lg:grid-cols-[1.25fr_1fr] lg:items-start lg:px-8">
+      <div className="relative -mt-6 grid gap-4 px-4 lg:mt-6 lg:grid-cols-[1.25fr_1fr] lg:items-start lg:px-8">
         <div className="rounded-2xl bg-surface p-5 shadow-card border border-line">
           <dl className="space-y-4">
             <div className="flex gap-3.5"><CalendarClock className="mt-0.5 size-5 shrink-0 text-purple" aria-hidden /><div><dt className="text-xs font-bold uppercase tracking-wide text-faint">When</dt><dd className="font-bold">{fmtDay(e.starts_at)}</dd><dd className="text-sm text-muted">{fmtRange(e.starts_at, e.ends_at)}</dd></div></div>
@@ -111,7 +111,7 @@ export default function EventDetail() {
             {just !== "cancelled" ? <Tick /> : null}
             <h2 className="mt-2 text-xl font-extrabold">{just === "registered" ? "You're registered" : just === "waitlisted" ? "You're on the waitlist" : "Registration cancelled"}</h2>
             <p className="mt-1 text-[15px] text-muted">{just === "registered" ? "Your seat is saved. We'll remind you in Notifications." : just === "waitlisted" ? "We will tell you in Notifications if a seat opens." : "You can register again any time while seats remain."}</p>
-            <Link href="/student/my" className="mt-4 inline-flex min-h-11 items-center rounded-xl bg-purple px-5 font-bold text-white">View my events</Link>
+            <Link href="/student/my" className="mt-4 inline-flex min-h-11 items-center rounded-xl bg-purple px-5 font-bold text-on-purple">View my events</Link>
           </motion.div>
         ) : canJoin ? (
           <div className="space-y-2">

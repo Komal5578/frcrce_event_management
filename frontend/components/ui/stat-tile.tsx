@@ -5,24 +5,24 @@ import { CountUp } from "./motion";
 
 type Tone = "green" | "red" | "amber" | "slate" | "blue";
 const tone: Record<Tone, string> = {
-  green: "bg-[var(--st-open-bg)] text-[var(--st-open-fg)]",
-  red: "bg-[var(--st-cancelled-bg)] text-[var(--st-cancelled-fg)]",
-  amber: "bg-[var(--st-pending-bg)] text-[var(--st-pending-fg)]",
-  slate: "bg-[var(--st-completed-bg)] text-[var(--st-completed-fg)]",
-  blue: "bg-[var(--st-approved-bg)] text-[var(--st-approved-fg)]",
+  green: "text-[var(--st-open-fg)]",
+  red: "text-[var(--st-cancelled-fg)]",
+  amber: "text-[var(--st-pending-fg)]",
+  slate: "text-ink",
+  blue: "text-[var(--st-approved-fg)]",
 };
 
-/** Big coloured number over a plain label, as in the original mockup's stat tiles. */
+/** Linear-style metric: quiet label, one confident figure. Colour sits on the number only, never the whole tile. */
 export function StatTile({
   label, value, suffix, tone: t = "slate", note, decimals, big,
 }: { label: string; value: number; suffix?: string; tone?: Tone; note?: string; decimals?: number; big?: boolean }) {
   return (
-    <div className={cn("h-full rounded-2xl px-5 py-4 border border-black/[.04]", tone[t])}>
-      <p className={cn("font-extrabold leading-none tracking-tight", big ? "text-[44px]" : "text-[34px]")}>
+    <div className="h-full rounded-xl border border-line bg-surface px-4 py-3.5 shadow-card">
+      <p className="text-[13.5px] font-medium text-muted">{label}</p>
+      <p className={cn("mt-2 font-semibold leading-none tracking-[-0.03em]", big ? "text-[44px]" : "text-[34px]", tone[t])}>
         <CountUp value={value} suffix={suffix} decimals={decimals} />
       </p>
-      <p className="mt-2 text-sm font-semibold">{label}</p>
-      {note ? <p className="mt-0.5 text-[13px] opacity-85">{note}</p> : null}
+      {note ? <p className="mt-1.5 text-[13px] text-muted">{note}</p> : null}
     </div>
   );
 }

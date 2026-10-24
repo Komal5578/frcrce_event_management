@@ -30,16 +30,15 @@ function Nav({ items, onNavigate }: { items: NavItem[]; onNavigate?: () => void 
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "group relative flex min-h-11 items-center gap-3 rounded-xl px-3.5 text-[15px] font-semibold transition-colors",
-              active ? "text-white" : "text-navy-ink hover:bg-white/[.07] hover:text-white",
+              "group relative flex min-h-11 items-center gap-3 rounded-[10px] px-3 text-[14.5px] font-medium transition-colors",
+              active ? "text-ink" : "text-muted hover:bg-ink/[.05] hover:text-ink",
             )}
           >
-            {active ? <motion.span layoutId="nav-active" className="absolute inset-0 rounded-xl bg-navy-2 border border-white/10" transition={{ type: "spring", stiffness: 500, damping: 38 }} /> : null}
-            {active ? <span className="absolute left-0 top-2.5 bottom-2.5 w-1 rounded-r-full bg-nav-accent" aria-hidden /> : null}
-            <it.icon className="relative size-5 shrink-0" strokeWidth={2} aria-hidden />
+            {active ? <motion.span layoutId="nav-active" className="absolute inset-0 rounded-[10px] border border-line bg-surface shadow-card" transition={{ type: "spring", stiffness: 500, damping: 38 }} /> : null}
+            <it.icon className="relative size-[18px] shrink-0" strokeWidth={active ? 2.2 : 1.9} aria-hidden />
             <span className="relative flex-1">{it.label}</span>
             {it.badge ? (
-              <span className="relative num grid min-w-6 place-items-center rounded-full bg-signal px-1.5 text-xs font-extrabold text-signal-ink">
+              <span className="relative num grid min-w-6 place-items-center rounded-full bg-ice px-1.5 text-xs font-bold text-neutral-950">
                 {it.badge}<span className="sr-only"> need attention</span>
               </span>
             ) : null}
@@ -52,24 +51,24 @@ function Nav({ items, onNavigate }: { items: NavItem[]; onNavigate?: () => void 
 
 function Sidebar({ items, roleLabel, name, home, onNavigate }: { items: NavItem[]; roleLabel: string; name: string; home: string; onNavigate?: () => void }) {
   return (
-    <div className="on-navy flex h-full flex-col bg-navy px-3.5 py-5 text-white">
-      <Link href={home} onClick={onNavigate} className="mb-7 flex items-center gap-3 rounded-xl px-1.5 py-1">
+    <div className="flex h-full flex-col border-r border-line bg-surface-2 px-3 py-4">
+      <Link href={home} onClick={onNavigate} className="mb-6 flex items-center gap-2.5 rounded-xl px-1.5 py-1">
         <BrandMark />
         <span className="leading-tight">
-          <span className="block text-[17px] font-extrabold tracking-tight">{BRAND}</span>
-          <span className="block text-xs font-semibold text-navy-ink">{roleLabel}<span className="sr-only"> home</span></span>
+          <span className="display block text-[25px]">{BRAND}</span>
+          <span className="block text-[12.5px] font-medium text-muted">{roleLabel}<span className="sr-only"> home</span></span>
         </span>
       </Link>
       <Nav items={items} onNavigate={onNavigate} />
-      <div className="mt-auto rounded-2xl bg-white/[.06] p-3">
+      <div className="mt-auto rounded-xl border border-line bg-surface p-2.5">
         <div className="flex items-center gap-3">
-          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-solid text-sm font-extrabold" aria-hidden>{initials(name)}</span>
+          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-ice text-sm font-bold text-neutral-950" aria-hidden>{initials(name)}</span>
           <div className="min-w-0 leading-tight">
-            <p className="truncate text-sm font-bold">{name}</p>
-            <p className="text-xs text-navy-ink">{roleLabel}</p>
+            <p className="truncate text-sm font-semibold text-ink">{name}</p>
+            <p className="text-xs text-muted">{roleLabel}</p>
           </div>
         </div>
-        <button onClick={signOut} className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold text-navy-ink border border-white/15 transition hover:bg-white/10 hover:text-white">
+        <button onClick={signOut} className="mt-2.5 flex min-h-11 w-full items-center justify-center gap-2 rounded-[10px] text-sm font-medium text-muted border border-line transition hover:bg-surface-2 hover:text-ink">
           <LogOut className="size-4" aria-hidden /> Sign out
         </button>
       </div>
@@ -88,11 +87,11 @@ export function AppShell({ items, roleLabel, name, home, notifHref, children }: 
       <aside className="sticky top-0 hidden h-dvh lg:block"><Sidebar items={items} roleLabel={roleLabel} name={name} home={home} /></aside>
 
       <div className="min-w-0">
-        <header className="no-print sticky top-0 z-30 flex items-center gap-2 border-b border-line bg-surface/90 px-4 py-2.5 backdrop-blur lg:px-8">
+        <header className="no-print sticky top-0 z-30 flex items-center gap-2 border-b border-line bg-canvas/60 px-4 py-2.5 backdrop-blur-xl lg:px-8">
           <button className="grid min-h-11 min-w-11 place-items-center rounded-xl border border-line lg:hidden" aria-label="Open menu" aria-expanded={open} onClick={() => setOpen(true)}>
             <Menu className="size-5" aria-hidden />
           </button>
-          <Link href={home} aria-label={`${BRAND} home`} className="grid min-h-11 min-w-11 place-items-center lg:hidden max-[359px]:hidden"><BrandMark className="size-8" /><span className="hidden font-extrabold tracking-tight min-[480px]:inline">{BRAND}</span></Link>
+          <Link href={home} aria-label={`${BRAND} home`} className="grid min-h-11 min-w-11 place-items-center lg:hidden max-[359px]:hidden"><BrandMark className="size-8" /><span className="display hidden text-[22px] min-[480px]:inline">{BRAND}</span></Link>
           <div className="ml-auto flex items-center gap-2">
             <TextSizeControl />
             <ThemeToggle />
@@ -112,7 +111,7 @@ export function AppShell({ items, roleLabel, name, home, notifHref, children }: 
           <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
             <motion.div className="absolute inset-0 bg-black/50" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)} />
             <motion.div className="absolute inset-y-0 left-0 w-72 max-w-[85vw]" initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }} transition={{ type: "spring", stiffness: 380, damping: 40 }}>
-              <button className="absolute right-3 top-4 z-10 grid min-h-11 min-w-11 place-items-center rounded-xl text-white hover:bg-white/10" aria-label="Close menu" onClick={() => setOpen(false)}><X className="size-5" aria-hidden /></button>
+              <button className="absolute right-3 top-4 z-10 grid min-h-11 min-w-11 place-items-center rounded-xl text-muted hover:bg-ink/[.06]" aria-label="Close menu" onClick={() => setOpen(false)}><X className="size-5" aria-hidden /></button>
               <Sidebar items={items} roleLabel={roleLabel} name={name} home={home} onNavigate={() => setOpen(false)} />
             </motion.div>
           </div>
@@ -129,7 +128,7 @@ export function PageHeader({ title, sub, actions, back }: { title: string; sub?:
       {back}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-[clamp(1.5rem,1.2rem+1.2vw,1.75rem)] font-extrabold leading-tight tracking-tight text-ink">{title}</h1>
+          <h1 className="text-[clamp(1.5rem,1.25rem+1vw,1.875rem)] font-semibold leading-tight tracking-[-0.025em] text-ink">{title}</h1>
           {sub ? <p className="mt-1 text-[15px] text-muted">{sub}</p> : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}

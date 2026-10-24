@@ -31,7 +31,7 @@ export function TextSizeControl({ onDark }: { onDark?: boolean }) {
           onClick={() => put("data-text", "textSize", v)}
           className={cn(
             "min-h-11 min-w-11 rounded-[10px] px-2 text-sm font-bold transition",
-            s === v ? (onDark ? "bg-white text-purple-deep" : "bg-brand text-on-brand") : onDark ? "text-white/85 hover:bg-white/10" : "text-muted hover:text-ink",
+            s === v ? (onDark ? "bg-ice text-neutral-950" : "bg-brand text-on-brand") : onDark ? "text-white/85 hover:bg-white/10" : "text-muted hover:text-ink",
           )}
         >
           {t}
@@ -42,7 +42,7 @@ export function TextSizeControl({ onDark }: { onDark?: boolean }) {
 }
 
 export function ThemeToggle({ onDark }: { onDark?: boolean }) {
-  const dark = useSyncExternalStore(subscribe, attr("data-theme", "light"), () => "light") === "dark";
+  const dark = useSyncExternalStore(subscribe, attr("data-theme", "dark"), () => "dark") === "dark";
   return (
     <button
       type="button"

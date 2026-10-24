@@ -16,7 +16,7 @@ export function RoleGuard({ role, children }: { role: Role; children: (name: str
   }, [me, signedOut, role, router]);
   if (!me || me.role !== role)
     return (
-      <div className="grid min-h-dvh place-items-center bg-canvas p-8" role="status" aria-label="Loading">
+      <div className="grid min-h-dvh place-items-center p-8" role="status" aria-label="Loading">
         <div className="w-full max-w-md space-y-3">
           <Skeleton className="h-10 w-2/3" />
           <Skeleton className="h-28 w-full" />
