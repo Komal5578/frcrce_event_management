@@ -1,0 +1,25 @@
+{
+  // Fr. CRCE demo deployment: a second Worker on its own D1, so the original Worker and database stay untouched.
+  // Deploy with: npx wrangler deploy --config wrangler.fcrce.jsonc
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "college-events-fcrce-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "college-events-fcrce",
+      "database_id": "81167ff9-c013-405b-b1ce-3e4182f28239",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    // ON for the Fr. CRCE demo (owner's explicit choice, 2026-10-25): anyone with the link can sign in as the first account of
+    // each role whose email ends with DEMO_EMAIL_SUFFIX. Synthetic data only. To lock it: set "false" and redeploy this Worker.
+    "DEMO_LOGIN": "true",
+    "DEMO_EMAIL_SUFFIX": "@frcrce-demo.test",
+    "LOGIN_MAX_FAILURES": "5",
+    "LOGIN_WINDOW_MINUTES": "15"
+  },
+  "observability": { "enabled": true }
+}

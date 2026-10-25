@@ -4,7 +4,7 @@
 export type Row = Record<string, any>;
 export type Role = "coordinator" | "student" | "admin";
 export interface Actor { id: string; role: Role; name: string; email: string }
-export interface Env { DB: D1Database; DEMO_LOGIN?: string; LOGIN_MAX_FAILURES?: string; LOGIN_WINDOW_MINUTES?: string }
+export interface Env { DB: D1Database; DEMO_LOGIN?: string; DEMO_EMAIL_SUFFIX?: string; LOGIN_MAX_FAILURES?: string; LOGIN_WINDOW_MINUTES?: string }
 
 export const MSG: Record<string, string> = {
   VENUE_CLASH: "That venue is already booked for part of this time. Pick another venue or time.",

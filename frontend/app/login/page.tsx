@@ -14,6 +14,9 @@ import { cn } from "@/lib/cn";
 import { homeFor } from "@/lib/session";
 import type { Me, Role } from "@/lib/types";
 
+// One-click role buttons exist only when a build deliberately enables them (03-UI-SPEC); otherwise they would always fail.
+const DEMO = process.env.NEXT_PUBLIC_DEMO_LOGIN === "true";
+
 const flow = [
   { label: "Plan", icon: CalendarPlus },
   { label: "Approve", icon: CheckCheck },
@@ -103,9 +106,9 @@ export default function Login() {
         </div>
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-8">
           <h1 className="text-[clamp(1.75rem,1.4rem+1.2vw,2.25rem)] font-semibold tracking-[-0.03em]">Sign in</h1>
-          <p className="mt-1 text-[15px] text-muted">Pick your role to jump straight in, or use your college email.</p>
+          <p className="mt-1 text-[15px] text-muted">{DEMO ? "Pick your role to jump straight in, or use your college email." : "Sign in with your college email and password."}</p>
 
-          <ul className="mt-6 space-y-3" aria-label="Sign in as">
+          {DEMO ? <ul className="mt-6 space-y-3" aria-label="Sign in as">
             {roles.map((r, i) => (
               <motion.li key={r.role} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 + i * 0.07, type: "spring", stiffness: 340, damping: 30 }}>
                 <button
@@ -123,11 +126,11 @@ export default function Login() {
                 </button>
               </motion.li>
             ))}
-          </ul>
+          </ul> : null}
 
-          <p className="my-6 text-center text-sm font-semibold text-muted">or sign in with your college email</p>
+          {DEMO ? <p className="my-6 text-center text-sm font-semibold text-muted">or sign in with your college email</p> : null}
 
-          <form onSubmit={submit} className="space-y-4" noValidate>
+          <form onSubmit={submit} className={DEMO ? "space-y-4" : "mt-6 space-y-4"} noValidate>
             <Field label="College email" required>
               {(id) => <Input id={id} type="email" autoComplete="username" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@college.edu" />}
             </Field>

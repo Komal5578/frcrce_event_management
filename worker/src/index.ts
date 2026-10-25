@@ -73,7 +73,7 @@ route("POST", "/api/auth/demo-login", async ({ env, db, body }) => {
   if (env.DEMO_LOGIN !== "true") return json({ detail: "Demo login disabled" }, 404);
   const role = str(await body(), "role", true);
   if (!["coordinator", "student", "admin"].includes(role as string)) throw bad();
-  const p = await first(db, "SELECT id, email, name, role FROM profiles WHERE role = ? AND email LIKE ? ORDER BY id LIMIT 1", role, "%@demo.college.test");
+  const p = await first(db, "SELECT id, email, name, role FROM profiles WHERE role = ? AND email LIKE ? ORDER BY id LIMIT 1", role, "%" + (env.DEMO_EMAIL_SUFFIX ?? "@demo.college.test"));
   if (!p) throw new DomainError("INTERNAL", `Demo account for role ${role} not found.`);
   return json(who(p), 200, { "set-cookie": sessionCookie(await createSession(db, p.id)) });
 }, false);
