@@ -1,14 +1,10 @@
-import { expect, test, type Page } from "@playwright/test";
-
-const signIn = async (page: Page, role: "Student" | "Coordinator") => {
-  await page.goto("/login");
-  await page.getByRole("button", { name: new RegExp(`Continue as ${role}`) }).click();
-  await page.waitForURL(/\/(student|coordinator)$/);
-};
+import { expect, test } from "@playwright/test";
+import { signIn } from "./auth";
 
 // Registers then cancels, so the seed data ends exactly as it started.
 test("student registers through Review & Confirm and can cancel again", async ({ page }) => {
-  await signIn(page, "Student");
+  await signIn(page, "Student", "meera@demo.college.test");
+  await page.getByRole("button", { name: "Clear filters" }).click();
   await page.getByRole("link", { name: /Annual Tech Fest Keynote/ }).first().click();
   await page.getByRole("button", { name: "Register" }).click();
 

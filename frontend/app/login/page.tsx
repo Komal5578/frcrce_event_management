@@ -14,12 +14,6 @@ import { cn } from "@/lib/cn";
 import { homeFor } from "@/lib/session";
 import type { Me, Role } from "@/lib/types";
 
-const roles: { role: Role; title: string; goal: string; icon: typeof GraduationCap; tone: string }[] = [
-  { role: "student", title: "Student", goal: "Find an event and register in a few taps.", icon: GraduationCap, tone: "bg-ice text-neutral-950" },
-  { role: "coordinator", title: "Coordinator", goal: "Get an event approved and running.", icon: UserCog, tone: "bg-brand text-on-brand" },
-  { role: "admin", title: "Admin", goal: "Approve safely, with clashes surfaced first.", icon: ShieldCheck, tone: "border border-line-strong bg-surface-2 text-ink" },
-];
-
 const flow = [
   { label: "Plan", icon: CalendarPlus },
   { label: "Approve", icon: CheckCheck },
@@ -32,6 +26,12 @@ const principles = [
   { icon: Hand, title: "Confirm before you commit", body: "Review & Confirm on every irreversible step." },
   { icon: Users2, title: "One screen per goal", body: "Each role sees only what its job needs." },
   { icon: KeyRound, title: "Clashes are impossible", body: "A venue can never be double-booked." },
+];
+
+const roles: { role: Role; title: string; goal: string; icon: typeof GraduationCap; tone: string }[] = [
+  { role: "student", title: "Student", goal: "Find an event and register in a few taps.", icon: GraduationCap, tone: "bg-ice text-neutral-950" },
+  { role: "coordinator", title: "Coordinator", goal: "Get an event approved and running.", icon: UserCog, tone: "bg-brand text-on-brand" },
+  { role: "admin", title: "Admin", goal: "Approve safely, with clashes surfaced first.", icon: ShieldCheck, tone: "border border-line-strong bg-surface-2 text-ink" },
 ];
 
 export default function Login() {

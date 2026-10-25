@@ -1,11 +1,10 @@
 import { expect, test } from "@playwright/test";
+import { signIn } from "./auth";
 
 // WCAG 2.1.1 / 2.4.3 / 2.4.7: the primary flows work without a mouse, focus is visible and returns where it came from.
 test("student can open and dismiss Review & Confirm using only the keyboard", async ({ page }) => {
-  await page.goto("/login");
-  await page.getByRole("button", { name: /Continue as Student/ }).focus();
-  await page.keyboard.press("Enter");
-  await page.waitForURL(/\/student$/);
+  await signIn(page, "Student", "meera@demo.college.test");
+  await page.getByRole("button", { name: "Clear filters" }).click();
   await page.getByRole("link", { name: /Annual Tech Fest Keynote/ }).first().focus();
   await page.keyboard.press("Enter");
   const register = page.getByRole("button", { name: "Register" });

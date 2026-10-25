@@ -35,20 +35,20 @@ Full list with ids in `.planning/REQUIREMENTS.md`. Summary by role (`dom-require
 
 ## Context
 
-- **Milestone v2 (2026-10-23):**
-  - The repo holds the kb (`node kb/tools/build-index.mjs` must pass after any kb change) and the v1 Cloudflare build at the root (Next.js + D1, 260 tests).
-  - v1 is frozen as the reference to port from. v2 rebuilds it as `/backend` (FastAPI + Postgres) and `/frontend` (Next.js) per ROADMAP Phases 8–13.
+- **Milestone v2 (current deployment re-baseline, 2026-10-24):**
+  - The repo holds the KB (`node kb/tools/build-index.mjs` must pass after any KB change), the Next.js frontend in `/frontend`, the current Cloudflare Worker + D1 API in `/worker`, and a prior FastAPI + Postgres implementation in `/backend` that is retained but unused.
+  - Current production target is Worker/D1 + Vercel. On 2026-10-25 the deployed Worker smoke and production browser suite passed 20/20, Lighthouse scored 96/100/100, disposable D1 restore counts matched, Gitleaks found no secrets in all 14 history commits, and the Admin clash/return browser journey passed with API fixtures. Phase 12 remains open for the club billing owner's GCP cost/data-ownership review. See `adr-001-stack` v4 and Phase 12 context.
 - Method: Goal-Directed Design. Three interfaces (Coordinator, Student, Admin), one per role, shaped by that role's goal, not a feature list (`src-feature-vs-goal-directed`, `adr-002-roles`). Student Organizer is a flag on a student account that adds My Tasks.
 - Personas are proto-personas with confidence `assumed` (`dom-personas`). Only real team research may be recorded as `evidence`. AI drafts research and usability instruments and never invents results.
 - Status vocabulary is fixed in `dom-status-vocabulary`; exact tokens are set in `kb/design-system` during Phase 3.
-- Things only the team can do: create the AWS account, EC2 key pair and S3 bucket, and the Vercel account (secrets only in `backend/.env` / `frontend/.env.local`, never committed), run real interviews and usability sessions.
+- Things only the team can do: approve account actions and billing/resource shutdowns, configure provider secrets (never committed), and run real interviews and usability sessions.
 - Demo mode: one-click role login with seeded test users so reviewers can explore all three interfaces.
 
 ## Constraints
 
-- **Tech stack (v2)**: FastAPI + Postgres on the AWS free tier (one EC2 instance, docker-compose), and Next.js (App Router, TS) + Tailwind + shadcn/ui on Vercel. All free tier. Verify current APIs with context7 before coding. See `adr-001-stack` (v3).
+- **Tech stack (current)**: Cloudflare Worker + D1 (`college-events-v2`, APAC) and Next.js (App Router, TS) + Tailwind + shadcn/ui on Vercel. Vercel's `BACKEND_URL` is the Worker origin. The older AWS/FastAPI/Postgres target is superseded. Verify current APIs with context7 before coding. See `adr-001-stack` (v4).
 - **Accessibility**: WCAG 2.2 AA, 44px targets, full keyboard path, A-/A/A+ text size, plain-language errors (`src-accessibility-areas`). Non-negotiable.
-- **Data integrity**: venue clashes via a Postgres exclusion constraint (approved/open/ongoing only); registrations unique per (event, user); authorization layer reviewed before deploy (`dom-domain-model`).
+- **Data integrity**: D1/SQLite triggers enforce venue clashes for approved/open/ongoing events, unique registration, capacity, resource limits and state transitions; verify deployed behavior and concurrency before phase completion (`dom-domain-model`).
 - **Process**: one GSD phase per session; lean v2 process (no worktrees, no frozen files); one commit per verified phase.
 - **Honesty**: kb `confidence` labels respected; no invented research or usability results.
 - **Simplicity**: prefer the simplest thing that works; leave one runnable check for non-trivial logic.
@@ -57,8 +57,8 @@ Full list with ids in `.planning/REQUIREMENTS.md`. Summary by role (`dom-require
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Next.js + Cloudflare Workers + D1 (`adr-001-stack`) | User decision 2026-10-20: free tier only; replaces the earlier Supabase/Vercel plan; triggers give clash prevention | Superseded 2026-10-23 |
-| FastAPI on AWS (EC2) + Next.js on Vercel, Postgres (milestone v2) | User decision 2026-10-23: FastAPI backend was the intended architecture; Postgres exclusion constraint gives native clash prevention | User-confirmed |
+| Next.js + Cloudflare Workers + D1 (`adr-001-stack`) | Initial 2026-10-20 stack; later restored as the active deployed architecture on 2026-10-24 | Current deployment, user-reported |
+| FastAPI on AWS (EC2) + Next.js on Vercel, Postgres (milestone v2) | User decision 2026-10-23; implementation remains in `/backend` | Superseded 2026-10-24 |
 | Port, don't redesign: keep the GDD artefacts and v1 rules, redesign visuals ("modern campus SaaS") | User decision 2026-10-23 | User-confirmed |
 | Only approved and later events book a venue | Makes the admin clash check (TT-A1) reachable; recorded in kb in Phase 8 | Assumed |
 | Three interfaces, four roles (`adr-002-roles`) | Mirrors the reference's Faculty/Student/Admin split and covers task allocation via the Organizer flag | Assumed, not yet user-confirmed |

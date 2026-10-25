@@ -92,6 +92,7 @@ function Editor({ id, step, setStep }: { id: string; step: number; setStep: (n: 
   const [errs, setErrs] = useState<Record<string, string>>({});
   const [save, setSave] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [discard, setDiscard] = useState(false);
+  const [venueSaving, setVenueSaving] = useState(false);
   const router = useRouter();
   const loaded = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -179,21 +180,21 @@ function Editor({ id, step, setStep }: { id: string; step: number; setStep: (n: 
               <div className="sm:col-span-2"><Field label="Description" hint="Shown to students on the event page.">{(i) => <Textarea id={i} value={f.description} onChange={(e) => set("description", e.target.value)} />}</Field></div>
             </div>
           </Card>
-        ) : step === 1 ? <VenueStep ev={ev} onPicked={() => mutate()} /> : step === 2 ? <ResourceStep ev={ev} /> : step === 3 ? <TaskStep ev={ev} /> : <ReviewStep ev={ev} onBack={() => setStep(3)} />}
+        ) : step === 1 ? <VenueStep ev={ev} onSaving={setVenueSaving} onPicked={() => mutate()} /> : step === 2 ? <ResourceStep ev={ev} /> : step === 3 ? <TaskStep ev={ev} /> : <ReviewStep ev={ev} onBack={() => setStep(3)} />}
       </motion.div>
 
       <ConfirmDialog open={discard} verb="discard" destructive summary={<p className="font-extrabold">{ev.title}</p>} consequence="This draft and everything you entered is deleted. Nothing is sent to the admin." confirmLabel="Discard draft" onConfirm={async () => { try { await api(`/api/events/${id}/draft`, { method: "DELETE" }); flash("Draft discarded."); router.push("/coordinator"); } catch (e) { flash(errText(e), { kind: "err" }); setDiscard(false); } }} onCancel={() => setDiscard(false)} />
       {step < 4 ? (
         <div className="mt-6 flex max-w-3xl justify-between gap-3">
           <Button variant="secondary" onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}>Go back</Button>
-          <Button onClick={next}>Next: {steps[step + 1].label}</Button>
+          <Button onClick={next} disabled={step === 1 && venueSaving}>Next: {steps[step + 1].label}</Button>
         </div>
       ) : null}
     </>
   );
 }
 
-function VenueStep({ ev, onPicked }: { ev: EventItem; onPicked: () => void }) {
+function VenueStep({ ev, onSaving, onPicked }: { ev: EventItem; onSaving: (saving: boolean) => void; onPicked: () => Promise<unknown> }) {
   const flash = useFlash();
   const q = `start=${encodeURIComponent(ev.starts_at ?? "")}&end=${encodeURIComponent(ev.ends_at ?? "")}&exclude_event_id=${ev.id}`;
   const { data: free } = useSWR<VenueItem[]>(`/api/venues/free?${q}`);
@@ -204,8 +205,10 @@ function VenueStep({ ev, onPicked }: { ev: EventItem; onPicked: () => void }) {
   const taken = (all ?? []).filter((v) => v.active && !freeIds.has(v.id));
 
   async function pick(v: VenueItem) {
-    try { await api(`/api/events/${ev.id}/draft`, { method: "PATCH", json: { venue_id: v.id } }); onPicked(); flash(`${v.name} selected.`); }
+    onSaving(true);
+    try { await api(`/api/events/${ev.id}/draft`, { method: "PATCH", json: { venue_id: v.id } }); await onPicked(); flash(`${v.name} selected.`); }
     catch (e) { flash(errText(e), { kind: "err" }); }
+    finally { onSaving(false); }
   }
   if (!free || !all) return <Skeleton className="h-64 max-w-3xl rounded-2xl" />;
   return (

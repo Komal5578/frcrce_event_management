@@ -1,17 +1,12 @@
 import { expect, test, type Page } from "@playwright/test";
-
-const signIn = async (page: Page, role: "Student" | "Coordinator" | "Admin") => {
-  if (!page.url().endsWith("/login")) await page.goto("/login");
-  await page.getByRole("button", { name: new RegExp(`Continue as ${role}`) }).click();
-  await page.waitForURL(/\/(student|coordinator|admin)$/);
-};
+import { signIn } from "./auth";
 
 const signOut = async (page: Page) => {
   await page.getByRole("button", { name: "Sign out" }).first().click();
   await page.waitForURL(/\/login$/);
 };
 
-test("one-click sign in lands each role on its own interface", async ({ page }) => {
+test("password sign in lands each role on its own interface", async ({ page }) => {
   await signIn(page, "Student");
   await expect(page).toHaveURL(/\/student$/);
   await expect(page.getByRole("heading", { level: 1, name: "Discover" })).toBeVisible();
@@ -23,6 +18,13 @@ test("one-click sign in lands each role on its own interface", async ({ page }) 
 
   await signIn(page, "Admin");
   await expect(page.getByRole("heading", { level: 1, name: "Admin Overview" })).toBeVisible();
+});
+
+test("session cookie stays secure and first-party through the API rewrite", async ({ page }) => {
+  await signIn(page, "Student");
+  const session = (await page.context().cookies(page.url())).find((cookie) => cookie.name === "session");
+  expect(session).toMatchObject({ secure: true, httpOnly: true, sameSite: "Lax" });
+  expect(session?.domain).not.toContain("workers.dev");
 });
 
 test("a role cannot open another role's interface", async ({ page }) => {

@@ -22,50 +22,17 @@ The attendance PDF/md in `kb/source/attendance-reference/` is a **reference exam
 - KB `confidence`: source / derived / assumed / evidence. Only real team research is `evidence`. **Never invent research or usability results**; draft instruments, leave results to the team.
 - Report outcomes faithfully (failing tests, skipped steps).
 
-## Stack (milestone v2, rebuild in progress)
-**DECISION (user, 2026-10-23): FastAPI backend on the AWS free tier + Next.js frontend on Vercel.** This supersedes the 2026-10-20 Cloudflare Workers + D1 decision. The v1 Cloudflare code now lives in `/frontend` (Next.js app, `lib/domain/*`, tests) and `/backend/migrations` + `/backend/seed` (SQLite/D1 SQL), as the porting reference. Don't extend it. ADR-001 was rewritten in Phase 8.
-- **Backend `/backend`:** FastAPI (Python 3.12), Postgres via psycopg 3 with plain SQL (no ORM) and plain `.sql` migrations, Pydantic schemas, pytest against a real Postgres, ruff.
-  - **Clashes:** blocked by a Postgres `EXCLUDE USING gist` constraint on (venue, `tstzrange [start,end)`) for **approved/open/ongoing only**. Pending requests may overlap, and the admin resolves them at approval.
-  - **Double registration:** blocked by `UNIQUE(event_id, user_id)`.
-  - **Capacity/waitlist, resource limits and the state machine:** live in `app/domain` inside one transaction with `SELECT … FOR UPDATE`.
-  - **Authorization:** `app/domain` is the authorization layer. Every function takes the `Actor` (from the session, never from request input) first.
-  - **Auth:** a random token in an httpOnly cookie, only its SHA-256 stored in `sessions`, argon2 passwords, a sign-in rate limit.
-- **Frontend `/frontend`:** Next.js (App Router, TS) + Tailwind + shadcn/ui + lucide + Recharts, light and dark themes.
-  - `next.config` `rewrites` proxies `/api/*` to the backend, so the session cookie is first-party and no CORS is needed.
-  - API types are generated with `openapi-typescript` from FastAPI's `/openapi.json`. Never hand-write the client types.
-- **Hosting:** backend is one EC2 t3.micro running docker-compose (Postgres + FastAPI + Caddy for HTTPS on an `<ip>.sslip.io` host), with a nightly `pg_dump` to S3. Frontend is Vercel, with the project root `/frontend`. Free tiers only; no paid add-ons.
-- Verify current APIs with the context7 MCP before coding.
-- KB check: `node kb/tools/build-index.mjs` (must pass after any kb change).
-- **Planned commands** (set up in Phases 9/10; not real yet):
-  - Backend: `cd backend && ruff check && pytest`; `docker compose up`.
-  - Frontend: `cd frontend && npm run lint && npm run typecheck && npm test && npm run build`; `npx playwright test`.
-- **Secrets:** `backend/.env` and `frontend/.env.local` only. Commit the `.env.example` files; never commit keys.
-- **Human steps:**
-  - Create an AWS account (check the free-tier type), an EC2 key pair and an S3 bucket.
-  - Create a Vercel account and import the repo with root `/frontend`.
-
-## v2 rebuild context (audit 2026-10-23; plan in `.planning/ROADMAP.md` Phases 8–12)
-**Port, don't redesign.** These stay the source of truth:
-- the GDD artefacts (kb, personas, IA, flows, wireframes)
-- the v1 business rules (`backend/migrations/0002_guards.sql`, `frontend/lib/domain/*`, `frontend/lib/errors.ts` messages)
-- the 260 vitest cases (port them to pytest)
-
-Error markers stay the same: `VENUE_CLASH`, `EVENT_FULL`, `RESOURCE_SHORT`, `BAD_STATE`, `NOT_ALLOWED`.
-
-**Audit findings that v2 must fix** (details in each phase's `CONTEXT.md`):
-- **The admin clash path is unreachable**: v1 counts `pending` as booked. The fix is to count approved and later only (`dom-domain-model`, TT-A1).
-- **Resource check gap**: the v1 resource-allocation guard doesn't re-check on approve or reschedule.
-- **Nav bug**: AppShell marks the home link current on every subpage.
-- **ConfirmDialog**: first focus must be "Go back", and it needs a destructive variant.
-- **Student mobile nav**: the student interface needs a mobile bottom tab bar (per the IA, not a "Menu" disclosure).
-- **Status tokens missing** for task, registration and alert statuses.
-- **Duplicated UI**: two reports pages, two export routes, two calendars, two event-card and two flash components.
-- **Security**: `DEMO_LOGIN` is live in prod, `/design` is unguarded, and there is no sign-in rate limit.
-- **Vocabulary drift**:
-  - Pending approval, not "Submitted"
-  - Done, not "Completed" (for tasks)
-  - Notifications, not "Alerts"
-- **The UI is visually plain.** v2 needs a real visual direction ("modern campus SaaS") through a UI-SPEC before screens are built.
+## Current stack (2026-10-24)
+**Current deployment:** Cloudflare Worker API + Cloudflare D1 (`college-events-v2`, APAC) and Next.js frontend on Vercel. This supersedes the 2026-10-23 AWS FastAPI/Postgres target. The original Worker/D1 source in `/worker` is the active v2 API implementation.
+- **API `/worker`:** TypeScript Cloudflare Worker, D1 binding `DB`, SQL migrations and seed data. `worker/src/index.ts` handles `/api/*`; `worker/src/domain.ts` contains domain operations and authorization; `worker/src/core.ts` handles sessions, PBKDF2, rate limiting and D1 errors.
+- **Frontend `/frontend`:** Next.js App Router on Vercel. `next.config.ts` proxies `/api/*` to `BACKEND_URL`, keeping the browser-facing session cookie first-party.
+- **Integrity:** D1/SQLite constraints and triggers protect unique registration, event transitions, venue clashes, capacity and resource allocation. Only approved/open/ongoing events hold venues/resources; pending requests may overlap until approval. Deployed Worker smoke passed 20/20 on 2026-10-25; remote D1 was reseeded afterwards.
+- **Authentication:** session token is httpOnly, Secure, SameSite=Lax; only its SHA-256 is stored. Password verification uses PBKDF2-SHA256. Production `DEMO_LOGIN=false`; the demo-login endpoint returns 404.
+- **Live state (verified 2026-10-25):** API is `college-events-api.varadaj47.workers.dev`; Vercel production `BACKEND_URL` points to it and the production deployment is live. Deployed Worker smoke and the full production browser suite passed 20/20. The old `college-events` Worker was deleted and its hostname returned HTTP 404; v2 health returned HTTP 200 after deletion.
+- **Outstanding:** run Lighthouse accessibility audits, document/verify D1 restore, finish the full-history secret audit, add a browser-driven Admin approval/clash journey, and review GCP costs with the club billing owner before any shutdown.
+- **Unused legacy code:** `/backend` FastAPI/Postgres and root GCP/Compose files are retained as reference; do not deploy them as the active backend or remove them until recovery/rollback value is reviewed.
+- **Secrets:** use provider environment settings; never commit credentials. KB check: `node kb/tools/build-index.mjs` after KB edits.
+- The GDD artefacts, role goals and requirements remain the product source of truth. Scope cuts remain in `adr-004-scope`.
 
 ## Session protocol
 - Start: read INDEX + STATE. Plan with `gsd-plan-phase`, build with `gsd-execute-phase`, verify with `gsd-verify-work`.

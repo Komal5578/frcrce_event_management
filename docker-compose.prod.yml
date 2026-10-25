@@ -1,0 +1,43 @@
+# Production stack: Postgres + FastAPI + Caddy (auto-HTTPS). Env comes from .env.prod on the VM.
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: app
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 3s
+      retries: 10
+
+  api:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://app:${DB_PASSWORD}@db:5432/app
+      COOKIE_SECURE: "true"
+      DEMO_LOGIN: ${DEMO_LOGIN:-false}
+      SEED_DEMO: ${SEED_DEMO:-false}
+    command: sh -c "python scripts/migrate.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      SITE: ${SITE}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on: [api]
+
+volumes:
+  pgdata:
+  caddy_data:

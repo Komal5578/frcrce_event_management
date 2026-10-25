@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { signIn } from "./auth";
 
 // power-design web rules #2 (no h-scroll at 320/390), #4 (44px targets), #18 (landmarks, one h1, no skipped levels), WCAG 2.4.2 (page titles).
 const routes: Record<"Student" | "Coordinator" | "Admin", string[]> = {
@@ -31,13 +32,12 @@ async function audit(page: Page) {
   });
 }
 
-for (const [role, paths] of Object.entries(routes)) {
+for (const role of ["Student", "Coordinator", "Admin"] as const) {
+  const paths = routes[role];
   for (const vp of [{ width: 320, height: 700 }, { width: 390, height: 844 }, { width: 1440, height: 900 }]) {
     test(`${role} screens: structure + targets @${vp.width}`, async ({ page }) => {
       await page.setViewportSize(vp);
-      await page.goto("/login");
-      await page.getByRole("button", { name: new RegExp(`Continue as ${role}`) }).click();
-      await page.waitForURL(/\/(student|coordinator|admin)$/);
+      await signIn(page, role);
       const problems: string[] = [];
       for (const p of paths) {
         await page.goto(p);

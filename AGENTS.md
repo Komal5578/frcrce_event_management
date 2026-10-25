@@ -27,10 +27,10 @@ Applies to any AI agent (Claude Code, Codex, subagents). `CLAUDE.md` has the pro
 | Over-engineering audit | `ponytail:ponytail-audit` (before final) |
 
 ## Stack and boundaries
-FastAPI + Postgres in `/backend` (AWS EC2), Next.js in `/frontend` (Vercel); see `kb/decisions/adr-001-stack.md`. `app/domain` (backend) is the authorization layer; route handlers call only it. API types are generated, never hand-written. `kb/`: run `node kb/tools/build-index.mjs` after edits. `.planning/`: GSD workflows own it.
+Cloudflare Worker + D1 in `/worker`, Next.js in `/frontend` (Vercel); see `kb/decisions/adr-001-stack.md`. The Worker domain layer is the authorization boundary. Vercel rewrites `/api/*` through `BACKEND_URL` so session cookies remain first-party. The old FastAPI/Postgres `/backend` is retained but unused until cutover verification. `kb/`: run `node kb/tools/build-index.mjs` after edits. `.planning/`: GSD workflows own it.
 
 ## Handoff format (write to the phase folder, not chat)
 What changed · which requirement ids covered · how to verify · open questions · kb ids consulted.
 
 ## Escalate to the user when
-A decision changes scope, roles or stack; real research data is needed; an account/key is needed (AWS, Vercel); two kb notes conflict.
+A decision changes scope, roles or stack; real research data is needed; an account/key is needed (Cloudflare, Vercel); two kb notes conflict.
