@@ -6,7 +6,7 @@ Seven phases, one per session, taken from the approved plan. The first two phase
 
 Config: standard granularity, interactive mode, parallelization on. Coverage: 42/42 v1 requirements mapped.
 
-> **2026-10-24: current deployment re-baseline.** The user-reported active stack is Cloudflare Worker + D1 and Next.js on Vercel. This supersedes the 2026-10-23 AWS/FastAPI target. Phases 8–11 remain completed work; Phase 12 is open for cutover, security and deployment verification. Phases 6–7 remain folded into Phases 12–13.
+> **2026-10-24: current deployment re-baseline.** The user-reported active stack is Cloudflare Worker + D1 and Next.js on Vercel. This supersedes the 2026-10-23 AWS/FastAPI target. Phases 8–12 are complete; the GCP disk/project review is an accepted follow-up. Phases 6–7 remain folded into Phases 12–13.
 
 ## Phases (milestone v1: Cloudflare build, closed)
 
@@ -24,7 +24,7 @@ Config: standard granularity, interactive mode, parallelization on. Coverage: 42
 - [x] **Phase 9: FastAPI Backend** - prior Postgres implementation complete and retained as unused reference; active API is now the Worker port
 - [x] **Phase 10: Design System & App Shell** - UI-SPEC with a real visual direction, shadcn/ui tokens (light and dark), shell per role, login, typed API client
 - [x] **Phase 11: Role Screens** - Student, Coordinator and Admin screens built and verified against the API contract
-- [ ] **Phase 12: Deploy & Harden** - Worker/D1, Vercel cutover, isolated deployed smoke tests, a11y pass, security review, and retirement of old services
+- [x] **Phase 12: Deploy & Harden** - Worker/D1, Vercel cutover, isolated deployed smoke tests, a11y pass, security review, and retirement of old services (completed by user direction; GCP billing/data review remains a follow-up)
 - [ ] **Phase 13: Validation & Final Docs** - Usability kit, heuristic evaluation and walkthrough, team sessions (team only), iterations, `docs/final/`, infographic
 
 ## Phase Details
@@ -347,5 +347,5 @@ Plans:
 | 9. FastAPI Backend | 6/6 | Complete (retained implementation, no longer active) | 2026-10-23 |
 | 10. Design System & App Shell | 5/5 | Complete | 2026-10-23 |
 | 11. Role Screens | 3/3 | Complete | 2026-10-23 |
-| 12. Deploy & Harden | 0/TBD | In progress (Worker live per user report; Vercel cutover pending) | - |
+| 12. Deploy & Harden | 5/5 | Complete by user direction; GCP disk/project review accepted as follow-up | 2026-10-25 |
 | 13. Validation & Final Docs | 0/TBD | Not started | - |

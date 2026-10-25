@@ -36,7 +36,7 @@ export default function Discover() {
   );
   const types = useMemo(() => [...new Set(open.map((e) => e.type).filter(Boolean) as string[])], [open]);
   const shown = open.filter((e) => {
-    if (dept && e.department !== dept) return false;
+    if (dept && e.department && e.department !== dept) return false; // events with no department are for everyone
     if (type && e.type !== type) return false;
     if (week && (!e.starts_at || +new Date(e.starts_at) > now + 7 * 864e5)) return false;
     if (q && !`${e.title} ${e.venue_name ?? ""}`.toLowerCase().includes(q.toLowerCase())) return false;

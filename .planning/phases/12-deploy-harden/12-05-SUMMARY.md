@@ -17,6 +17,6 @@
 
 ## Open questions
 
-- GCP VM/project costs, retained data and shutdown disposition await club billing-owner review. No GCP resources were changed.
+- The legacy GCP `ce-vm` and `ce-ip` were later removed at the user's direction. Its 30 GB disk remains until the club billing owner reviews costs, data/backup ownership, retention and project disposition. See `BILLING-OWNER-REVIEW.md`.
 
 KB id consulted: `adr-004-scope`.

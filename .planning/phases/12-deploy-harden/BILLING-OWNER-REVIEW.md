@@ -1,6 +1,8 @@
 # GCP billing and data ownership review
 
-**Status:** awaiting club billing-owner response. No GCP VM/project shutdown or deletion is authorized by this record.
+**Status:** VM retired at the user's direction; owner review still needed for the retained disk and project.
+
+On 2026-10-25, `gcloud` showed the legacy `ce-vm` running in project `college-events-29738` (`us-central1-a`), with a 30 GB disk and reserved static IP `ce-ip`. The VM was deleted with `--keep-disks=all`; the detached `ce-ip` was released. Follow-up inventory showed no Compute VM or reserved address, and the 30 GB disk `ce-vm` remains. Do not delete the disk or project until the billing owner confirms data ownership, backups, retention and disposition.
 
 Please review the current GCP billing account and project before any retirement decision, and reply with:
 

@@ -1,7 +1,7 @@
 # Phase 12 Verification — Deploy & Harden
 
 Date: 2026-10-25  
-Status: **In progress** — do not mark the phase complete yet.
+Status: **Complete by explicit user direction.** The GCP billing/data-owner review remains an accepted follow-up; the 30 GB disk is retained pending that review.
 
 ## Deployment and security
 
@@ -25,12 +25,12 @@ Status: **In progress** — do not mark the phase complete yet.
 - Keyboard Review & Confirm, visible focus ring, all-role sign-in, cookie forwarding and cross-role denial passed.
 - `frontend npm run lint` and `npm run typecheck` passed after the fix. A sandboxed local production build could not complete because font fetch and local port binding were blocked; Vercel's production build succeeded.
 
-## Remaining Phase 12 work
+## Phase 12 results and accepted follow-up
 
 - **Lighthouse: passed.** Reports are in `lighthouse/`. On 2026-10-25, production role home accessibility scores were Student 96, Coordinator 100, Admin 100 (required: >=95). Each report records the exact URL and fetch timestamp.
 - **D1 recovery: passed locally.** `D1-RECOVERY.md` documents the production export and disposable restore procedure. Wrangler exported a uniquely named local D1 and restored it into a second local D1. All 11 application-table row counts and all 9 triggers matched; representative totals: 7 profiles, 6 venues, 9 events, 7 registrations, 4 tasks. No production database was touched. This verifies the restore mechanics, not the production backup's integrity.
 - **Admin browser journey: passed.** `frontend/e2e/admin-approval-clash.spec.ts` passed in Chrome against the local Worker and disposable D1 seeded from the repo plus `12-admin-clash-fixture.sql`. It verified password login, the overlapping open booking, disabled approval, and returning the request with a reason through the real API. Production data was untouched. The deployed API smoke separately verified `VENUE_CLASH`.
 - **Full-history secret scan: passed.** Gitleaks scanned all refs (`--log-opts=--all`): 14 commits, 4.37 MB, no findings. The separate working-tree scan found the expected Vercel OIDC token in ignored `frontend/.env.local` and generated-cache false positives; no finding was reported from Git history. Do not commit or share `.env.local`; replace/revoke the token if it was not intentionally generated for this local Vercel session.
-- **GCP billing/data review: pending.** No owner contact or messaging integration is available in this workspace. A request checklist is prepared in `BILLING-OWNER-REVIEW.md`; no GCP resources were changed. Keep the phase open until the club billing owner records charges, data/backup ownership, and a retain/stop/delete decision.
+- **Accepted follow-up: GCP billing/data review.** Per the user's instruction, `gcloud` deleted the legacy `ce-vm` in `college-events-29738` and released its detached `ce-ip`. Follow-up inventory found no Compute VM or reserved address; the 30 GB persistent disk `ce-vm` remains to preserve data. Cloud Run and Cloud SQL inventory could not be queried because their APIs are disabled; no APIs were enabled. The owner should review charges, disk data/backup ownership, retention and project disposition. No owner contact or messaging integration is available here; the checklist is in `BILLING-OWNER-REVIEW.md`. The user explicitly directed that Phase 12 be marked complete with this follow-up outstanding.
 
 KB ids consulted: `adr-001-stack`, `dom-domain-model`, `dom-requirements`, `dom-scenarios`, `src-accessibility-areas`, `adr-004-scope`.
