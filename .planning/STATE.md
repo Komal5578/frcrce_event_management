@@ -1,39 +1,39 @@
 ---
 gsd_state_version: 1.0
 milestone: v2.0
-milestone_name: FastAPI + Next.js rebuild
-status: ready
-stopped_at: Phase 11 complete (11-01..11-03 verified); Phase 12 ready
-last_updated: "2026-10-23T09:15:00.000Z"
+milestone_name: Cloudflare Worker + D1, Next.js on Vercel
+status: in_progress
+stopped_at: Phase 12 complete by user direction; Phase 13 is next; GCP billing/data review retained as follow-up
+last_updated: "2026-10-25T08:34:55.000Z"
 progress:
   total_phases: 13
-  completed_phases: 9
+  completed_phases: 10
   total_plans: 54
-  completed_plans: 51
-  percent: 94
+  completed_plans: 54
+  percent: 100
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-10-23)
+See: .planning/PROJECT.md (updated 2026-10-24)
 
 **Core value:** Each role completes its primary task fast, with few errors, and always knows the state of the system; clashes are impossible, not just discouraged.
-**Current focus:** Phase 11 complete. Next: Phase 12 Deploy & Harden.
+**Current focus:** Phase 13 Validation & Final Docs. Phase 12 is complete by the user's direction; the club billing/data-owner review remains a follow-up, and the 30 GB GCP disk is retained.
 
 ## Current Position
 
-- **Milestone:** v2 (FastAPI on AWS + Next.js on Vercel)
-- **Phase:** 11 done (11-01 through 11-03 executed, tested, built and verified); next: Phase 12 Deploy & Harden
-- **Next phases:** 12 Deploy & Harden, 13 Validation & Final Docs
+- **Milestone:** v2 (Cloudflare Worker + D1 API, Next.js on Vercel)
+- **Phase:** 12 done (deployment, smoke, Lighthouse, D1 restore, history scan and Admin clash journey verified; GCP owner review accepted as a follow-up)
+- **Next phase:** 13 Validation & Final Docs
 
-**v1 status (closed, frozen as the porting reference):**
+**Earlier implementations:**
 
 - Phases 1–3 are complete.
 - Phase 4 was built but not formally verified.
 - Phase 5 was built (260/260 vitest tests pass) but its human checkpoint was never done.
-- The live Cloudflare deployment (college-events.varadaj47.workers.dev) is v1 and has `DEMO_LOGIN=true`.
+- The old Cloudflare v1 Worker `college-events` was deleted after v2 verification; its public hostname returned HTTP 404.
 
 ## Working Rules
 
@@ -47,7 +47,7 @@ See: .planning/PROJECT.md (updated 2026-10-23)
 
 Full log in PROJECT.md Key Decisions.
 
-- [2026-10-23, user]: Stack is FastAPI (AWS free tier, EC2) + Next.js (Vercel). Supersedes the Cloudflare/D1 decision of 2026-10-20.
+- [2026-10-24, user-reported deployment]: Current API is a Cloudflare Worker on the new D1 database `college-events-v2` (APAC), with Next.js on Vercel. This supersedes the 2026-10-23 AWS/FastAPI/Postgres plan.
 - [2026-10-23, user]: Port the v1 work and keep the GDD design (kb, personas, IA, flows). Redesign the frontend visually as "modern campus SaaS".
 - [2026-10-23, user]: Start a new lean milestone instead of continuing the 7-phase process.
 - [2026-10-23, assistant, pending kb in Phase 8]: Only approved/open/ongoing events book a venue, so pending requests may overlap and are resolved at approval. This makes TT-A1 reachable.
@@ -55,11 +55,10 @@ Full log in PROJECT.md Key Decisions.
 
 ### Pending Todos
 
-- Phase 12: the user creates the AWS and Vercel accounts.
+- Follow-up: the club billing owner should review GCP charges and data/backup ownership and decide whether to retain or delete the remaining disk/project. See `12-VERIFICATION.md` and `BILLING-OWNER-REVIEW.md`.
 
 ### Blockers/Concerns
 
-- AWS free-tier type depends on account age: accounts made after July 2025 are on the credit-based free plan. Check before Phase 12.
 - Phase 13 needs the team to run real research and usability sessions.
 
 ## Deferred Items
@@ -70,10 +69,10 @@ Full log in PROJECT.md Key Decisions.
 
 ## Session Continuity
 
-Last session: 2026-10-23
-Stopped at: Phase 8 executed (08-01..08-05), kb index passes, nothing committed. Commit once, then /clear.
-Resume: `.planning/phases/09-fastapi-backend/CONTEXT.md`
+Last session: 2026-10-25
+Stopped at: Phase 12 complete by user direction. Deployment and 20/20 production suite are verified; Lighthouse scored 96/100/100; disposable D1 export/restore counts match; Gitleaks scanned all 14 history commits with no findings; Admin clash/return browser journey passed against a local Worker and D1. The GCP VM and IP were removed; the disk/project review remains a follow-up. Nothing committed.
+Resume: `.planning/phases/13-validation-final-docs/CONTEXT.md`
 
-## 2026-10-24: frontend rebuild (post Phase 11)
+## 2026-10-24: frontend rebuild and backend port
 
-The v1/v2 frontend was deleted and rebuilt from scratch in `/frontend` to match the original mockup (`kb/source/attendance-reference/design-model.png`), using the impeccable, power-design and taste skills. All three role interfaces, the login (with one-click role buttons) and the Review & Confirm flows are built against the FastAPI backend. Responsive: Student is phone-first with a bottom tab bar and a sidebar layout from 1024px up. Gate: `tsc`, `eslint`, `next build` green; Lighthouse a11y 100 on login/coordinator/student; impeccable detector clean. Also: taste-skill inspector gate run on all screens (0 FAIL) and 5 Playwright specs that clean up after themselves (`cd frontend && npm run test:e2e`, needs a production build on :3000 and the backend on :8000). Not done: deploy (Phase 12), usability validation (Phase 13). Not committed (commit only per verified phase).
+The frontend in `/frontend` is rebuilt for the GDD role flows. The Worker in `/worker` ports the API to D1 and retains endpoint paths/response shapes. On 2026-10-25, the deployed Worker returned health 200, demo login returned 404, Vercel production served health 200 through its Worker rewrite, the deployed Worker smoke passed 20/20, and the full browser suite passed 20/20 after fixing a coordinator venue-save race. Remote D1 was reset and reseeded after tests. The old v1 Worker was deleted and returned 404; v2 health still returned 200. Phase 12 additions: Lighthouse 96/100/100, disposable local D1 export/restore matched all application table counts and triggers, Gitleaks scanned all 14 history commits with no findings, and the Admin clash/return browser journey passed against a local Worker and D1. The GCP billing-owner review is an accepted follow-up. Not committed (commit only per verified phase).

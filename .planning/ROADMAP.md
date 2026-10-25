@@ -6,7 +6,7 @@ Seven phases, one per session, taken from the approved plan. The first two phase
 
 Config: standard granularity, interactive mode, parallelization on. Coverage: 42/42 v1 requirements mapped.
 
-> **2026-10-23: milestone v2 replaces Phases 6–7.** The user switched the stack to FastAPI (AWS free tier) + Next.js (Vercel) and asked for a proper frontend design. v1 (Phases 1–5, the Cloudflare build) is frozen as the reference to port from. v1 Phase 5 was built but its human checkpoint was **never done**. Phases 6–7 are folded into v2 Phases 12–13. See "Milestone v2" below.
+> **2026-10-24: current deployment re-baseline.** The user-reported active stack is Cloudflare Worker + D1 and Next.js on Vercel. This supersedes the 2026-10-23 AWS/FastAPI target. Phases 8–12 are complete; the GCP disk/project review is an accepted follow-up. Phases 6–7 remain folded into Phases 12–13.
 
 ## Phases (milestone v1: Cloudflare build, closed)
 
@@ -16,15 +16,15 @@ Config: standard granularity, interactive mode, parallelization on. Coverage: 42
 - [x] **Phase 4: Role Interfaces (parallel wave)** - Coordinator, Student and Admin interfaces built by three agents in disjoint folders (no VERIFICATION/UAT; browser evidence was only "works")
 - [~] **Phase 5: Cross-Cutting** - Alerts, reports/export, a11y pass, empty/error/loading states, Review & Confirm everywhere (all 6 plans built, 260 tests pass; human checkpoint not done; superseded by v2)
 - [→] **Phase 6: Validation Kit & Iteration** - folded into v2 Phase 13
-- [→] **Phase 7: Deploy & Final Documentation** - folded into v2 Phases 12–13 (Cloudflare deploy replaced by AWS + Vercel)
+- [→] **Phase 7: Deploy & Final Documentation** - folded into v2 Phases 12–13
 
-## Phases (milestone v2: FastAPI + Next.js rebuild)
+## Phases (milestone v2: Cloudflare Worker + D1, Next.js on Vercel)
 
-- [ ] **Phase 8: Re-baseline & Restructure** - ADR-001 v3, kb fixes (clash rule, vocabulary, IA), repo split into `/backend` + `/frontend`, cleanup
-- [ ] **Phase 9: FastAPI Backend** - Postgres schema, auth, domain logic ported from `lib/domain`, all endpoints, pytest port of the v1 tests
+- [x] **Phase 8: Re-baseline & Restructure** - completed for the prior AWS/FastAPI target; stack docs are being re-baselined to the deployed Worker/D1 architecture
+- [x] **Phase 9: FastAPI Backend** - prior Postgres implementation complete and retained as unused reference; active API is now the Worker port
 - [x] **Phase 10: Design System & App Shell** - UI-SPEC with a real visual direction, shadcn/ui tokens (light and dark), shell per role, login, typed API client
-- [ ] **Phase 11: Role Screens** - Student, Coordinator and Admin screens rebuilt on the new design and wired to FastAPI, one role at a time
-- [ ] **Phase 12: Deploy & Harden** - EC2 docker-compose + Caddy, Vercel, Playwright smoke tests of the 3 primary flows, a11y pass, security review
+- [x] **Phase 11: Role Screens** - Student, Coordinator and Admin screens built and verified against the API contract
+- [x] **Phase 12: Deploy & Harden** - Worker/D1, Vercel cutover, isolated deployed smoke tests, a11y pass, security review, and retirement of old services (completed by user direction; GCP billing/data review remains a follow-up)
 - [ ] **Phase 13: Validation & Final Docs** - Usability kit, heuristic evaluation and walkthrough, team sessions (team only), iterations, `docs/final/`, infographic
 
 ## Phase Details
@@ -315,8 +315,8 @@ Plans:
 **Depends on**: Phase 11
 **Requirements**: DEPLOY-01, DEPLOY-02, DEPLOY-03, DEP-02
 **Success Criteria**:
-  1. The backend runs on one EC2 free-tier instance (docker-compose: Postgres + FastAPI + Caddy HTTPS on sslip.io), with a nightly `pg_dump` to S3 and a one-command redeploy script. (The user creates the AWS account.)
-  2. The frontend is on Vercel (root `/frontend`, `API_URL` set) and reaches the backend through the rewrite.
+  1. The Cloudflare Worker API on D1 is documented, secure, recoverable, and verified against deployed behavior.
+  2. The frontend is on Vercel (root `/frontend`, production `BACKEND_URL` set) and reaches the Worker through the rewrite with a working first-party session.
   3. Playwright smoke tests of TT-C1, TT-S1 and TT-A1 pass against the deployed URL. Clash and double registration are rejected on production.
   4. **Security review:**
      - Authorization per role is checked.
@@ -343,9 +343,9 @@ Plans:
 | 5. Cross-Cutting | 6/6 | Built, human checkpoint not done (superseded by v2) | - |
 | 6. Validation Kit & Iteration | - | Folded into Phase 13 | - |
 | 7. Deploy & Final Documentation | - | Folded into Phases 12–13 | - |
-| 8. Re-baseline & Restructure | 1/1 | Complete | 2026-10-23 |
-| 9. FastAPI Backend | 6/6 | Complete | 2026-10-23 |
+| 8. Re-baseline & Restructure | 1/1 | Complete (original stack baseline; docs re-baselined in Phase 12) | 2026-10-23 |
+| 9. FastAPI Backend | 6/6 | Complete (retained implementation, no longer active) | 2026-10-23 |
 | 10. Design System & App Shell | 5/5 | Complete | 2026-10-23 |
 | 11. Role Screens | 3/3 | Complete | 2026-10-23 |
-| 12. Deploy & Harden | 0/TBD | Not started (next) | - |
+| 12. Deploy & Harden | 5/5 | Complete by user direction; GCP disk/project review accepted as follow-up | 2026-10-25 |
 | 13. Validation & Final Docs | 0/TBD | Not started | - |

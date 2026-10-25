@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "college-events-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "college-events-v2",
+      "database_id": "34286775-5f0f-46a2-af1e-1cc65068b180",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    // Keep public role impersonation disabled in production.
+    "DEMO_LOGIN": "false",
+    "LOGIN_MAX_FAILURES": "5",
+    "LOGIN_WINDOW_MINUTES": "15"
+  },
+  "observability": { "enabled": true }
+}

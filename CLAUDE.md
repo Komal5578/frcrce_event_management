@@ -22,50 +22,39 @@ The attendance PDF/md in `kb/source/attendance-reference/` is a **reference exam
 - KB `confidence`: source / derived / assumed / evidence. Only real team research is `evidence`. **Never invent research or usability results**; draft instruments, leave results to the team.
 - Report outcomes faithfully (failing tests, skipped steps).
 
-## Stack (milestone v2, rebuild in progress)
-**DECISION (user, 2026-10-23): FastAPI backend on the AWS free tier + Next.js frontend on Vercel.** This supersedes the 2026-10-20 Cloudflare Workers + D1 decision. The v1 Cloudflare code now lives in `/frontend` (Next.js app, `lib/domain/*`, tests) and `/backend/migrations` + `/backend/seed` (SQLite/D1 SQL), as the porting reference. Don't extend it. ADR-001 was rewritten in Phase 8.
-- **Backend `/backend`:** FastAPI (Python 3.12), Postgres via psycopg 3 with plain SQL (no ORM) and plain `.sql` migrations, Pydantic schemas, pytest against a real Postgres, ruff.
-  - **Clashes:** blocked by a Postgres `EXCLUDE USING gist` constraint on (venue, `tstzrange [start,end)`) for **approved/open/ongoing only**. Pending requests may overlap, and the admin resolves them at approval.
-  - **Double registration:** blocked by `UNIQUE(event_id, user_id)`.
-  - **Capacity/waitlist, resource limits and the state machine:** live in `app/domain` inside one transaction with `SELECT … FOR UPDATE`.
-  - **Authorization:** `app/domain` is the authorization layer. Every function takes the `Actor` (from the session, never from request input) first.
-  - **Auth:** a random token in an httpOnly cookie, only its SHA-256 stored in `sessions`, argon2 passwords, a sign-in rate limit.
-- **Frontend `/frontend`:** Next.js (App Router, TS) + Tailwind + shadcn/ui + lucide + Recharts, light and dark themes.
-  - `next.config` `rewrites` proxies `/api/*` to the backend, so the session cookie is first-party and no CORS is needed.
-  - API types are generated with `openapi-typescript` from FastAPI's `/openapi.json`. Never hand-write the client types.
-- **Hosting:** backend is one EC2 t3.micro running docker-compose (Postgres + FastAPI + Caddy for HTTPS on an `<ip>.sslip.io` host), with a nightly `pg_dump` to S3. Frontend is Vercel, with the project root `/frontend`. Free tiers only; no paid add-ons.
-- Verify current APIs with the context7 MCP before coding.
-- KB check: `node kb/tools/build-index.mjs` (must pass after any kb change).
-- **Planned commands** (set up in Phases 9/10; not real yet):
-  - Backend: `cd backend && ruff check && pytest`; `docker compose up`.
-  - Frontend: `cd frontend && npm run lint && npm run typecheck && npm test && npm run build`; `npx playwright test`.
-- **Secrets:** `backend/.env` and `frontend/.env.local` only. Commit the `.env.example` files; never commit keys.
-- **Human steps:**
-  - Create an AWS account (check the free-tier type), an EC2 key pair and an S3 bucket.
-  - Create a Vercel account and import the repo with root `/frontend`.
+## Current stack (2026-10-24)
+**Current deployment:** Cloudflare Worker API + Cloudflare D1 (`college-events-v2`, APAC) and Next.js frontend on Vercel. This supersedes the 2026-10-23 AWS FastAPI/Postgres target. The original Worker/D1 source in `/worker` is the active v2 API implementation.
+- **API `/worker`:** TypeScript Cloudflare Worker, D1 binding `DB`, SQL migrations and seed data. `worker/src/index.ts` handles `/api/*`; `worker/src/domain.ts` contains domain operations and authorization; `worker/src/core.ts` handles sessions, PBKDF2, rate limiting and D1 errors.
+- **Frontend `/frontend`:** Next.js App Router on Vercel. `next.config.ts` proxies `/api/*` to `BACKEND_URL`, keeping the browser-facing session cookie first-party.
+- **Integrity:** D1/SQLite constraints and triggers protect unique registration, event transitions, venue clashes, capacity and resource allocation. Only approved/open/ongoing events hold venues/resources; pending requests may overlap until approval. Deployed Worker smoke passed 20/20 on 2026-10-25; remote D1 was reseeded afterwards.
+- **Authentication:** session token is httpOnly, Secure, SameSite=Lax; only its SHA-256 is stored. Password verification uses PBKDF2-SHA256. Production `DEMO_LOGIN=false`; the demo-login endpoint returns 404.
+- **Live state (verified 2026-10-25):** API is `college-events-api.varadaj47.workers.dev`; Vercel production `BACKEND_URL` points to it and the production deployment is live. Deployed Worker smoke and the full production browser suite passed 20/20. The old `college-events` Worker was deleted and its hostname returned HTTP 404; v2 health returned HTTP 200 after deletion.
+- **Phase 12:** marked complete at the user's direction after Lighthouse, disposable D1 restore, full-history secret scan, and Admin approval/clash browser checks passed. The GCP `ce-vm` and `ce-ip` are removed; its 30 GB disk is retained pending a billing-owner cost/data review. Do not delete the disk/project until that follow-up is complete.
+- **Unused legacy code:** `/backend` FastAPI/Postgres and root GCP/Compose files are retained as reference; do not deploy them as the active backend or remove them until recovery/rollback value is reviewed.
+- **Secrets:** use provider environment settings; never commit credentials. KB check: `node kb/tools/build-index.mjs` after KB edits.
+- The GDD artefacts, role goals and requirements remain the product source of truth. Scope cuts remain in `adr-004-scope`.
 
-## v2 rebuild context (audit 2026-10-23; plan in `.planning/ROADMAP.md` Phases 8–12)
-**Port, don't redesign.** These stay the source of truth:
-- the GDD artefacts (kb, personas, IA, flows, wireframes)
-- the v1 business rules (`backend/migrations/0002_guards.sql`, `frontend/lib/domain/*`, `frontend/lib/errors.ts` messages)
-- the 260 vitest cases (port them to pytest)
+## Handoff (2026-10-25): read this before touching anything
+**Where we are:** Phases 1-12 are complete; Phase 13 (validation and final docs) is next and needs the team to run real research and usability sessions. Nothing from 2026-10-25 is committed yet.
 
-Error markers stay the same: `VENUE_CLASH`, `EVENT_FULL`, `RESOURCE_SHORT`, `BAD_STATE`, `NOT_ALLOWED`.
+**Features built (all three roles):** Coordinator (templated create with autosave, free-venue picker, resources, tasks, Review & Confirm submit, monitor, edit/cancel), Student (discover/filter, detail, register with waitlist, My Registrations, calendar, reminders, My Tasks), Admin (approvals queue with clash check, venue/resource management, calendar, dashboard, CSV reports). Requirement ids are in `.planning/REQUIREMENTS.md`.
 
-**Audit findings that v2 must fix** (details in each phase's `CONTEXT.md`):
-- **The admin clash path is unreachable**: v1 counts `pending` as booked. The fix is to count approved and later only (`dom-domain-model`, TT-A1).
-- **Resource check gap**: the v1 resource-allocation guard doesn't re-check on approve or reschedule.
-- **Nav bug**: AppShell marks the home link current on every subpage.
-- **ConfirmDialog**: first focus must be "Go back", and it needs a destructive variant.
-- **Student mobile nav**: the student interface needs a mobile bottom tab bar (per the IA, not a "Menu" disclosure).
-- **Status tokens missing** for task, registration and alert statuses.
-- **Duplicated UI**: two reports pages, two export routes, two calendars, two event-card and two flash components.
-- **Security**: `DEMO_LOGIN` is live in prod, `/design` is unguarded, and there is no sign-in rate limit.
-- **Vocabulary drift**:
-  - Pending approval, not "Submitted"
-  - Done, not "Completed" (for tasks)
-  - Notifications, not "Alerts"
-- **The UI is visually plain.** v2 needs a real visual direction ("modern campus SaaS") through a UI-SPEC before screens are built.
+**Two deployments, do not mix them up:**
+- `college-events-api` Worker + D1 `college-events-v2`: the graded/"real" deployment. Seed is `worker/seed.sql`.
+- `college-events-fcrce-api` Worker + D1 `college-events-fcrce`: Fr. CRCE demo with the real councils and clubs (Crescendo is the main tech fest, with events under each council). Config is `worker/wrangler.fcrce.jsonc` (untracked), seed is generated by `worker/scripts/gen-frcrce-seed.mjs`. Deploy with `npx wrangler deploy --config wrangler.fcrce.jsonc`. The Worker and D1 exist remotely (checked with wrangler 2026-10-25), but the live URL was not tested, the remote DB was not re-seeded after the last seed-script edit (Bit-n-Build is now a hackathon on 31 Oct-1 Nov, room TBA), and it is not known whether a Vercel project points at it. Verify before relying on it. Event details are public-source or labelled demo data; do not present them as official.
+
+**Audit and known gaps:** `.planning/AUDIT-2026-10-25.md` (run against a local copy, never production; re-run steps are at the bottom) lists the findings and a fix plan in phases 12.2-12.5. None of the fixes are applied. Highest impact:
+1. No event lifecycle: nothing moves events open -> ongoing -> completed, and reminders are never sent (needs a Cron Trigger).
+2. Rules the DB does not enforce: capacity vs venue size, past-dated events, cancelling on completed events, edits to approved events without re-approval, waitlist queue-jump, resource/venue cuts below allocations.
+3. Login abuse: the lockout can be used to lock out the real owner, there is no per-IP throttle, `login_attempts` grows forever. Also no CSRF/Origin check, no security headers, no body size limits.
+4. Scale: `/api/events` is 2.2 MB after a simulated year; it needs pagination and counters.
+5. Missing UX: password change/reset, registrant list for coordinators, coordinator calendar shows only own events.
+
+**Check first:** the demo password `demo-password-2026` is committed (`worker/seed.sql`, `worker/smoke.mjs`, `frontend/e2e/auth.ts`) and probably works on the production admin account. Try one login; if it works, remove the demo accounts from production D1 (audit S1).
+
+**Open decisions for the user (audit section 8):** keep a separate public demo deployment, treat the registrant list as in scope, and when edits to open events need re-approval.
+
+**Known and accepted:** the GCP disk review is still open (see Phase 12 above). Stretch items I18N-01, EXPT-01 and CHKN-01 stay deferred. Research and usability results must come from the team, never from AI.
 
 ## Session protocol
 - Start: read INDEX + STATE. Plan with `gsd-plan-phase`, build with `gsd-execute-phase`, verify with `gsd-verify-work`.

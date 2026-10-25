@@ -2,15 +2,15 @@
   {
     "id": "adr-001-stack",
     "type": "decision",
-    "title": "ADR-001 Stack: FastAPI + Postgres on AWS EC2, Next.js on Vercel (v3)",
+    "title": "ADR-001 Stack: Cloudflare Worker + D1, Next.js on Vercel (v4)",
     "tags": [
       "stack",
       "architecture"
     ],
     "confidence": "derived",
     "sources": "[user-chat]",
-    "summary": "Chosen stack and rationale (v3); user decision 2026-10-23, FastAPI + Postgres on one EC2 free-tier instance, Next.js on Vercel.",
-    "updated": "2026-10-23",
+    "summary": "Current deployed architecture is a Cloudflare Worker API with D1 and a Next.js frontend on Vercel; user-reported deployment state 2026-10-24.",
+    "updated": "2026-10-25",
     "path": "decisions/adr-001-stack.md"
   },
   {
@@ -98,7 +98,7 @@
     "confidence": "derived",
     "sources": "[src-hmi-problems-pattern]",
     "summary": "Entities, relationships and the integrity rules the UI relies on.",
-    "updated": "2026-10-23",
+    "updated": "2026-10-24",
     "path": "domain/domain-model.md"
   },
   {

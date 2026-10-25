@@ -3,45 +3,38 @@ phase: 12-deploy-harden
 status: draft
 nyquist_compliant: true
 wave_0_complete: false
-created: 2026-10-23
+created: 2026-10-24
 ---
 
 # Phase 12 — Validation Strategy
 
 ## Execution Gate
 
-Phase 11 must be verified before any Phase 12 task starts. The first task in `12-01-PLAN.md` blocks until `.planning/STATE.md` records Phase 11 complete and `.planning/phases/11-role-screens/11-VERIFICATION.md` confirms all three role browser gates. AWS account eligibility, region, S3 bucket, key path, retention, and provisioning approval are then confirmed before infrastructure work.
+Phase 11 is already verified. Phase 12 uses Cloudflare Worker + D1 and Vercel; the former AWS/EC2 validation steps are superseded. The live API and local smoke outcomes below are user-reported, not independently verified in this session.
 
 ## Automated and Live Checks
 
 | Requirement | Method | Pass condition | Evidence |
 |---|---|---|---|
-| DEPLOY-01 | Before security review: `cd backend && docker compose -f compose.yaml config --quiet`; `bash -n backend/scripts/deploy.sh && bash -n backend/scripts/backup.sh && bash -n backend/scripts/self-check-deploy.sh`; run `backend/scripts/self-check-deploy.sh`; provision and inspect EC2 host. After DEP-02 passes in Plan 02, deploy backend, check public `curl https://<host>/health`, inspect security group, run scheduled backup and restore to disposable DB | Compose and config self-checks pass; only 80/443 public and SSH limited to user's IP; after security review HTTPS health succeeds and nightly object arrives in S3 and restores | `12-01-SUMMARY.md`, `12-03-SUMMARY.md`, backup/restore command output (no secrets) |
-| DEPLOY-02 | Vercel production deployment from `/frontend`; browser login, authenticated API call, sign-out | App loads and API rewrite succeeds through Vercel origin; session is Secure/HttpOnly and first-party | `12-03-SUMMARY.md`, browser/network evidence |
-| DEPLOY-03 | `cd frontend && npx --no-install playwright test --config=playwright.config.ts --project=deployed` | TT-S1, TT-C1 and TT-A1 pass using isolated accounts and disposable data | `12-VERIFICATION.md`, Playwright report |
-| DEP-02 | Approved scanner over all refs/history; review every router-to-domain authorization path; request protected APIs as a student | No unresolved committed secret exposure; student receives 403 on coordinator/admin routes | `SECURITY-REVIEW.md`, backend test output |
-| Data integrity | Production smoke attempts at duplicate registration and overlapping approved booking, with isolated records | DB/API rejects both attempts and test records are cleaned up | `12-VERIFICATION.md` |
-| Accessibility | For each role home run `cd frontend && npx --no-install lighthouse "$ROLE_URL" --only-categories=accessibility --output=json --output-path="../.planning/phases/12-deploy-harden/artifacts/lighthouse-$ROLE.json" --chrome-flags="--headless"` | All three actual accessibility scores are >=95 | JSON reports under `.planning/phases/12-deploy-harden/artifacts/` and scores/URLs/timestamps in `12-VERIFICATION.md` |
-| Legacy v1 | `curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' https://college-events.varadaj47.workers.dev` after explicit remove/redirect choice | Old v1 demo-login app is unavailable or redirects to verified v2 URL | `12-VERIFICATION.md` |
+| DEPLOY-01 | Check \`curl -fsS https://college-events-api.varadaj47.workers.dev/api/health\`; verify password login; inspect Wrangler binding/migrations; document D1 backup and restore/reseed on a disposable DB | Worker health/login work, D1 binding points to \`college-events-v2\` in APAC, and recovery can be executed without overwriting the live database | User-provided deployment details; \`12-VERIFICATION.md\`; \`D1-RECOVERY.md\`; local Wrangler export/import comparison |
+| DEPLOY-02 | Configure Vercel production \`BACKEND_URL=https://college-events-api.varadaj47.workers.dev\`, deploy from \`/frontend\`, then browser login/API/logout | Vercel routes \`/api/*\` through the Worker; session is Secure, HttpOnly, SameSite=Lax and remains first-party | \`12-VERIFICATION.md\`, deployment and browser evidence |
+| DEPLOY-03 | Run TT-S1, TT-C1 and TT-A1 in the browser; run smoke tests against isolated D1/Worker seeded from migrations | All three journeys pass; 20 smoke scenarios pass against deployed-equivalent code without mutating live user data | Playwright/Worker output, isolated test DB details, \`12-VERIFICATION.md\`; Admin clash browser flow uses local D1 fixture |
+| DEP-02 | Review Worker route-to-domain authorization; query protected APIs as Student; scan tracked Git history for secrets | Student is denied coordinator/admin endpoints; no secrets in Git history; production demo login disabled | \`SECURITY-REVIEW.md\`, Gitleaks all-history scan (14 commits, 0 findings), and deployed checks |
+| Integrity | In isolated D1, verify duplicate registration, waitlist promotion, approved venue clash and resource shortage; include concurrent competing writes where practical | Expected error markers/transition are observed, and test data is cleaned up | Deployed smoke output and test DB reset evidence |
+| Accessibility | Run Lighthouse against Student, Coordinator and Admin home pages on Vercel | Each actual accessibility score is >=95 | \`lighthouse/{student,coordinator,admin}.json\`; scores/URLs/timestamps in \`12-VERIFICATION.md\` |
+| Legacy v1 | After v2 passes, check \`college-events.varadaj47.workers.dev\` after the chosen disable/remove/redirect action | Old v1 demo-login app is unavailable or redirects to verified v2 | User-selected action and actual URL check in \`12-VERIFICATION.md\` |
+| GCP retirement | Review current charges and data/backup ownership with the club billing owner before stopping or deleting resources | No unreviewed billing or data-retention impact; record retain/stop/delete decision | Billing-owner confirmation and observed resource state in \`12-VERIFICATION.md\` |
 
-No production smoke check may mutate real user records. Credentials come from the user's secret manager/environment and never from committed files or planning output. If any check is blocked or fails, record the actual result and do not mark the phase complete.
+Do not run the mutating remote smoke against the live D1 without an isolated database or an explicitly approved backup/reseed plan. Do not claim a result from local D1 as a production result. Keep all credentials out of docs and test output.
 
 ## Coverage
 
-- `DEPLOY-01`: Plan 01, Compose/Caddy and EC2 preparation; Plan 03, reviewed backend deployment, scheduled S3 backup and restore.
-- `DEPLOY-02`: Plan 03, Vercel deployment and authenticated rewrite; Plan 05 retires the old public v1 URL.
-- `DEPLOY-03`: Plan 04, deployed Playwright TT-S1, TT-C1 and TT-A1.
-- `DEP-02`: Plan 02, role authorization review and full-history secret scan.
+- DEPLOY-01: Worker/D1 health, login, configuration and recoverability.
+- DEPLOY-02: Vercel \`BACKEND_URL\` cutover and cookie forwarding.
+- DEPLOY-03: deployed role journeys and isolated D1 integrity smoke.
+- DEP-02: Worker authorization review, full-history secret scan and \`DEMO_LOGIN=false\`.
+- Legacy retirement and GCP billing review: after v2 cutover passes.
 
-## Plan Source Audit
+Scope fence: no email/SMS, payments, native apps, QR check-in, calendar sync, multi-tenancy or vector search (\`adr-004-scope\`).
 
-| Source | In-scope items | Coverage |
-|---|---|---|
-| Roadmap goal | Shareable HTTPS deployment, security review | Plans 01–05 |
-| Requirements | DEPLOY-01, DEPLOY-02, DEPLOY-03, DEP-02 | Plans 01–05 |
-| Research | Compose readiness, Caddy HTTPS, instance profile, secret scan, authz review, Vercel rewrite/cookies, Playwright, Lighthouse, restore test | Plans 01–05 |
-| Context decisions | EC2 t3.micro, sslip.io, SSH from user's IP, S3 nightly `pg_dump`, pinned deploy after security review, explicit `DEMO_LOGIN`, Vercel root `/frontend`, three flow tests, 95 Lighthouse scores, legacy v1 disposition | Plans 01–05 and blocking checkpoints |
-
-Scope fence: no email/SMS, payments, native apps, QR check-in, calendar sync, multi-tenancy or vector search (`adr-004-scope`).
-
-KB ids consulted: `adr-001-stack`, `adr-004-scope`, `dom-domain-model`, `dom-requirements`, `dom-scenarios`, `src-accessibility-areas`.
+KB ids: \`adr-001-stack\`, \`adr-004-scope\`, \`dom-domain-model\`, \`dom-requirements\`, \`dom-scenarios\`, \`src-accessibility-areas\`.

@@ -1,5 +1,7 @@
 # Phase 12: Deploy & Harden — Research
 
+> **Superseded deployment target (2026-10-24):** The AWS EC2/FastAPI/Postgres recommendations below were researched for the previous stack and must not be executed. The active user-reported target is Cloudflare Worker + D1 and Vercel. Use `CONTEXT.md` and `12-VALIDATION.md` for the current cutover plan; D1 backup/recovery and deployed smoke evidence remain open.
+
 **Researched:** 2026-10-23  
 **Domain:** AWS EC2/Postgres deployment, Vercel Next.js hosting, production security and smoke verification  
 **Confidence:** MEDIUM
