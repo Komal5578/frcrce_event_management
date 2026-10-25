@@ -217,7 +217,7 @@ h1, h2, h3, .font-grotesk {
   height: 100%;
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .card-3d-front,
 .card-3d-back {
@@ -235,6 +235,36 @@ h1, h2, h3, .font-grotesk {
   inset: 0;
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
+}
+
+/* Flyer Hover: snappy lift, straighten the tilt, peel the tape */
+@media (hover: hover) and (pointer: fine) {
+  .card-3d-wrap:hover .card-3d-inner:not([style*="180deg"]) {
+    transform: translateY(-8px) rotate(0deg) !important;
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  .card-3d-wrap:hover .card-3d-inner:not([style*="180deg"]) .card-3d-front {
+    box-shadow: 4px 16px 28px rgba(30, 26, 23, 0.2) !important;
+    transition: box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  /* Tape peel effect on flyer hover */
+  .card-3d-wrap:hover .card-3d-inner:not([style*="180deg"]) [aria-hidden="true"]:not(.card-3d-back) {
+    transform: translateY(-3px) scale(1.08) rotate(-1.5deg) !important;
+    box-shadow: 0 4px 10px rgba(30, 26, 23, 0.22) !important;
+    transition: transform 0.14s ease-out, box-shadow 0.14s ease-out !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-3d-wrap:hover .card-3d-inner {
+    transform: none !important;
+    transition: none !important;
+  }
+  .card-3d-inner,
+  .animate-stamp-thud {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 /* Rubber Stamp Styling & Thud Animation */
@@ -270,6 +300,49 @@ h1, h2, h3, .font-grotesk {
 
 .animate-stamp-thud {
   animation: stamp-thud 0.4s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+}
+
+/* Ladder continuous scrolling animations */
+@keyframes ladder-scroll-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes ladder-scroll-down {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.ladder-scroll-up {
+  animation: ladder-scroll-up 30s linear infinite;
+  will-change: transform;
+}
+
+.ladder-scroll-down {
+  animation: ladder-scroll-down 30s linear infinite;
+  will-change: transform;
+}
+
+/* Pause ladder scroll on hover or keyboard focus */
+.ladder-container:hover .ladder-scroll-up,
+.ladder-container:hover .ladder-scroll-down,
+.ladder-container:focus-within .ladder-scroll-up,
+.ladder-container:focus-within .ladder-scroll-down {
+  animation-play-state: paused !important;
+}
+
+/* Soft top & bottom fade mask for seamless ladder entry/exit */
+.ladder-mask {
+  mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
 }
 
 /* Status badge mapping */
@@ -310,6 +383,19 @@ h1, h2, h3, .font-grotesk {
   html { scroll-behavior: auto; }
   .skeleton { animation: none; }
   .animate-stamp-thud { animation: none !important; transform: rotate(-6deg) !important; opacity: 1 !important; }
+  .ladder-scroll-up,
+  .ladder-scroll-down {
+    animation: none !important;
+    transform: none !important;
+  }
+  .ladder-mask {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+    overflow-y: auto !important;
+  }
+  .ladder-duplicate {
+    display: none !important;
+  }
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;

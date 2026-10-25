@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Bell, CalendarHeart, ChevronLeft, ClipboardCheck, Compass, LogOut, type LucideIcon } from "lucide-react";
+import { Bell, CalendarHeart, ChevronLeft, ClipboardCheck, Compass, LogOut, MapPin, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import type { ReactNode } from "react";
@@ -25,6 +25,7 @@ export function StudentShell({ name, children }: { name: string; children: React
   const tabs: Tab[] = [
     { href: "/student", label: "Discover", icon: Compass },
     { href: "/student/my", label: "My Events", icon: CalendarHeart },
+    { href: "/map", label: "Campus Map", icon: MapPin },
     ...(profile?.is_organizer ? [{ href: "/student/tasks", label: "My Tasks", icon: ClipboardCheck }] : []),
     { href: "/student/notifications", label: "Notifications", icon: Bell, badge: unread?.count },
   ];

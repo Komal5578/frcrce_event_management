@@ -63,7 +63,17 @@ export function EventCard({ e }: { e: EventItem }) {
       ) : null}
 
       <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 border-t border-[#1E1A17]/10 pt-2.5">
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
+          {e.coordinator_name || e.department ? (
+            <span className="font-grotesk text-[10.5px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#F2B93B]/25 border border-[#1E1A17]/30 text-[#1E1A17]">
+              {e.coordinator_name ?? e.department}
+            </span>
+          ) : null}
+          {e.type ? (
+            <span className="font-grotesk text-[10.5px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#D9CBB3]/40 border border-[#1E1A17]/25 text-[#1E1A17]/85">
+              {e.type}
+            </span>
+          ) : null}
           <Tag variant={statusToTagVariant(status)} label={status} />
           {e.my_reg && e.my_reg !== "cancelled" ? (
             <Tag

@@ -16,6 +16,7 @@ export function Nav() {
   const navLinks = [
     { href: "/", label: "Noticeboard" },
     { href: "/events", label: "Events" },
+    { href: "/map", label: "Campus Map" },
     { href: "/student", label: "Student Portal" },
     { href: "/coordinator", label: "Faculty & Staff" },
     { href: "/admin", label: "Admin" },

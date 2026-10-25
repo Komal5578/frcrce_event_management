@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Clock, MapPin, Users } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Tape } from "./Tape";
@@ -48,6 +51,8 @@ export function Flyer({
   className,
   onClick,
 }: FlyerProps) {
+  const router = useRouter();
+
   // WCAG AA contrast colors: ink black #1E1A17 on all variants
   const colorStyles: Record<FlyerColor, { bg: string; text: string; badge: string; border: string }> = {
     cream: {
@@ -164,9 +169,30 @@ export function Flyer({
             </div>
 
             {room && (
-              <div className="flex items-center gap-2">
-                <MapPin className="size-4 shrink-0 text-[#1E1A17]/70" aria-hidden="true" />
-                <span className="truncate">{room}</span>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <MapPin className="size-4 shrink-0 text-[#1E1A17]/70" aria-hidden="true" />
+                  <span className="truncate">{room}</span>
+                </div>
+                <span
+                  role="link"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    router.push(id ? `/map?event=${encodeURIComponent(id)}` : "/map");
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      router.push(id ? `/map?event=${encodeURIComponent(id)}` : "/map");
+                    }
+                  }}
+                  className="shrink-0 font-grotesk text-[11px] font-black text-[#EF4B35] hover:underline underline-offset-2 flex items-center gap-0.5 ml-auto cursor-pointer"
+                >
+                  Where is this? 📍
+                </span>
               </div>
             )}
 

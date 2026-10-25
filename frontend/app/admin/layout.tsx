@@ -1,12 +1,12 @@
 "use client";
 
-import { Bell, CalendarRange, FileBarChart2, Inbox, Warehouse } from "lucide-react";
+import { Bell, CalendarRange, FileBarChart2, Inbox, MapPin, Warehouse } from "lucide-react";
 import useSWR from "swr";
 import { AppShell, type NavItem } from "@/components/shell/app-shell";
 import { RoleGuard } from "@/components/shell/guard";
 import type { EventItem } from "@/lib/types";
 
-// Navigation stays at five (AD-01 Dashboard is the home, reached from the brand block; D-06).
+// Navigation stays at five/six (AD-01 Dashboard is the home, reached from the brand block; D-06).
 function Shell({ name, children }: { name: string; children: React.ReactNode }) {
   const { data } = useSWR<EventItem[]>("/api/events");
   const pending = (data ?? []).filter((e) => e.status === "pending").length;
@@ -14,6 +14,7 @@ function Shell({ name, children }: { name: string; children: React.ReactNode }) 
     { href: "/admin/approvals", label: "Approvals", icon: Inbox, badge: pending || undefined },
     { href: "/admin/calendar", label: "Calendar", icon: CalendarRange },
     { href: "/admin/catalog", label: "Venues & Resources", icon: Warehouse },
+    { href: "/map", label: "Campus Map", icon: MapPin },
     { href: "/admin/reports", label: "Reports", icon: FileBarChart2 },
     { href: "/admin/notifications", label: "Notifications", icon: Bell },
   ];

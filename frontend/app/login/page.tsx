@@ -4,8 +4,8 @@ import { motion } from "motion/react";
 import { ArrowRight, GraduationCap, LockKeyhole, Pin, ShieldCheck, UserCog } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { Tape } from "@/components/board/Tape";
 import { PrimaryButton } from "@/components/board/PrimaryButton";
 import { Field, Input } from "@/components/ui/field";
@@ -39,14 +39,31 @@ const roles: { role: Role; title: string; goal: string; icon: typeof GraduationC
   },
 ];
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next");
+  const reason = searchParams.get("reason");
+
   const [busy, setBusy] = useState<Role | "email" | null>(null);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const done = (me: Me) => router.replace(homeFor(me.role));
+  const done = (me: Me) => {
+    if (
+      next &&
+      (next === "/map" ||
+        next.startsWith("/map?") ||
+        next.startsWith("/map/") ||
+        next === `/${me.role}` ||
+        next.startsWith(`/${me.role}/`))
+    ) {
+      router.replace(next);
+    } else {
+      router.replace(homeFor(me.role));
+    }
+  };
 
   async function demo(role: Role) {
     setBusy(role);
@@ -145,6 +162,26 @@ export default function LoginPage() {
                 Pick your role for 1-click demo entry, or use your college email.
               </p>
             </div>
+
+            {reason === "map" || next?.startsWith("/map") ? (
+              <div className="mb-5 p-3.5 rounded-lg border-[1.5px] border-[#EF4B35] bg-[#FDE9E6] text-xs font-bold text-[#1E1A17] shadow-[2px_2px_0px_#EF4B35] flex items-center gap-2.5">
+                <div className="grid size-7 shrink-0 place-items-center rounded bg-[#EF4B35] text-white">
+                  <Pin className="size-4 -rotate-45" />
+                </div>
+                <div>
+                  <p className="font-grotesk font-black text-sm text-[#EF4B35]">
+                    Sign in to see the Crescendo map.
+                  </p>
+                  <p className="text-xs text-[#1E1A17]/80 mt-0.5">
+                    Select any role below for 1-click access to floor plans and event routes.
+                  </p>
+                </div>
+              </div>
+            ) : (reason === "auth" || next) && (
+              <div className="mb-5 p-3 rounded-lg border border-[#EF4B35] bg-[#FDE9E6] text-xs font-bold text-[#EF4B35]">
+                Please sign in to access the {next?.replace("/", "") ?? "student"} portal. Click below for 1-click demo entry!
+              </div>
+            )}
 
             {/* Quick Role Selection as Flyer Tickets */}
             <div className="space-y-2.5 mb-6" aria-label="1-Click Demo Access">
@@ -255,5 +292,19 @@ export default function LoginPage() {
         </span>
       </footer>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F4EFE3] text-[#1E1A17] flex items-center justify-center p-6">
+        <div className="max-w-sm w-full rounded-2xl border-[1.5px] border-[#1E1A17] bg-[#D9CBB3] p-8 text-center">
+          <p className="font-grotesk text-lg font-bold">Loading Noticeboard Sign In...</p>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

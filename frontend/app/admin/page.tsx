@@ -49,7 +49,7 @@ export default function Dashboard() {
     const seats = live.reduce((a, e) => a + (e.capacity ?? 0), 0);
     const reg = ev.reduce((a, e) => a + (e.confirmed ?? 0), 0);
     const dept = new Map<string, { n: number; reg: number; seats: number }>();
-    ev.filter((e) => !["draft", "cancelled"].includes(e.status)).forEach((e) => { const k = e.department ?? "Other"; const d = dept.get(k) ?? { n: 0, reg: 0, seats: 0 }; dept.set(k, { n: d.n + 1, reg: d.reg + (e.confirmed ?? 0), seats: d.seats + (e.capacity ?? 0) }); });
+    ev.filter((e) => !["draft", "cancelled"].includes(e.status)).forEach((e) => { const k = e.department ?? e.coordinator_name ?? "College-Wide"; const d = dept.get(k) ?? { n: 0, reg: 0, seats: 0 }; dept.set(k, { n: d.n + 1, reg: d.reg + (e.confirmed ?? 0), seats: d.seats + (e.capacity ?? 0) }); });
 
     const group = (k: string) => (["pending", "returned"].includes(k) ? "Awaiting a decision" : ["approved", "open", "full", "ongoing"].includes(k) ? "Live or upcoming" : k === "cancelled" ? "Cancelled" : "Draft or finished");
     const status = new Map<string, number>();
