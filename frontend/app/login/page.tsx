@@ -1,48 +1,45 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ArrowRight, BarChart3, Bell, CalendarPlus, CheckCheck, ClipboardList, Eye, GraduationCap, Hand, KeyRound, LockKeyhole, ShieldCheck, Ticket, UserCog, Users2, Zap } from "lucide-react";
+import { ArrowRight, GraduationCap, LockKeyhole, Pin, ShieldCheck, UserCog } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { BRAND, BrandMark } from "@/components/shell/brand";
-import { Button } from "@/components/ui/button";
+import { Tape } from "@/components/board/Tape";
+import { PrimaryButton } from "@/components/board/PrimaryButton";
 import { Field, Input } from "@/components/ui/field";
-import { Stepper } from "@/components/ui/stepper";
 import { TextSizeControl, ThemeToggle } from "@/components/ui/prefs";
 import { api, errText } from "@/lib/api";
 import { cn } from "@/lib/cn";
 import { homeFor } from "@/lib/session";
 import type { Me, Role } from "@/lib/types";
 
-const roles: { role: Role; title: string; goal: string; icon: typeof GraduationCap; tone: string }[] = [
-  { role: "student", title: "Student", goal: "Find an event and register in a few taps.", icon: GraduationCap, tone: "bg-purple text-white" },
-  { role: "coordinator", title: "Coordinator", goal: "Get an event approved and running.", icon: UserCog, tone: "bg-brand text-on-brand" },
-  { role: "admin", title: "Admin", goal: "Approve safely, with clashes surfaced first.", icon: ShieldCheck, tone: "bg-navy text-white" },
+const roles: { role: Role; title: string; goal: string; icon: typeof GraduationCap; color: string }[] = [
+  {
+    role: "student",
+    title: "Student",
+    goal: "Discover events and grab seats in 1 click.",
+    icon: GraduationCap,
+    color: "bg-[#B5DDD4] text-[#1E1A17]",
+  },
+  {
+    role: "coordinator",
+    title: "Coordinator / Faculty",
+    goal: "Plan, submit and run college events.",
+    icon: UserCog,
+    color: "bg-[#F2B93B] text-[#1E1A17]",
+  },
+  {
+    role: "admin",
+    title: "Administrator",
+    goal: "Review bookings and prevent venue clashes.",
+    icon: ShieldCheck,
+    color: "bg-[#EF4B35] text-white",
+  },
 ];
 
-const flow = [
-  { label: "Plan", icon: CalendarPlus },
-  { label: "Approve", icon: CheckCheck },
-  { label: "Register", icon: Ticket },
-  { label: "Run tasks", icon: ClipboardList },
-];
-
-const principles = [
-  { icon: Eye, title: "Always know the state", body: "Every status shows an icon, a word and a colour." },
-  { icon: Hand, title: "Confirm before you commit", body: "Review & Confirm on every irreversible step." },
-  { icon: Users2, title: "One screen per goal", body: "Each role sees only what its job needs." },
-  { icon: KeyRound, title: "Clashes are impossible", body: "A venue can never be double-booked." },
-];
-
-const features = [
-  { icon: Zap, label: "Clash-proof booking" },
-  { icon: Users2, label: "Live seat counts" },
-  { icon: Bell, label: "In-app notifications" },
-  { icon: BarChart3, label: "Reports and CSV" },
-  { icon: LockKeyhole, label: "Role-based access" },
-];
-
-export default function Login() {
+export default function LoginPage() {
   const router = useRouter();
   const [busy, setBusy] = useState<Role | "email" | null>(null);
   const [error, setError] = useState("");
@@ -76,87 +73,187 @@ export default function Login() {
   }
 
   return (
-    <div className="grid min-h-dvh lg:grid-cols-[1.05fr_1fr]">
-      <section className="on-navy relative hidden flex-col justify-between overflow-hidden bg-navy p-12 text-white lg:flex">
-        <div aria-hidden className="pointer-events-none absolute -right-32 -top-32 size-[34rem] rounded-full bg-brand-solid/25 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-24 size-[30rem] rounded-full bg-purple/30 blur-3xl" />
-        <div className="relative flex items-center gap-3">
-          <BrandMark className="size-11" />
-          <span className="text-xl font-extrabold tracking-tight">{BRAND}</span>
-        </div>
-        <div className="relative max-w-xl">
-          <p className="text-[40px] font-extrabold leading-[1.1] tracking-tight">
-            Every college event, from idea to attendance.
-          </p>
-          <p className="mt-4 max-w-md text-lg text-navy-ink">
-            One place to plan, approve, register and keep track, without the group chats.
-          </p>
-          <div className="mt-8 rounded-2xl bg-white/[.06] p-4">
-            <p className="mb-3 text-sm font-semibold text-navy-ink">How an event travels</p>
-            <Stepper steps={flow} current={1} />
+    <div className="relative min-h-screen text-[#1E1A17] flex flex-col justify-between py-6 px-4 sm:px-6 overflow-x-hidden">
+      {/* Background Image: Bandra-Worli Sea Link overlooking FrCRCE, Bandra Bandstand */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <Image
+          src="/images/bandra-sealink.png"
+          alt="Bandra-Worli Sea Link at Night overlooking FrCRCE, Bandra Bandstand Mumbai"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        {/* Atmospheric overlays: warm dark ink tint + subtle vignette to keep the noticeboard crisp and legible */}
+        <div className="absolute inset-0 bg-[#1E1A17]/60 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1E1A17]/75 via-transparent to-[#1E1A17]/85" />
+      </div>
+
+      {/* Top Bar */}
+      <div className="relative z-10 max-w-4xl mx-auto w-full flex items-center justify-between pb-4">
+        <Link
+          href="/"
+          className="flex items-center gap-2 group font-grotesk text-base font-black text-[#F4EFE3] bg-[#1E1A17]/85 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/20 shadow-[2px_2px_0px_#1E1A17] hover:bg-[#1E1A17] transition-all"
+        >
+          <div className="grid size-7 place-items-center rounded bg-[#EF4B35] text-white border border-[#1E1A17] shadow-[1px_1px_0px_#1E1A17]">
+            <Pin className="size-3.5 -rotate-45" />
           </div>
+          <span>FrCRCE Events</span>
+        </Link>
+        <div className="flex items-center gap-2 bg-[#1E1A17]/85 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/20 text-[#F4EFE3]">
+          <TextSizeControl />
+          <ThemeToggle />
         </div>
-        <div className="relative">
-        <h2 className="mb-3 text-sm font-bold text-navy-ink">Key features</h2>
-        <ul className="mb-5 flex flex-wrap gap-x-5 gap-y-2.5">
-          {features.map((f) => (
-            <li key={f.label} className="flex items-center gap-2 text-[14px] font-semibold"><f.icon className="size-[18px] text-sky" aria-hidden />{f.label}</li>
-          ))}
-        </ul>
-        <ul className="grid grid-cols-2 gap-3">
-          {principles.map((p, i) => (
-            <motion.li key={p.title} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.07 }} className="flex gap-3 rounded-2xl bg-white/[.05] p-3.5 border border-white/10">
-              <p.icon className="mt-0.5 size-5 shrink-0 text-sky" aria-hidden />
-              <div><p className="text-sm font-bold">{p.title}</p><p className="mt-0.5 text-[13px] text-navy-ink">{p.body}</p></div>
-            </motion.li>
-          ))}
-        </ul>
-        </div>
-      </section>
+      </div>
 
-      <main className="flex flex-col bg-canvas px-5 py-6 sm:px-10">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5 lg:invisible"><BrandMark /><span className="hidden font-extrabold tracking-tight min-[420px]:inline">{BRAND}</span></div>
-          <div className="flex items-center gap-2"><TextSizeControl /><ThemeToggle /></div>
-        </div>
-        <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-8">
-          <h1 className="text-[clamp(1.5rem,1.2rem+1.2vw,1.75rem)] font-extrabold tracking-tight">Sign in</h1>
-          <p className="mt-1 text-[15px] text-muted">Pick your role to jump straight in, or use your college email.</p>
+      {/* Main Noticeboard Area with a Single Flyer-Style Card on the Board */}
+      <main className="relative z-10 flex-1 flex items-center justify-center py-6 sm:py-10">
+        {/* Noticeboard Panel Backdrop */}
+        <div
+          className={cn(
+            "relative w-full max-w-xl rounded-2xl sm:rounded-3xl border-[1.5px] border-[#1E1A17] bg-[#D9CBB3] p-6 sm:p-10",
+            "shadow-[4px_6px_0px_rgba(30,26,23,0.18)]"
+          )}
+          style={{
+            backgroundImage: "radial-gradient(#1E1A17 0.85px, transparent 0.85px)",
+            backgroundSize: "18px 18px",
+          }}
+        >
+          {/* Cork Frame Pins at top */}
+          <div
+            aria-hidden="true"
+            className="absolute top-3 left-3 size-3 rounded-full bg-[#EF4B35] border border-[#1E1A17]"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute top-3 right-3 size-3 rounded-full bg-[#EF4B35] border border-[#1E1A17]"
+          />
 
-          <ul className="mt-6 space-y-3" aria-label="Sign in as">
-            {roles.map((r, i) => (
-              <motion.li key={r.role} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 + i * 0.07, type: "spring", stiffness: 340, damping: 30 }}>
+          {/* THE SINGLE FLYER-STYLE CARD */}
+          <div className="relative rounded-xl border-[1.5px] border-[#1E1A17] bg-[#F4EFE3] p-6 sm:p-8 shadow-[3px_6px_16px_rgba(30,26,23,0.12)] rotate-[-0.5deg]">
+            {/* Masking tape on flyer top */}
+            <Tape position="top" />
+
+            <div className="text-center mb-6">
+              <span className="font-script text-base sm:text-lg font-bold text-[#EF4B35] rotate-[-2deg] inline-block mb-1">
+                ★ Campus Noticeboard Access
+              </span>
+              <h1 className="font-grotesk text-2xl sm:text-3xl md:text-4xl font-black tracking-[-0.01em] leading-[0.98] text-[#1E1A17]">
+                Sign in to FrCRCE
+              </h1>
+              <p className="mt-2 text-sm font-semibold text-[#1E1A17]/75">
+                Pick your role for 1-click demo entry, or use your college email.
+              </p>
+            </div>
+
+            {/* Quick Role Selection as Flyer Tickets */}
+            <div className="space-y-2.5 mb-6" aria-label="1-Click Demo Access">
+              {roles.map((r) => (
                 <button
+                  key={r.role}
+                  type="button"
                   onClick={() => demo(r.role)}
                   disabled={busy !== null}
-                  aria-busy={busy === r.role}
-                  className="group flex min-h-[4.5rem] w-full items-center gap-4 rounded-2xl bg-surface p-3.5 text-left border border-line transition duration-150 hover:-translate-y-0.5 hover:ring-brand active:scale-[.985] disabled:opacity-60"
+                  className={cn(
+                    "w-full flex items-center justify-between gap-3 p-3 rounded-lg border-[1.5px] border-[#1E1A17] bg-white",
+                    "text-left transition-all duration-150 cursor-pointer shadow-[2px_2px_0px_#1E1A17]",
+                    "hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#1E1A17] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none",
+                    "disabled:opacity-50"
+                  )}
                 >
-                  <span className={cn("grid size-12 shrink-0 place-items-center rounded-xl", r.tone)}><r.icon className="size-6" aria-hidden /></span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-base font-extrabold">{busy === r.role ? "Signing in…" : `Continue as ${r.title}`}</span>
-                    <span className="block text-[13.5px] text-muted">{r.goal}</span>
-                  </span>
-                  <ArrowRight className="size-5 shrink-0 text-faint transition group-hover:translate-x-1 group-hover:text-brand" aria-hidden />
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className={cn("grid size-9 shrink-0 place-items-center rounded border border-[#1E1A17]", r.color)}>
+                      <r.icon className="size-5" />
+                    </span>
+                    <div className="min-w-0">
+                      <span className="font-grotesk text-sm font-extrabold text-[#1E1A17] block leading-tight">
+                        {busy === r.role ? "Entering..." : `Continue as ${r.title}`}
+                      </span>
+                      <span className="text-xs text-[#1E1A17]/70 block truncate">
+                        {r.goal}
+                      </span>
+                    </div>
+                  </div>
+                  <ArrowRight className="size-4 shrink-0 text-[#1E1A17]/60" />
                 </button>
-              </motion.li>
-            ))}
-          </ul>
+              ))}
+            </div>
 
-          <p className="my-6 text-center text-sm font-semibold text-muted">or sign in with your college email</p>
+            {/* Divider */}
+            <div className="relative my-6 text-center">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-[#1E1A17]/25" />
+              </div>
+              <span className="relative bg-[#F4EFE3] px-3 font-grotesk text-xs uppercase font-extrabold tracking-wider text-[#1E1A17]/70">
+                Or enter with credentials
+              </span>
+            </div>
 
-          <form onSubmit={submit} className="space-y-4" noValidate>
-            <Field label="College email" required>
-              {(id) => <Input id={id} type="email" autoComplete="username" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@college.edu" />}
-            </Field>
-            <Field label="Password" required>
-              {(id) => <Input id={id} type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />}
-            </Field>
-            {error ? <p role="alert" className="rounded-xl bg-danger-soft px-4 py-3 text-sm font-medium text-danger">{error}</p> : null}
-            <Button type="submit" full size="lg" loading={busy === "email"} disabled={!email || !password}>Sign in</Button>
-          </form>
+            {/* Credential Form */}
+            <form onSubmit={submit} className="space-y-3.5" noValidate>
+              <div>
+                <label className="font-grotesk text-xs uppercase tracking-wider font-extrabold text-[#1E1A17] block mb-1">
+                  College Email
+                </label>
+                <input
+                  type="email"
+                  autoComplete="username"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@college.edu"
+                  className="w-full rounded-md border-[1.5px] border-[#1E1A17] bg-white px-3 py-2 text-sm font-semibold text-[#1E1A17] placeholder:text-[#1E1A17]/40 shadow-inner focus:outline-none focus:ring-2 focus:ring-[#1E1A17]"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="font-grotesk text-xs uppercase tracking-wider font-extrabold text-[#1E1A17] block mb-1">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full rounded-md border-[1.5px] border-[#1E1A17] bg-white px-3 py-2 text-sm font-semibold text-[#1E1A17] shadow-inner focus:outline-none focus:ring-2 focus:ring-[#1E1A17]"
+                  required
+                />
+              </div>
+
+              {error && (
+                <p role="alert" className="rounded border border-[#EF4B35] bg-[#FDE9E6] p-2.5 text-xs font-bold text-[#EF4B35]">
+                  {error}
+                </p>
+              )}
+
+              {/* Main CTA Button with hard offset shadow */}
+              <div className="pt-2">
+                <PrimaryButton
+                  type="submit"
+                  size="md"
+                  variant="red"
+                  className="w-full"
+                  disabled={busy === "email" || !email || !password}
+                >
+                  {busy === "email" ? "Signing In..." : "Sign In to Board"}
+                </PrimaryButton>
+              </div>
+            </form>
+
+            <p className="mt-4 text-center text-xs font-semibold text-[#1E1A17]/60">
+              Need access? Ask your department head or coordinator.
+            </p>
+          </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="relative z-10 text-center text-xs font-semibold py-2">
+        <span className="inline-block bg-[#1E1A17]/80 backdrop-blur-sm px-3.5 py-1 rounded-full border border-white/15 text-[#F4EFE3]/80">
+          FrCRCE Events · Bandstand, Bandra (W) · Mumbai
+        </span>
+      </footer>
     </div>
   );
 }

@@ -27,7 +27,7 @@ export default function Discover() {
   const [week, setWeek] = useState(false);
   const [type, setType] = useState<string | null>(null);
   const [now] = useState(() => Date.now());
-  const [deptOff, setDeptOff] = useState(false); // department is pre-filled from the profile; one tap clears it
+  const [deptOff, setDeptOff] = useState(false);
   const dept = deptOff ? null : profile?.department ?? null;
 
   const open = useMemo(
@@ -51,51 +51,94 @@ export default function Discover() {
   const ms = next?.starts_at ? Math.max(0, +new Date(next.starts_at) - now) : 0;
   const countdown = ms >= 864e5 ? { n: Math.floor(ms / 864e5), unit: Math.floor(ms / 864e5) === 1 ? "day" : "days" } : { n: Math.max(1, Math.floor(ms / 36e5)), unit: "hours" };
 
-  const chip = (on: boolean) => cn("min-h-11 shrink-0 rounded-full px-4 text-sm font-bold border transition active:scale-95", on ? "border-purple bg-purple text-white" : "border-line-strong bg-surface text-muted hover:text-ink");
+  const chip = (on: boolean) =>
+    cn(
+      "min-h-10 shrink-0 rounded-lg px-3.5 text-xs font-bold uppercase tracking-wider font-grotesk border-[1.5px] transition active:scale-95 cursor-pointer",
+      on
+        ? "border-[#1E1A17] bg-[#EF4B35] text-white"
+        : "border-[#1E1A17]/30 bg-white text-[#1E1A17] hover:border-[#1E1A17]"
+    );
 
   return (
     <>
-      <StudentHead title="Discover" sub="Events you can join" name={me?.name}>
+      <StudentHead title="Discover" sub="Pinned events you can join" name={me?.name}>
         <div className="relative mt-4">
           <label htmlFor="q" className="sr-only">Search events</label>
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-faint" aria-hidden />
-          <input id="q" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search events or venues" className="min-h-12 w-full rounded-2xl bg-surface pl-11 pr-4 text-[15px] text-ink placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-white/80" />
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4.5 -translate-y-1/2 text-[#1E1A17]/60" aria-hidden />
+          <input
+            id="q"
+            type="search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search events or venues..."
+            className="min-h-11 w-full rounded-xl bg-white pl-10 pr-4 text-sm font-semibold text-[#1E1A17] placeholder:text-[#1E1A17]/50 border border-[#1E1A17]/30 focus:outline-none focus:ring-2 focus:ring-[#EF4B35]"
+          />
         </div>
       </StudentHead>
 
       <div className="-mt-6 lg:mt-6 space-y-5 px-4 lg:px-8">
+        {/* Filter chips */}
         <div className="-mx-4 flex gap-2 relative overflow-x-auto px-4 pb-1 lg:mx-0 lg:flex-wrap lg:px-0 [scrollbar-width:none]" role="group" aria-label="Filters">
-          {profile?.department ? <button aria-pressed={!!dept} onClick={() => setDeptOff((v) => !v)} className={chip(!!dept)}>{profile.department}</button> : null}
-          <button aria-pressed={week} onClick={() => setWeek((v) => !v)} className={chip(week)}>Next 7 days</button>
-          {types.map((t) => <button key={t} aria-pressed={type === t} onClick={() => setType(type === t ? null : t)} className={chip(type === t)}>{cap(t)}</button>)}
+          {profile?.department ? (
+            <button aria-pressed={!!dept} onClick={() => setDeptOff((v) => !v)} className={chip(!!dept)}>
+              {profile.department}
+            </button>
+          ) : null}
+          <button aria-pressed={week} onClick={() => setWeek((v) => !v)} className={chip(week)}>
+            Next 7 days
+          </button>
+          {types.map((t) => (
+            <button key={t} aria-pressed={type === t} onClick={() => setType(type === t ? null : t)} className={chip(type === t)}>
+              {cap(t)}
+            </button>
+          ))}
         </div>
 
+        {/* Next event countdown card */}
         {next ? (
-          <Link href={`/student/events/${next.event_id}`} className="group flex items-center gap-5 rounded-2xl border border-line bg-surface p-4 shadow-card transition hover:border-purple active:scale-[.985] sm:p-5">
-            <div className="grid min-w-20 place-items-center rounded-2xl bg-purple px-3 py-3 text-center text-white" aria-hidden>
-              <span className="num text-[34px] font-extrabold leading-none">{countdown.n}</span>
-              <span className="mt-1 text-xs font-bold uppercase tracking-wide opacity-90">{countdown.unit}</span>
+          <Link
+            href={`/student/events/${next.event_id}`}
+            className="group flex items-center gap-5 rounded-xl border-[1.5px] border-[#1E1A17]/25 bg-white p-4 shadow-sm transition hover:border-[#1E1A17] active:scale-[.99] sm:p-5"
+          >
+            <div className="grid min-w-20 place-items-center rounded-lg bg-[#EF4B35] border border-[#1E1A17] px-3 py-3 text-center text-white shadow-[2px_2px_0px_#1E1A17]" aria-hidden>
+              <span className="num font-grotesk text-[32px] font-black leading-none">{countdown.n}</span>
+              <span className="mt-1 text-[11px] font-bold uppercase tracking-wider opacity-90">{countdown.unit}</span>
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold uppercase tracking-wide text-purple">Your next event <span className="sr-only">starts {relative(next.starts_at)}</span></p>
-              <p className="mt-0.5 truncate text-lg font-extrabold">{next.title}</p>
-              <p className="text-sm text-muted">{fmtDay(next.starts_at)}, {fmtTime(next.starts_at)}{next.venue_name ? ` · ${next.venue_name}` : ""}</p>
+              <p className="font-grotesk text-xs font-black uppercase tracking-wider text-[#EF4B35]">
+                Your next event <span className="sr-only">starts {relative(next.starts_at)}</span>
+              </p>
+              <p className="mt-0.5 truncate font-grotesk text-lg font-black text-[#1E1A17]">{next.title}</p>
+              <p className="text-xs font-semibold text-[#1E1A17]/75">
+                {fmtDay(next.starts_at)}, {fmtTime(next.starts_at)}
+                {next.venue_name ? ` · ${next.venue_name}` : ""}
+              </p>
             </div>
-            <ArrowRight className="size-5 shrink-0 text-purple transition group-hover:translate-x-1" aria-hidden />
+            <ArrowRight className="size-5 shrink-0 text-[#1E1A17] transition group-hover:translate-x-1" aria-hidden />
           </Link>
         ) : null}
 
         {error ? (
-          <ErrorState onRetry={() => mutate()} message="We could not load events. Check your connection and try again." />
+          <ErrorState onRetry={() => mutate()} message="We could not load notices. Check your connection and try again." />
         ) : !events ? (
           <ListSkeleton rows={3} h="h-44" />
         ) : shown.length === 0 ? (
-          <EmptyState art="search" icon={CalendarX2} title="No events match" body="Clear a filter to see more." action={<Button variant="purple" onClick={clear}>Clear filters</Button>} />
+          <EmptyState
+            title="No events match your filter"
+            body="Clear a department or search filter to see more pinned notices."
+            action={<Button variant="primary" onClick={clear}>Clear filters</Button>}
+          />
         ) : (
           <>
-            <p className="num text-sm font-semibold text-muted" role="status">{shown.length} {shown.length === 1 ? "event" : "events"}{filtered ? " match your filters" : ""}</p>
-            <Stagger className="grid gap-3.5 md:grid-cols-[repeat(auto-fit,minmax(21rem,1fr))]">
-              {shown.map((e) => <Item key={e.id}><EventCard e={e} /></Item>)}
+            <p className="num text-xs font-bold uppercase tracking-wider text-[#1E1A17]/70" role="status">
+              {shown.length} {shown.length === 1 ? "notice" : "notices"}{filtered ? " matching filters" : " pinned"}
+            </p>
+            <Stagger className="grid gap-4 md:grid-cols-[repeat(auto-fit,minmax(21rem,1fr))]">
+              {shown.map((e) => (
+                <Item key={e.id}>
+                  <EventCard e={e} />
+                </Item>
+              ))}
             </Stagger>
           </>
         )}

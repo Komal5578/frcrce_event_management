@@ -1,150 +1,135 @@
 @import "tailwindcss";
 
 /*
-  Design tokens. Source of truth: kb `ds-readme` + the original mockup
-  (navy sidebar, light canvas, white cards, blue primary, purple student app).
-  Status pairs are icon + word + colour (`dom-status-vocabulary`); every fg/bg pair is >= 4.5:1.
+  Campus Noticeboard Theme Design Tokens
+  Locked Theme:
+  - Page background: warm cream (#F4EFE3)
+  - Noticeboard panel: tan (#D9CBB3) with faint dot texture & thin dark border (#1E1A17)
+  - Palette: ink black (#1E1A17), tomato red (#EF4B35), mustard (#F2B93B), soft teal (#B5DDD4). Nothing else.
+  - Fonts: heavy grotesque (headlines), clean sans (body), handwritten script (annotations only, max 3/page).
+  - Status tags: mustard = Pending, teal = Approved, red = Declined.
 */
 :root {
-  --canvas: oklch(96.7% 0.009 265);
-  --surface: oklch(100.0% 0 0);
-  --surface-2: oklch(97.9% 0.006 265);
-  --line: oklch(92.1% 0.016 263);
-  --line-strong: oklch(81.8% 0.032 263);
-  --ink: oklch(22.3% 0.056 263);
-  --muted: oklch(47.4% 0.049 263);
-  --faint: oklch(52.3% 0.048 263);
+  /* Core Palette */
+  --page: #F4EFE3;
+  --board: #D9CBB3;
+  --ink: #1E1A17;
+  --red: #EF4B35;
+  --mustard: #F2B93B;
+  --teal: #B5DDD4;
 
-  --brand: oklch(52.8% 0.207 262);
-  --brand-hover: oklch(45.2% 0.181 262);
-  --brand-soft: oklch(94.8% 0.022 266);
-  --on-brand: oklch(100.0% 0 0);
+  /* Aliased application variables */
+  --canvas: var(--page);
+  --surface: #FFFFFF;
+  --surface-2: #F9F6F0;
+  --panel: var(--board);
+  --line: rgba(30, 26, 23, 0.18);
+  --line-strong: rgba(30, 26, 23, 0.38);
+  --muted: #4B453E;
+  --faint: #6E665E;
 
-  --navy: oklch(24.9% 0.062 263);
-  --navy-2: oklch(30.2% 0.078 264);
-  --navy-line: oklch(35.5% 0.089 265);
-  --navy-ink: oklch(85.3% 0.037 265);
+  --brand: var(--red);
+  --brand-hover: #DB3D28;
+  --brand-soft: #F9E4E1;
+  --on-brand: #FFFFFF;
 
-  --purple: oklch(43.6% 0.194 283);
-  --purple-deep: oklch(35.8% 0.167 282);
-  --purple-soft: oklch(94.6% 0.028 295);
+  --navy: var(--ink);
+  --navy-2: #2B2521;
+  --navy-line: rgba(244, 239, 227, 0.2);
+  --navy-ink: #D9CBB3;
 
-  --danger: oklch(50.0% 0.182 30);
-  --danger-soft: oklch(95.6% 0.019 22);
-  --warn-soft: oklch(96.5% 0.040 90);
-  --good: oklch(51.2% 0.121 154);
-  --good-soft: oklch(95.8% 0.022 160);
+  --purple: var(--ink);
+  --purple-deep: var(--ink);
+  --purple-soft: #EFE8DA;
 
-  /* chart-1/3/4 validated with dataviz validate_palette.js (light on white, dark on navy): CVD dE >= 20, lightness band ok. Never pair red with green. */
-  --chart-1: oklch(56.5% 0.204 263);
-  --chart-2: oklch(61.4% 0.150 152);
-  --chart-3: oklch(75.1% 0.155 78);
-  --chart-4: oklch(59.7% 0.189 27);
-  --chart-5: oklch(58.9% 0.224 287);
-  --chart-grid: oklch(93.9% 0.013 262);
+  --danger: var(--red);
+  --danger-soft: #FDE9E6;
+  --warn-soft: #FCF4DD;
+  --good: #1B7F6B;
+  --good-soft: #E0F3EE;
 
-  --brand-solid: oklch(56.5% 0.204 263);
-  --sky: oklch(77.2% 0.115 264);
-  --signal: oklch(81.5% 0.150 82);
-  --signal-ink: oklch(29.7% 0.061 85);
-  --ok-bright: oklch(78.5% 0.146 155);
-  --bad-bright: oklch(75.9% 0.144 26);
-  --gold: oklch(88.0% 0.135 86);
-  --nav-accent: oklch(67.2% 0.173 263);
+  --chart-1: #EF4B35;
+  --chart-2: #1B7F6B;
+  --chart-3: #C2820B;
+  --chart-4: #1E1A17;
+  --chart-5: #6E665E;
+  --chart-grid: rgba(30, 26, 23, 0.12);
 
-  --shadow-card: 0 1px 2px rgb(13 26 53 / 0.04);
-  --shadow-pop: 0 24px 60px -12px rgb(13 26 53 / 0.35);
+  --brand-solid: var(--red);
+  --sky: var(--teal);
+  --signal: var(--mustard);
+  --signal-ink: var(--ink);
+  --ok-bright: var(--teal);
+  --bad-bright: var(--red);
+  --gold: var(--mustard);
+  --nav-accent: var(--red);
 
-  --st-draft-fg: oklch(37.3% 0.031 260);      --st-draft-bg: oklch(96.7% 0 0);
-  --st-pending-fg: oklch(41.4% 0.105 46);    --st-pending-bg: oklch(96.2% 0.058 96);
-  --st-approved-fg: oklch(42.4% 0.181 266);   --st-approved-bg: oklch(93.2% 0.032 256);
-  --st-open-fg: oklch(44.8% 0.108 151);       --st-open-bg: oklch(96.2% 0.043 157);
-  --st-ongoing-fg: oklch(43.7% 0.071 188);    --st-ongoing-bg: oklch(95.3% 0.050 181);
-  --st-completed-fg: oklch(37.2% 0.039 257);  --st-completed-bg: oklch(92.9% 0.013 256);
-  --st-cancelled-fg: oklch(44.4% 0.161 27);  --st-cancelled-bg: oklch(93.6% 0.031 18);
-  --st-full-fg: oklch(47.0% 0.143 37);       --st-full-bg: oklch(95.4% 0.037 75);
-  --st-returned-fg: oklch(45.2% 0.192 325);   --st-returned-bg: oklch(95.2% 0.036 319);
-  --st-todo-fg: oklch(37.3% 0.031 260);       --st-todo-bg: oklch(96.7% 0 0);
-  --st-doing-fg: oklch(42.4% 0.181 266);      --st-doing-bg: oklch(93.2% 0.032 256);
-  --st-done-fg: oklch(44.8% 0.108 151);       --st-done-bg: oklch(96.2% 0.043 157);
-  --st-overdue-fg: oklch(44.4% 0.161 27);    --st-overdue-bg: oklch(93.6% 0.031 18);
-  --st-registered-fg: oklch(44.8% 0.108 151); --st-registered-bg: oklch(96.2% 0.043 157);
-  --st-waitlisted-fg: oklch(47.0% 0.143 37); --st-waitlisted-bg: oklch(95.4% 0.037 75);
-  --st-clash-fg: oklch(44.4% 0.161 27);      --st-clash-bg: oklch(93.6% 0.031 18);
-  --st-low-fg: oklch(41.4% 0.105 46);        --st-low-bg: oklch(96.2% 0.058 96);
+  --shadow-cta: 4px 4px 0px var(--ink);
+  --shadow-card: 2px 3px 0px rgba(30, 26, 23, 0.1);
+  --shadow-pop: 0 20px 40px -10px rgba(30, 26, 23, 0.25);
+  --shadow-flyer: 2px 5px 12px rgba(30, 26, 23, 0.1);
+  --shadow-flyer-lift: 4px 14px 28px rgba(30, 26, 23, 0.16);
+
+  /* Status Colors: mustard = Pending, teal = Approved, red = Declined */
+  --st-draft-fg: var(--ink);       --st-draft-bg: var(--mustard);
+  --st-pending-fg: var(--ink);     --st-pending-bg: var(--mustard);
+  --st-returned-fg: var(--ink);    --st-returned-bg: var(--mustard);
+  --st-todo-fg: var(--ink);        --st-todo-bg: var(--mustard);
+  --st-doing-fg: var(--ink);       --st-doing-bg: var(--mustard);
+  --st-waitlisted-fg: var(--ink);  --st-waitlisted-bg: var(--mustard);
+  --st-low-fg: var(--ink);         --st-low-bg: var(--mustard);
+
+  --st-approved-fg: var(--ink);    --st-approved-bg: var(--teal);
+  --st-open-fg: var(--ink);        --st-open-bg: var(--teal);
+  --st-ongoing-fg: var(--ink);     --st-ongoing-bg: var(--teal);
+  --st-completed-fg: var(--ink);   --st-completed-bg: var(--teal);
+  --st-done-fg: var(--ink);        --st-done-bg: var(--teal);
+  --st-registered-fg: var(--ink);  --st-registered-bg: var(--teal);
+
+  --st-cancelled-fg: var(--ink);   --st-cancelled-bg: var(--red);
+  --st-overdue-fg: var(--ink);     --st-overdue-bg: var(--red);
+  --st-clash-fg: var(--ink);       --st-clash-bg: var(--red);
+  --st-full-fg: var(--ink);        --st-full-bg: var(--red);
 }
 
 :root[data-theme="dark"] {
-  --canvas: oklch(18.7% 0.043 266);
-  --surface: oklch(22.9% 0.054 267);
-  --surface-2: oklch(21.1% 0.051 267);
-  --line: oklch(31.3% 0.059 265);
-  --line-strong: oklch(41.7% 0.069 266);
-  --ink: oklch(94.9% 0.018 269);
-  --muted: oklch(75.9% 0.041 265);
-  --faint: oklch(66.2% 0.051 264);
+  /* Retain contrast and noticeboard spirit in dark mode */
+  --canvas: #1E1A17;
+  --surface: #2A2420;
+  --surface-2: #241F1C;
+  --line: rgba(244, 239, 227, 0.18);
+  --line-strong: rgba(244, 239, 227, 0.35);
+  --ink: #F4EFE3;
+  --muted: #C8BFB3;
+  --faint: #A69D91;
 
-  --brand: oklch(65.2% 0.185 262);
-  --brand-hover: oklch(70.1% 0.156 264);
-  --brand-soft: oklch(29.7% 0.085 265);
-  --on-brand: oklch(19.1% 0.059 264);
+  --navy: #181412;
+  --navy-2: #221D19;
+  --navy-line: rgba(244, 239, 227, 0.15);
+  --navy-ink: #F4EFE3;
 
-  --navy: oklch(16.8% 0.039 266);
-  --navy-2: oklch(24.2% 0.060 266);
-  --navy-line: oklch(30.1% 0.072 266);
-  --navy-ink: oklch(78.2% 0.046 266);
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.35);
 
-  --purple: oklch(55.7% 0.198 285);
-  --purple-deep: oklch(44.4% 0.192 282);
-  --purple-soft: oklch(25.4% 0.086 282);
-
-  --danger: oklch(75.9% 0.144 26);
-  --danger-soft: oklch(25.6% 0.057 19);
-  --warn-soft: oklch(29.7% 0.052 81);
-  --good: oklch(78.5% 0.146 155);
-  --good-soft: oklch(26.9% 0.046 159);
-
-  --chart-1: oklch(62.3% 0.176 264);
-  --chart-2: oklch(76.5% 0.155 155);
-  --chart-3: oklch(63.9% 0.134 72);
-  --chart-4: oklch(63.6% 0.172 26);
-  --chart-5: oklch(72.3% 0.154 289);
-  --chart-grid: oklch(29.7% 0.058 265);
-
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.25);
-
-  --st-draft-fg: oklch(87.2% 0.009 258);      --st-draft-bg: oklch(32.2% 0.038 266);
-  --st-pending-fg: oklch(87.9% 0.153 92);    --st-pending-bg: oklch(30.8% 0.052 88);
-  --st-approved-fg: oklch(80.9% 0.096 260);   --st-approved-bg: oklch(29.7% 0.085 265);
-  --st-open-fg: oklch(87.1% 0.136 154);       --st-open-bg: oklch(26.9% 0.046 159);
-  --st-ongoing-fg: oklch(85.5% 0.125 181);    --st-ongoing-bg: oklch(27.9% 0.041 187);
-  --st-completed-fg: oklch(86.9% 0.020 253);  --st-completed-bg: oklch(31.8% 0.046 264);
-  --st-cancelled-fg: oklch(80.8% 0.103 20);  --st-cancelled-bg: oklch(25.6% 0.057 19);
-  --st-full-fg: oklch(83.7% 0.117 66);       --st-full-bg: oklch(28.1% 0.047 59);
-  --st-returned-fg: oklch(83.3% 0.132 321);   --st-returned-bg: oklch(26.3% 0.081 319);
-  --st-todo-fg: oklch(87.2% 0.009 258);       --st-todo-bg: oklch(32.2% 0.038 266);
-  --st-doing-fg: oklch(80.9% 0.096 260);      --st-doing-bg: oklch(29.7% 0.085 265);
-  --st-done-fg: oklch(87.1% 0.136 154);       --st-done-bg: oklch(26.9% 0.046 159);
-  --st-overdue-fg: oklch(80.8% 0.103 20);    --st-overdue-bg: oklch(25.6% 0.057 19);
-  --st-registered-fg: oklch(87.1% 0.136 154); --st-registered-bg: oklch(26.9% 0.046 159);
-  --st-waitlisted-fg: oklch(83.7% 0.117 66); --st-waitlisted-bg: oklch(28.1% 0.047 59);
-  --st-clash-fg: oklch(80.8% 0.103 20);      --st-clash-bg: oklch(25.6% 0.057 19);
-  --st-low-fg: oklch(87.9% 0.153 92);        --st-low-bg: oklch(30.8% 0.052 88);
+  --st-draft-fg: #1E1A17;       --st-draft-bg: var(--mustard);
+  --st-pending-fg: #1E1A17;     --st-pending-bg: var(--mustard);
+  --st-returned-fg: #1E1A17;    --st-returned-bg: var(--mustard);
+  --st-approved-fg: #1E1A17;    --st-approved-bg: var(--teal);
+  --st-open-fg: #1E1A17;        --st-open-bg: var(--teal);
+  --st-cancelled-fg: #1E1A17;   --st-cancelled-bg: var(--red);
 }
 
 @theme inline {
-  --color-brand-solid: var(--brand-solid);
-  --color-sky: var(--sky);
-  --color-signal: var(--signal);
-  --color-signal-ink: var(--signal-ink);
-  --color-ok-bright: var(--ok-bright);
-  --color-bad-bright: var(--bad-bright);
-  --color-gold: var(--gold);
-  --color-nav-accent: var(--nav-accent);
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --color-page: #F4EFE3;
+  --color-board: #D9CBB3;
+  --color-ink: #1E1A17;
+  --color-red: #EF4B35;
+  --color-mustard: #F2B93B;
+  --color-teal: #B5DDD4;
+
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-panel: var(--panel);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
   --color-ink: var(--ink);
@@ -162,13 +147,16 @@
   --color-purple-deep: var(--purple-deep);
   --color-purple-soft: var(--purple-soft);
   --color-danger: var(--danger);
-  --color-danger-soft: var(--danger-soft);
-  --color-warn-soft: var(--warn-soft);
   --color-good: var(--good);
-  --color-good-soft: var(--good-soft);
+
+  --font-grotesk: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-script), cursive, sans-serif;
+
+  --shadow-cta: var(--shadow-cta);
   --shadow-card: var(--shadow-card);
-  --shadow-pop: var(--shadow-pop);
-  --radius-card: 16px;
+  --shadow-flyer: var(--shadow-flyer);
+  --shadow-flyer-lift: var(--shadow-flyer-lift);
 }
 
 html {
@@ -190,19 +178,106 @@ body {
 
 .num { font-variant-numeric: tabular-nums; }
 
+/* Legibility bug fix 1: Headline letters collision fix */
+.headline-grotesk,
+h1, h2, h3, .font-grotesk {
+  font-family: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  line-height: 0.98;
+}
+
+.font-script {
+  font-family: var(--font-script), cursive, sans-serif;
+}
+
 /* One visible focus ring everywhere; never removed. */
 :focus-visible {
-  outline: 3px solid var(--brand);
+  outline: 3px solid var(--ink);
   outline-offset: 2px;
   border-radius: 6px;
 }
-.on-navy :focus-visible { outline-color: white; }
+.on-navy :focus-visible { outline-color: #F4EFE3; }
 
-/* Status chip colours come from tokens so light/dark both pass contrast. */
+/* Noticeboard panel with faint dot texture and thin dark border */
+.noticeboard-panel {
+  background-color: #D9CBB3;
+  background-image: radial-gradient(#1E1A17 0.85px, transparent 0.85px);
+  background-size: 18px 18px;
+  border: 1.5px solid #1E1A17;
+}
+
+/* 3D Flip Card System */
+.card-3d-wrap {
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+.card-3d-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-3d-front,
+.card-3d-back {
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+.card-3d-front {
+  transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+}
+.card-3d-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+}
+
+/* Rubber Stamp Styling & Thud Animation */
+.rubber-stamp {
+  display: inline-block;
+  font-family: var(--font-grotesk), ui-sans-serif, sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 2.5px dashed currentColor;
+  border-radius: 4px;
+  padding: 3px 8px;
+  line-height: 1;
+}
+
+@keyframes stamp-thud {
+  0% {
+    transform: scale(3.2) rotate(-20deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(0.92) rotate(-6deg);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1.05) rotate(-8deg);
+  }
+  100% {
+    transform: scale(1) rotate(-7deg);
+    opacity: 1;
+  }
+}
+
+.animate-stamp-thud {
+  animation: stamp-thud 0.4s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+}
+
+/* Status badge mapping */
 .status {
   color: var(--st-fg);
   background: var(--st-bg);
-  border: 1px solid color-mix(in oklab, var(--st-fg) 28%, transparent);
+  border: 1px solid rgba(30, 26, 23, 0.25);
+  font-weight: 700;
 }
 .status[data-s="draft"]      { --st-fg: var(--st-draft-fg);      --st-bg: var(--st-draft-bg); }
 .status[data-s="pending"]    { --st-fg: var(--st-pending-fg);    --st-bg: var(--st-pending-bg); }
@@ -222,21 +297,29 @@ body {
 .status[data-s="clash"]      { --st-fg: var(--st-clash-fg);      --st-bg: var(--st-clash-bg); }
 .status[data-s="low"]        { --st-fg: var(--st-low-fg);        --st-bg: var(--st-low-bg); }
 
-/* Skeleton: flat tone with a slow opacity pulse (no gradients; transform/opacity only). */
+/* Skeleton */
 .skeleton {
-  background: var(--line);
+  background: rgba(30, 26, 23, 0.1);
   animation: pulse-soft 1.4s ease-in-out infinite;
   border-radius: 8px;
 }
 @keyframes pulse-soft { 50% { opacity: 0.45; } }
 
+/* Reduced Motion: respect user preference */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .skeleton { animation: none; }
-  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  .animate-stamp-thud { animation: none !important; transform: rotate(-6deg) !important; opacity: 1 !important; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
 }
 
-dialog::backdrop { background: rgb(7 14 32 / 0.55); backdrop-filter: blur(2px); }
+dialog::backdrop {
+  background: rgba(30, 26, 23, 0.6);
+  backdrop-filter: blur(2px);
+}
 
 @media print {
   .no-print { display: none !important; }
