@@ -14,18 +14,33 @@ services:
       interval: 3s
       retries: 10
 
+  # Cache only: no persistence, bounded memory, evicts least-recently-used. The API works without it.
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --save "" --appendonly no --maxmemory 128mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      retries: 10
+
   api:
     build: ./backend
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://app:${DB_PASSWORD}@db:5432/app
+      REDIS_URL: redis://redis:6379/0
+      CACHE_TTL: "30"
+      POOL_MAX: "10"
       COOKIE_SECURE: "true"
       DEMO_LOGIN: ${DEMO_LOGIN:-false}
       SEED_DEMO: ${SEED_DEMO:-false}
-    command: sh -c "python scripts/migrate.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    command: sh -c "python scripts/migrate.py && uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2 --proxy-headers --forwarded-allow-ips='*'"
 
   caddy:
     image: caddy:2-alpine

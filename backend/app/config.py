@@ -62,3 +62,6 @@ COOKIE_SECURE: bool = _bool(os.environ.get("COOKIE_SECURE"), default=False)
 LOGIN_MAX_FAILURES: int = _int(os.environ.get("LOGIN_MAX_FAILURES"), default=5)
 LOGIN_WINDOW_MINUTES: int = _int(os.environ.get("LOGIN_WINDOW_MINUTES"), default=15)
 SEED_DEMO: bool = _bool(os.environ.get("SEED_DEMO"), default=False)
+REDIS_URL: str = os.environ.get("REDIS_URL", "")  # empty = no cache
+CACHE_TTL: int = _int(os.environ.get("CACHE_TTL"), default=30)
+POOL_MAX: int = _int(os.environ.get("POOL_MAX"), default=10)
