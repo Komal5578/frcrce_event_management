@@ -1,10 +1,13 @@
 """FastAPI application entrypoint, middleware, exception handlers, and routing."""
 
+from contextlib import asynccontextmanager
+
 import psycopg
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from app.db import lifespan
+from app import cache
+from app.db import lifespan as db_lifespan
 from app.errors import STATUS, DomainError, translate
 from app.routers.approvals import router as approvals_router
 from app.routers.auth import router as auth_router
@@ -16,11 +19,22 @@ from app.routers.resources import router as resources_router
 from app.routers.tasks import router as tasks_router
 from app.routers.venues import router as venues_router
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with db_lifespan(app):
+        await cache.open_cache()
+        try:
+            yield
+        finally:
+            await cache.close_cache()
+
+
 app = FastAPI(
     title="College Event Management API",
     lifespan=lifespan,
     generate_unique_id_function=lambda r: f"{r.tags[0]}_{r.name}" if r.tags else r.name,
 )
+app.add_middleware(cache.ResponseCache)
 
 
 @app.exception_handler(DomainError)

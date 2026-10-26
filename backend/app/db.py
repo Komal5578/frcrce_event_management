@@ -8,12 +8,12 @@ import psycopg
 from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
 
-from app.config import DATABASE_URL
+from app.config import DATABASE_URL, POOL_MAX
 
 pool = ConnectionPool(
     DATABASE_URL,
     min_size=1,
-    max_size=5,
+    max_size=POOL_MAX,
     open=False,
     kwargs={"row_factory": dict_row},
 )
@@ -27,7 +27,7 @@ async def lifespan(app: Any) -> AsyncIterator[None]:
         pool = ConnectionPool(
             DATABASE_URL,
             min_size=1,
-            max_size=5,
+            max_size=POOL_MAX,
             open=False,
             kwargs={"row_factory": dict_row},
         )
