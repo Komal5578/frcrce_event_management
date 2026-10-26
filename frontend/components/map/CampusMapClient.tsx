@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useTransition } from "react";
+import React, { useState, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Search,
@@ -38,6 +38,41 @@ import { useMe } from "@/lib/session";
 import { api } from "@/lib/api";
 import type { Me, Role, EventItem } from "@/lib/types";
 import { cn } from "@/lib/cn";
+
+function findTargetFocus(
+  paramEvent: string | null,
+  matchResult: VenueMatchResult
+): { type: "entity"; floorId: string; entityId: string } | { type: "tba" } | { type: "not_in_guide" } | null {
+  if (!paramEvent) return null;
+
+  for (const [entityId, evList] of Object.entries(matchResult.matchedEntityMap)) {
+    const found = evList.find(
+      (e) => e.id === paramEvent || e.rawEvent.id === paramEvent
+    );
+    if (found) {
+      const entity = floorEntities.find((e) => e.id === entityId);
+      if (entity) {
+        return { type: "entity", floorId: entity.floorId, entityId: entity.id };
+      }
+    }
+  }
+
+  const inTba = matchResult.unannouncedEvents.find(
+    (e) => e.id === paramEvent || e.rawEvent.id === paramEvent
+  );
+  if (inTba) {
+    return { type: "tba" };
+  }
+
+  const inNotInGuide = matchResult.notInFloorGuideEvents.find(
+    (e) => e.id === paramEvent || e.rawEvent.id === paramEvent
+  );
+  if (inNotInGuide) {
+    return { type: "not_in_guide" };
+  }
+
+  return null;
+}
 
 export interface CampusMapClientProps {
   initialEvents: EventItem[];
@@ -77,62 +112,45 @@ export function CampusMapClient({
     return matchEventsToVenues(initialEvents);
   }, [initialEvents]);
 
+  // Focus target from ?event=<id>
+  const targetFocus = findTargetFocus(paramEvent, matchResult);
+
   // Active filters and state
   const [selectedFloorId, setSelectedFloorId] = useState<string>(
-    paramFloor ?? "ground"
+    targetFocus?.type === "entity" ? targetFocus.floorId : (paramFloor ?? "ground")
   );
   const [selectedEntityId, setSelectedEntityId] = useState<string | null>(
-    paramEntity ?? null
+    targetFocus?.type === "entity" ? targetFocus.entityId : (paramEntity ?? null)
   );
   const [dayFilter, setDayFilter] = useState<"all" | "29 Oct" | "30 Oct">("all");
   const [timeFilter, setTimeFilter] = useState<"all" | "now" | "next_hour" | "later">("all");
   const [facilityFilter, setFacilityFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const [flyerSheetOpen, setFlyerSheetOpen] = useState(false);
-  const [unannouncedDrawerOpen, setUnannouncedDrawerOpen] = useState(false);
-  const [drawerDefaultTab, setDrawerDefaultTab] = useState<"tba" | "not_in_guide">("tba");
+  const [flyerSheetOpen, setFlyerSheetOpen] = useState(targetFocus?.type === "entity");
+  const [unannouncedDrawerOpen, setUnannouncedDrawerOpen] = useState(
+    targetFocus?.type === "tba" || targetFocus?.type === "not_in_guide"
+  );
+  const [drawerDefaultTab, setDrawerDefaultTab] = useState<"tba" | "not_in_guide">(
+    targetFocus?.type === "not_in_guide" ? "not_in_guide" : "tba"
+  );
 
-  // Handle ?event=<id> auto-focus
-  useEffect(() => {
-    if (!paramEvent) return;
-
-    // 1. Check matched entities
-    for (const [entityId, evList] of Object.entries(matchResult.matchedEntityMap)) {
-      const found = evList.find(
-        (e) => e.id === paramEvent || e.rawEvent.id === paramEvent
-      );
-      if (found) {
-        const entity = floorEntities.find((e) => e.id === entityId);
-        if (entity) {
-          setSelectedFloorId(entity.floorId);
-          setSelectedEntityId(entity.id);
-          setFlyerSheetOpen(true);
-          return;
-        }
-      }
-    }
-
-    // 2. Check TBA events
-    const inTba = matchResult.unannouncedEvents.find(
-      (e) => e.id === paramEvent || e.rawEvent.id === paramEvent
-    );
-    if (inTba) {
+  // Sync state if ?event parameter changes dynamically
+  const [prevParamEvent, setPrevParamEvent] = useState(paramEvent);
+  if (paramEvent !== prevParamEvent) {
+    setPrevParamEvent(paramEvent);
+    if (targetFocus?.type === "entity") {
+      setSelectedFloorId(targetFocus.floorId);
+      setSelectedEntityId(targetFocus.entityId);
+      setFlyerSheetOpen(true);
+    } else if (targetFocus?.type === "tba") {
       setDrawerDefaultTab("tba");
       setUnannouncedDrawerOpen(true);
-      return;
-    }
-
-    // 3. Check Not in Floor Guide events
-    const inNotInGuide = matchResult.notInFloorGuideEvents.find(
-      (e) => e.id === paramEvent || e.rawEvent.id === paramEvent
-    );
-    if (inNotInGuide) {
+    } else if (targetFocus?.type === "not_in_guide") {
       setDrawerDefaultTab("not_in_guide");
       setUnannouncedDrawerOpen(true);
-      return;
     }
-  }, [paramEvent, matchResult]);
+  }
 
   // Filter events according to day, time, and search
   const filteredEntityMap = useMemo(() => {

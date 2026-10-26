@@ -28,7 +28,7 @@ export default function EventsError({
           Could not load events
         </h1>
         <p className="mt-3 text-sm font-semibold text-[#1E1A17]/80">
-          The noticeboard couldn't retrieve the latest notices. Try refreshing or browse available local events.
+          The noticeboard couldn&apos;t retrieve the latest notices. Try refreshing or browse available local events.
         </p>
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

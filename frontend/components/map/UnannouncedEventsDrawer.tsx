@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   X,
   ExternalLink,
@@ -31,12 +31,16 @@ export function UnannouncedEventsDrawer({
   defaultTab = "tba",
 }: UnannouncedEventsDrawerProps) {
   const [activeTab, setActiveTab] = useState<"tba" | "not_in_guide">(defaultTab);
+  const [prevDefaultTab, setPrevDefaultTab] = useState(defaultTab);
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
-  useEffect(() => {
-    if (isOpen) {
-      setActiveTab(defaultTab);
-    }
-  }, [isOpen, defaultTab]);
+  if (isOpen && (!prevIsOpen || defaultTab !== prevDefaultTab)) {
+    setPrevIsOpen(isOpen);
+    setPrevDefaultTab(defaultTab);
+    setActiveTab(defaultTab);
+  } else if (!isOpen && prevIsOpen) {
+    setPrevIsOpen(false);
+  }
 
   if (!isOpen) return null;
 

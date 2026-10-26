@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { ZoomIn, ZoomOut, RotateCcw, AlertCircle, Droplets, Info } from "lucide-react";
 import {
   campusFloors,
@@ -49,10 +49,12 @@ export function FloorSchematic({
   const currentEntities = floorEntities.filter((e) => e.floorId === floor.id);
 
   // Reset zoom & pan when floor changes
-  useEffect(() => {
+  const [prevFloorId, setPrevFloorId] = useState(floor.id);
+  if (prevFloorId !== floor.id) {
+    setPrevFloorId(floor.id);
     setZoom(1);
     setPan({ x: 0, y: 0 });
-  }, [floor.id]);
+  }
 
   const handleZoomIn = () => setZoom((z) => Math.min(z + 0.25, 2.5));
   const handleZoomOut = () => setZoom((z) => Math.max(z - 0.25, 0.75));

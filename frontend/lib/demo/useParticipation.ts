@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   getStoredParticipation,
   markStudentStatus,
@@ -10,9 +10,7 @@ import {
   type ParticipationStatus,
   demoStudents,
   getStudentById,
-  type DemoStudent,
 } from "./participation";
-import { getCouncilById, getCouncils } from "./councils";
 
 export function useParticipation() {
   const [records, setRecords] = useState<ParticipationRecord[]>(() => getStoredParticipation());
@@ -22,7 +20,7 @@ export function useParticipation() {
   }, []);
 
   useEffect(() => {
-    reload();
+    queueMicrotask(() => reload());
 
     const onCustomUpdate = () => reload();
     const onStorage = (e: StorageEvent) => {
