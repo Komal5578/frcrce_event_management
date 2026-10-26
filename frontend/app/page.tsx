@@ -14,6 +14,7 @@ import { fmtDay, fmtRange } from "@/lib/format";
 import { seatsLeft } from "@/lib/status";
 import { getEventLink } from "@/lib/eventLinks";
 import type { EventItem } from "@/lib/types";
+import { filterCrescendoEvents } from "@/lib/crescendo-events";
 
 // Seeded fallback noticeboard flyers if API events are still loading or empty
 const SAMPLE_FLYERS: {
@@ -114,55 +115,37 @@ export default function LandingPage() {
   const { data: events } = useSWR<EventItem[]>("/api/events");
   const [openingId, setOpeningId] = useState<string | null>(null);
 
-  // Format real API events or fall back to samples
+  // Strictly display authentic Fr. CRCE Crescendo notices
   const displayFlyers = useMemo(() => {
-    if (events && events.length > 0) {
-      const palette: FlyerColor[] = ["mustard", "teal", "red", "cream"];
-      const tilts = [-1.5, 2, -2, 1.5, -1, 2.5];
-      return events.slice(0, 6).map((e, idx) => {
-        const unstopUrl = getEventLink(e);
-        const isOpening = openingId === e.id;
-        let stamp = null;
-        if (isOpening) {
-          stamp = { text: "OPENING UNSTOP", variant: "approved" as const, animate: true };
-        } else if (!unstopUrl) {
-          stamp = { text: "COMING SOON", variant: "pending" as const };
-        } else if (e.status === "open") {
-          stamp = { text: "OPEN", variant: "approved" as const };
-        } else if (e.status === "full") {
-          stamp = { text: "FULL", variant: "declined" as const };
-        }
+    const activeList = filterCrescendoEvents(events);
+    const palette: FlyerColor[] = ["mustard", "teal", "red", "cream"];
+    const tilts = [-1.5, 2, -2, 1.5, -1, 2.5];
 
-        return {
-          id: e.id,
-          title: e.title,
-          date: fmtDay(e.starts_at),
-          time: fmtRange(e.starts_at, e.ends_at),
-          room: e.venue_name ?? "Room TBA",
-          seatsLeft: seatsLeft(e),
-          capacity: e.capacity,
-          department: e.department ?? e.coordinator_name ?? "College-Wide",
-          colorVariant: palette[idx % palette.length],
-          tiltDegree: tilts[idx % tilts.length],
-          stamp,
-          unstopUrl,
-          actionText: unstopUrl ? "Register on Unstop ↗" : "Link coming soon",
-        };
-      });
-    }
-
-    return SAMPLE_FLYERS.map((f) => {
-      const unstopUrl = getEventLink(f);
-      const isOpening = openingId === f.id;
-      let stamp = f.stamp;
+    return activeList.slice(0, 6).map((e, idx) => {
+      const unstopUrl = getEventLink(e);
+      const isOpening = openingId === e.id;
+      let stamp = null;
       if (isOpening) {
         stamp = { text: "OPENING UNSTOP", variant: "approved" as const, animate: true };
       } else if (!unstopUrl) {
         stamp = { text: "COMING SOON", variant: "pending" as const };
+      } else if (e.status === "open") {
+        stamp = { text: "OPEN", variant: "approved" as const };
+      } else if (e.status === "full") {
+        stamp = { text: "FULL", variant: "declined" as const };
       }
 
       return {
-        ...f,
+        id: e.id,
+        title: e.title,
+        date: fmtDay(e.starts_at),
+        time: fmtRange(e.starts_at, e.ends_at),
+        room: e.venue_name ?? "Room TBA",
+        seatsLeft: seatsLeft(e),
+        capacity: e.capacity ?? 60,
+        department: e.department ?? e.coordinator_name ?? "College-Wide",
+        colorVariant: palette[idx % palette.length],
+        tiltDegree: tilts[idx % tilts.length],
         stamp,
         unstopUrl,
         actionText: unstopUrl ? "Register on Unstop ↗" : "Link coming soon",

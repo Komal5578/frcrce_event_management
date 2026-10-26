@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Nav } from "@/components/board/Nav";
 import { CampusMapClient } from "@/components/map/CampusMapClient";
+import { filterCrescendoEvents } from "@/lib/crescendo-events";
 import type { EventItem } from "@/lib/types";
 
 export const metadata = {
@@ -50,7 +51,7 @@ export default async function MapPage({
       <Nav />
       <main className="flex-1 flex flex-col">
         <CampusMapClient
-          initialEvents={events}
+          initialEvents={filterCrescendoEvents(events)}
           initialEventId={resolvedParams.event}
           initialFloorId={resolvedParams.floor}
         />

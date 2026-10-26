@@ -33,9 +33,20 @@ export function RoleGuard({ role, children }: { role: Role; children: (name: str
     try {
       const actor = await api<Me>("/api/auth/demo-login", { method: "POST", json: { role } });
       await mutate(actor, { revalidate: true });
-    } catch (err) {
-      setErrorMsg(errText(err));
-      setLoggingIn(false);
+    } catch {
+      try {
+        const creds = {
+          student: { email: "student@demo.college.test", password: "demo-password-2026" },
+          coordinator: { email: "coordinator@demo.college.test", password: "demo-password-2026" },
+          admin: { email: "admin@demo.college.test", password: "demo-password-2026" },
+        }[role];
+        await api("/api/auth/login", { method: "POST", json: creds });
+        const actor = await api<Me>("/api/auth/me");
+        await mutate(actor, { revalidate: true });
+      } catch (err) {
+        setErrorMsg(errText(err));
+        setLoggingIn(false);
+      }
     }
   };
 

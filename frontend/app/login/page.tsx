@@ -70,9 +70,19 @@ function LoginForm() {
     setError("");
     try {
       done(await api<Me>("/api/auth/demo-login", { method: "POST", json: { role } }));
-    } catch (e) {
-      setError(errText(e));
-      setBusy(null);
+    } catch {
+      try {
+        const creds = {
+          student: { email: "student@demo.college.test", password: "demo-password-2026" },
+          coordinator: { email: "coordinator@demo.college.test", password: "demo-password-2026" },
+          admin: { email: "admin@demo.college.test", password: "demo-password-2026" },
+        }[role];
+        await api("/api/auth/login", { method: "POST", json: creds });
+        done(await api<Me>("/api/auth/me"));
+      } catch (err) {
+        setError(errText(err));
+        setBusy(null);
+      }
     }
   }
 

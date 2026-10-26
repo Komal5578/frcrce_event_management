@@ -21,6 +21,7 @@ import { seatsLeft } from "@/lib/status";
 import { getEventLink } from "@/lib/eventLinks";
 import { useMe } from "@/lib/session";
 import { cn } from "@/lib/cn";
+import { filterCrescendoEvents } from "@/lib/crescendo-events";
 import type { EventItem } from "@/lib/types";
 
 const CATEGORY_CHIPS = [
@@ -46,7 +47,7 @@ export default function StudentPortalPage() {
 
   // Open & upcoming events available to register on Unstop
   const displayEvents = useMemo(() => {
-    const list = (allEvents ?? []).filter(
+    const list = filterCrescendoEvents(allEvents).filter(
       (e) => e.status === "open" || e.status === "ongoing"
     );
     const palette: FlyerColor[] = ["mustard", "teal", "red", "cream"];

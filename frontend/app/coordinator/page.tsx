@@ -24,7 +24,7 @@ export default function MyEvents() {
   const [f, setF] = useState<F>("mine");
 
   const overdueEvents = useMemo(() => new Set((tasks ?? []).filter((t) => t.status !== "done" && t.due_at && new Date(t.due_at) < new Date()).map((t) => t.event_id)), [tasks]);
-  const mine = (data ?? []).filter((e) => e.coordinator_id === me?.id);
+  const mine = (data ?? []).filter((e) => e.coordinator_id === me?.id || (me?.name && e.coordinator_name === me.name));
   const needs = (e: EventItem) => ["draft", "returned"].includes(e.status) || overdueEvents.has(e.id) || isLow(e);
   const list = (f === "all" ? data ?? [] : f === "mine" ? mine : mine.filter(needs)).slice().sort((a, b) => +new Date(a.starts_at ?? 9e15) - +new Date(b.starts_at ?? 9e15));
 
