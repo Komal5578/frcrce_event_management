@@ -1,8 +1,8 @@
 "use client";
 
-import { ArrowRight, CircleCheckBig, MapPin } from "lucide-react";
+import { ArrowRight, CircleCheckBig, MapPin, Building2, RotateCcw } from "lucide-react";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 import { PageHeader } from "@/components/shell/app-shell";
 import { Card, CardHeader } from "@/components/ui/card";
@@ -15,6 +15,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { StatTile } from "@/components/ui/stat-tile";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Tag, statusToTagVariant } from "@/components/board/Tag";
+import { CouncilHeadCard } from "@/components/councils/CouncilHeadCard";
+import { getCouncilById } from "@/lib/demo/councils";
+import { useParticipation } from "@/lib/demo/useParticipation";
 import { dateBlock, fmtDay, fmtRange, plural } from "@/lib/format";
 import { eventStatus, type StatusKey } from "@/lib/status";
 import type { AlertItem, EventItem } from "@/lib/types";
@@ -40,6 +43,15 @@ const alertKey = { clash: "clash", overdue: "overdue", low_registrations: "low" 
 export default function Dashboard() {
   const { data: events, error, mutate } = useSWR<EventItem[]>("/api/events");
   const { data: alerts } = useSWR<AlertItem[]>("/api/notifications/alerts");
+  const { reset } = useParticipation();
+  const [resetMsg, setResetMsg] = useState<string | null>(null);
+  const overallCouncil = useMemo(() => getCouncilById("student-council"), []);
+
+  const handleReset = () => {
+    reset();
+    setResetMsg("Demo participation data reset successfully!");
+    setTimeout(() => setResetMsg(null), 3000);
+  };
 
   const m = useMemo(() => {
     const ev = events ?? [];
@@ -75,7 +87,31 @@ export default function Dashboard() {
       <PageHeader
         title="Admin Overview"
         sub={events ? (m.pending.length ? `${plural(m.pending.length, "event")} waiting for your decision${clashes ? `, ${plural(clashes, "clash", "clashes")} to resolve first` : ""}.` : "Nothing needs your decision. New submissions will appear here.") : "Loading the latest numbers…"}
+        actions={
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleReset}
+              className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border-[1.5px] border-[#1E1A17] bg-[#F4EFE3] px-3.5 font-grotesk text-xs uppercase font-extrabold tracking-wider text-[#1E1A17] shadow-[2px_2px_0px_#1E1A17] hover:bg-[#D9CBB3] transition cursor-pointer"
+            >
+              <RotateCcw className="size-3.5" /> Reset Demo Data
+            </button>
+            <Link
+              href="/admin/councils"
+              className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border-[1.5px] border-[#1E1A17] bg-[#B5DDD4] px-3.5 font-grotesk text-xs uppercase font-extrabold tracking-wider text-[#1E1A17] shadow-[2px_2px_0px_#1E1A17] hover:bg-[#9ecfc4] transition"
+            >
+              <Building2 className="size-3.5" /> All Councils
+            </Link>
+          </div>
+        }
       />
+
+      {resetMsg && (
+        <div className="mb-4 rounded-xl border border-[#1B7F6B] bg-[#B5DDD4]/40 p-3 text-xs font-bold text-[#145C4D] flex items-center gap-2">
+          <CircleCheckBig className="size-4 shrink-0" />
+          <span>{resetMsg}</span>
+        </div>
+      )}
 
       {events ? (
         <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }} aria-labelledby="decision" className="mb-5 grid overflow-hidden rounded-xl border-[1.5px] border-[#1E1A17] bg-[#1E1A17] text-[#F4EFE3] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
@@ -148,6 +184,35 @@ export default function Dashboard() {
           <div className="flex-1 p-4">{events ? <Donut size={150} center={String(events.length)} sub="events" data={m.status.map((s) => ({ name: s.k, value: s.v, color: colors[s.k] ?? "#D9CBB3" }))} /> : <Skeleton className="h-40" />}</div>
         </Card>
         <Card className="lg:col-span-3">
+          <CardHeader
+            title="Student Leadership & Governance"
+            aside={
+              <Link href="/admin/councils" className="font-grotesk text-xs font-bold uppercase text-[#EF4B35] hover:underline">
+                View All Councils Directory ↗
+              </Link>
+            }
+          />
+          <div className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#F4EFE3]/50 rounded-b-xl border-t border-[#1E1A17]/10">
+            {overallCouncil && (
+              <div className="w-full sm:w-auto">
+                <span className="block text-[11px] font-grotesk font-extrabold uppercase text-[#1E1A17]/70 mb-1.5">
+                  Overall Student Council Head
+                </span>
+                <CouncilHeadCard
+                  head={overallCouncil.head}
+                  councilName={overallCouncil.name}
+                  showCoreMembers={overallCouncil.coreMembersCount}
+                  size="md"
+                />
+              </div>
+            )}
+            <div className="text-xs font-semibold text-[#1E1A17]/80 max-w-md">
+              Fr. CRCE features verified student council leadership, overseeing {m.dept.length} active student bodies across cultural, sports, and technical wings.
+            </div>
+          </div>
+        </Card>
+
+        <Card className="lg:col-span-3">
           <CardHeader title="Status key" aside={<span className="text-xs font-bold text-[#1E1A17]/60">Mustard = Pending, Teal = Approved, Red = Declined</span>} />
           <ul className="grid gap-x-8 gap-y-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
             {keyRows.map(([s, meaning]) => (
@@ -159,6 +224,11 @@ export default function Dashboard() {
           </ul>
         </Card>
       </div>
+
+      {/* Mandatory Footer Note (Step 8) */}
+      <footer className="mt-8 pt-4 border-t border-[#1E1A17]/20 text-center text-xs font-semibold text-[#1E1A17]/60">
+        Council head details are real. Student numbers are demo data, stored in this browser only.
+      </footer>
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarPlus, Inbox, Plus } from "lucide-react";
+import { CalendarPlus, Inbox, Plus, UserCheck } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
@@ -50,12 +50,20 @@ export default function MyEvents() {
         title="Faculty & Coordinator Dashboard"
         sub="Everything you are running, soonest first."
         actions={
-          <Link
-            href="/coordinator/new"
-            className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#EF4B35] px-4 font-grotesk text-xs uppercase font-extrabold tracking-wider text-white border border-[#1E1A17] shadow-[2px_2px_0px_#1E1A17] hover:bg-[#DB3D28]"
-          >
-            <Plus className="size-4" aria-hidden /> New event
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/coordinator/attendance"
+              className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#B5DDD4] px-4 font-grotesk text-xs uppercase font-extrabold tracking-wider text-[#1E1A17] border border-[#1E1A17] shadow-[2px_2px_0px_#1E1A17] hover:bg-[#9ecfc4]"
+            >
+              <UserCheck className="size-4" aria-hidden /> Attendance & Check-in
+            </Link>
+            <Link
+              href="/coordinator/new"
+              className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#EF4B35] px-4 font-grotesk text-xs uppercase font-extrabold tracking-wider text-white border border-[#1E1A17] shadow-[2px_2px_0px_#1E1A17] hover:bg-[#DB3D28]"
+            >
+              <Plus className="size-4" aria-hidden /> New event
+            </Link>
+          </div>
         }
       />
 

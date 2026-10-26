@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, CalendarRange, FileBarChart2, Inbox, MapPin, Warehouse } from "lucide-react";
+import { Bell, CalendarRange, FileBarChart2, Inbox, MapPin, Warehouse, Building2 } from "lucide-react";
 import useSWR from "swr";
 import { AppShell, type NavItem } from "@/components/shell/app-shell";
 import { RoleGuard } from "@/components/shell/guard";
@@ -12,6 +12,7 @@ function Shell({ name, children }: { name: string; children: React.ReactNode }) 
   const pending = (data ?? []).filter((e) => e.status === "pending").length;
   const items: NavItem[] = [
     { href: "/admin/approvals", label: "Approvals", icon: Inbox, badge: pending || undefined },
+    { href: "/admin/councils", label: "Councils", icon: Building2 },
     { href: "/admin/calendar", label: "Calendar", icon: CalendarRange },
     { href: "/admin/catalog", label: "Venues & Resources", icon: Warehouse },
     { href: "/map", label: "Campus Map", icon: MapPin },

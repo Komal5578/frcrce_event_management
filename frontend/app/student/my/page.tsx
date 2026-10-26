@@ -44,6 +44,9 @@ export default function MyEvents() {
                 >
                   Open My Unstop Dashboard <ExternalLink className="size-4" />
                 </a>
+                <PrimaryButton href="/student/participation" size="md" variant="teal">
+                  View My Participation Stamps ★
+                </PrimaryButton>
                 <PrimaryButton href="/events" size="md" variant="cream">
                   Browse Noticeboard Events
                 </PrimaryButton>

@@ -15,6 +15,8 @@ import {
 import { Tape } from "@/components/board/Tape";
 import type { CampusFloor, FloorEntity } from "@/lib/campus-map-data";
 import type { MatchedEvent } from "@/lib/venue-matcher";
+import { useMe } from "@/lib/session";
+import { findCouncilForDepartment } from "@/lib/demo/councils";
 import { cn } from "@/lib/cn";
 
 export interface VenueFlyerSheetProps {
@@ -32,6 +34,7 @@ export function VenueFlyerSheet({
   isOpen,
   onClose,
 }: VenueFlyerSheetProps) {
+  const { me } = useMe();
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   if (!entity || !isOpen) return null;
@@ -214,15 +217,31 @@ export function VenueFlyerSheet({
             </div>
           ) : (
             <div className="space-y-3">
-              {events.map((ev) => (
+              {events.map((ev) => {
+                const councilMatch = findCouncilForDepartment(ev.department);
+                const showHeadDetails = Boolean(me && councilMatch?.head);
+
+                return (
                 <div
                   key={ev.id}
                   className="rounded-xl border-[1.5px] border-[#1E1A17] bg-white p-3.5 shadow-[2px_2px_0px_#1E1A17]"
                 >
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <span className="font-grotesk text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#1E1A17] text-[#F4EFE3]">
-                      {ev.department}
-                    </span>
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="font-grotesk text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#1E1A17] text-[#F4EFE3]">
+                        {councilMatch ? councilMatch.name : ev.department}
+                      </span>
+                      {showHeadDetails && councilMatch && (
+                        <span className="font-grotesk text-[10px] font-bold text-[#1E1A17]/80 flex items-center gap-1">
+                          <span>Head: {councilMatch.head.name}</span>
+                          {!councilMatch.head.verified && (
+                            <span className="px-1 py-0.2 rounded bg-[#EF4B35] text-[9px] font-black uppercase text-white border border-[#1E1A17] shadow-[1px_1px_0px_#1E1A17]" title="Demo fictitious name">
+                              DEMO
+                            </span>
+                          )}
+                        </span>
+                      )}
+                    </div>
                     {ev.timeWindow === "now" && (
                       <span className="font-grotesk text-[10px] font-black uppercase text-white bg-[#EF4B35] px-2 py-0.5 rounded animate-pulse">
                         Live Now
@@ -289,7 +308,8 @@ export function VenueFlyerSheet({
                     </button>
                   </div>
                 </div>
-              ))}
+              );
+            })}
             </div>
           )}
         </div>

@@ -1,11 +1,13 @@
 "use client";
 
-import { Bell, CalendarDays, ClipboardList, LayoutList, MapPin } from "lucide-react";
+import { Bell, CalendarDays, ClipboardList, LayoutList, MapPin, UserCheck, Building2 } from "lucide-react";
 import { AppShell, type NavItem } from "@/components/shell/app-shell";
 import { RoleGuard } from "@/components/shell/guard";
 
 const items: NavItem[] = [
   { href: "/coordinator", label: "My Events", icon: LayoutList, exact: true },
+  { href: "/coordinator/attendance", label: "Attendance", icon: UserCheck },
+  { href: "/coordinator/councils", label: "Councils", icon: Building2 },
   { href: "/coordinator/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/map", label: "Campus Map", icon: MapPin },
   { href: "/coordinator/tasks", label: "Tasks", icon: ClipboardList },

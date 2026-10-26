@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Bell, CalendarHeart, ChevronLeft, ClipboardCheck, Compass, LogOut, MapPin, type LucideIcon } from "lucide-react";
+import { Bell, CalendarHeart, CalendarCheck, ChevronLeft, ClipboardCheck, Compass, LogOut, MapPin, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import type { ReactNode } from "react";
@@ -24,6 +24,7 @@ export function StudentShell({ name, children }: { name: string; children: React
   const { data: unread } = useSWR<{ count: number }>("/api/notifications/unread-count", fetcher, { refreshInterval: 30000 });
   const tabs: Tab[] = [
     { href: "/student", label: "Discover", icon: Compass },
+    { href: "/student/participation", label: "Participation", icon: CalendarCheck },
     { href: "/student/my", label: "My Events", icon: CalendarHeart },
     { href: "/map", label: "Campus Map", icon: MapPin },
     ...(profile?.is_organizer ? [{ href: "/student/tasks", label: "My Tasks", icon: ClipboardCheck }] : []),
